@@ -25,8 +25,8 @@ Make sure you have Node.js and npm installed.
 
 1. Clone the repository:
 ```bash
-   git clone https://github.com/mnichols08/ctd-react-guided-project.git
-   cd ctd-react-guided-project
+   git clone https://github.com/mnichols08/ctd-react-v3-guided-project.git
+   cd ctd-react-v3-guided-project
 ```
 
 2. Install dependencies:
