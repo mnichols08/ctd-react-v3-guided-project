@@ -19,7 +19,7 @@ Follow these instructions to get the project up and running on your local machin
 
 Make sure you have Node.js and npm installed.
 
-- Node.js ^v21.19.0 or >=22.12.0
+- Node.js ^20.19.0 or >=22.12.0
 
 ### Installation
 
