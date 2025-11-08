@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.2] - 2025-11-15
+
+### Added
+- TodoList component created within a directory structure of `/components/TodoList`
+- Import statement into app and applies an instance within the main app.jsx
+
+### Changed
+- Migrates the todos array and render logic into the new TodoList component
+
 ## [0.0.1] - 2025-11-07
 Project cleanup and further initialization
 
@@ -37,8 +46,6 @@ Initial project scaffolding with Vite
 ### Added
 - Initialize React Application with Vite
 - Installs and configures prettier
-
----
 
 ## How to Use This Changelog
 
