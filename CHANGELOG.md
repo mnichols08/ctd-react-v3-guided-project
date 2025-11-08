@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.2] - 2025-11-08
+Create TodoList component and styles
+
+### Added
+- Applies some basic styling to App
+- Migrate logic from app to a separate TodoList component
+- Provide a simple stylesheet for TodoList component
+
 ## [0.0.1] - 2025-11-07
 Project cleanup and further initialization
 
@@ -71,5 +79,6 @@ Brief version description
 ```
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
+[0.0.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.0...v0.0.1
 [0.0.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/releases/tag/v0.0.0
