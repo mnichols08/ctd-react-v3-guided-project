@@ -1,0 +1,15 @@
+/* =========================================================================
+   NOTE: 
+
+   These styles were generated with the assistance of AI technology.
+   They are designed to be accessibility-friendly, ARIA-aware, and
+   support automatic light/dark mode based on user preferences.
+
+   You can safely modify or extend them for your application needs.
+========================================================================= */
+
+/* Import the reset first */
+@import './reset.css';
+
+/* Import app-wide styles */
+@import './App.css';

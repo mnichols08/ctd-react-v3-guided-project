@@ -1,4 +1,22 @@
-html,
+:root {
+  --font-family: system-ui, sans-serif;
+  --bg: #ffffff;
+  --text: #111111;
+  --border: #cccccc;
+  --focus: #005fcc;
+  --accent: #0066ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --text: #eaeaea;
+    --border: #444444;
+    --focus: #4da3ff;
+    --accent: #3399ff;
+  }
+}
+
 body {
     background: linear-gradient(45deg, rgb(0, 255, 0), rgb(0, 204, 255));
     background-attachment: fixed;
@@ -8,6 +26,10 @@ body {
 }
 
 #root {
-    padding: 5vw;
-    margin: auto 5em;
+  display: flex;
+  justify-content: center;
+}
+
+.todos-title {
+    text-align: center;
 }
