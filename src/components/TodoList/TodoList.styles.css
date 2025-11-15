@@ -1,0 +1,6 @@
+.todo-list {
+    border-radius: .75em;
+    padding: 2em;
+    margin: 5em auto;
+    box-shadow: 0 0 6em #000;
+}
