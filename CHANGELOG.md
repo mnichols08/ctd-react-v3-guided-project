@@ -26,10 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updates TodoList component for better accessibility
 - Updates title and adds a meta description to index.html
 - Adds a className to h1 of 'todos-title', that centers the title on screen
+- Imports TodoList stylesheet into component
 
 ### Fixed
 - Fixes a typo in TodoList component that was using class instead of className
-
+- Removes older styles associated with a rebase which brought them back
 
 ## [0.0.2] - 2025-11-15
 

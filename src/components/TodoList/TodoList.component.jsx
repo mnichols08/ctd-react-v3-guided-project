@@ -1,3 +1,5 @@
+import './ToDoList.styles.css';
+
 function TodoList() {
   const todos = [
     { id: 1, title: 'review resources' },
@@ -5,7 +7,7 @@ function TodoList() {
     { id: 3, title: 'code out app' },
   ];
   return (
-    <ul className='todo-list'>
+    <ul className="todo-list">
       {todos.map((todo) => (
         <li key={todo.id}>{todo.title}</li>
       ))}
