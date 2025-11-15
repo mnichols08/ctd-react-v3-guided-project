@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.3] - 2025-11-15
+
+### Added
+- Adds disclaimer to Index.css to indicate that the styles are created with AI assistance
+- Adds a reset.css file to ensure consistent styles across browsers
+- Adds a stylesheet for TodoForm component
+- Creates a TodoForm component by following the steps provided in the assignment
+
+### Changed
+- Updates index.css to import App.css
+- Updates TodoList component for better accessibility
+- Updates title and adds a meta description to index.html
+- Adds a className to h1 of 'todos-title', that centers the title on screen
+
+### Fixed
+- Fixes a typo in TodoList component that was using class instead of className
+
+
 ## [0.0.2] - 2025-11-15
 
 ### Added
