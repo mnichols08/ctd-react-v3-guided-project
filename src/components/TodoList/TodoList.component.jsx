@@ -5,7 +5,7 @@ function TodoList() {
     { id: 3, title: 'code out app' },
   ];
   return (
-    <ul>
+    <ul className='todo-list'>
       {todos.map((todo) => (
         <li key={todo.id}>{todo.title}</li>
       ))}
