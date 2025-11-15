@@ -1,0 +1,41 @@
+:root {
+  --font-family: system-ui, sans-serif;
+  --bg: #ffffff;
+  --text: #111111;
+  --border: #cccccc;
+  --focus: #005fcc;
+  --accent: #0066ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --text: #eaeaea;
+    --border: #444444;
+    --focus: #4da3ff;
+    --accent: #3399ff;
+  }
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 2rem;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.25rem;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+}
+
+.todos-title {
+    text-align: center;
+}
