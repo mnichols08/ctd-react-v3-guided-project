@@ -24,12 +24,14 @@ Make sure you have Node.js and npm installed.
 ### Installation
 
 1. Clone the repository:
+
 ```bash
    git clone https://github.com/mnichols08/ctd-react-v3-guided-project.git
    cd ctd-react-v3-guided-project
 ```
 
 2. Install dependencies:
+
 ```bash
    npm install
 ```
@@ -37,6 +39,7 @@ Make sure you have Node.js and npm installed.
 ### Running the Development Server
 
 Start the development server with:
+
 ```bash
 npm run dev
 ```
