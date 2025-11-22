@@ -13,15 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.4] - 2025-11-22
+
+### Fixed
+
+- Fixes a typo in TodoList.jsx file to update inconsistent casing in import.
+- Corrects merge conflict within submodule within `main` branch.
+
 ## [0.0.3] - 2025-11-15
 
 ### Added
+
 - Adds disclaimer to Index.css to indicate that the styles are created with AI assistance
 - Adds a reset.css file to ensure consistent styles across browsers
 - Adds a stylesheet for TodoForm component
 - Creates a TodoForm component by following the steps provided in the assignment
 
 ### Changed
+
 - Updates index.css to import App.css
 - Updates TodoList component for better accessibility
 - Updates title and adds a meta description to index.html
@@ -29,16 +38,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Imports TodoList stylesheet into component
 
 ### Fixed
+
 - Fixes a typo in TodoList component that was using class instead of className
 - Removes older styles associated with a rebase which brought them back
 
 ## [0.0.2] - 2025-11-15
 
 ### Added
+
 - TodoList component created within a directory structure of `/components/TodoList`
 - Import statement into app and applies an instance within the main app.jsx
 
 ### Changed
+
 - Migrates the todos array and render logic into the new TodoList component
 
 ## [0.0.1] - 2025-11-07
@@ -110,6 +122,8 @@ Brief version description
 ```
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
+
+[0.0.4]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.0...v0.0.1
