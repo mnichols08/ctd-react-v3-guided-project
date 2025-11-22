@@ -1,4 +1,4 @@
-import './ToDoList.styles.css';
+import './TodoList.styles.css';
 
 function TodoList() {
   const todos = [
