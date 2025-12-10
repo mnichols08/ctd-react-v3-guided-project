@@ -1,4 +1,5 @@
 import './ToDoList.styles.css';
+import TodoListItem from '../TodoListItem/TodoListItem.component';
 
 function TodoList() {
   const todos = [
@@ -9,7 +10,7 @@ function TodoList() {
   return (
     <ul className="todo-list">
       {todos.map((todo) => (
-        <li key={todo.id}>{todo.title}</li>
+        <TodoListItem key={todo.id} todo={todo}/>
       ))}
     </ul>
   );
