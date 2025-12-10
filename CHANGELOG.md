@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Migrates stylesheet for li into new stylesheet for TodoListItem
+- Updates TodoList component to import new TodoListItem component and renders it, passing in the properties of the todos
 
 ## [0.0.3] - 2025-11-15
 
