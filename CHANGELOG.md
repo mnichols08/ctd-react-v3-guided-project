@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.6] - 2025-12-18
+### Added
+- Utilizes new hooks useRef, useState to manage state and allow users to create new Todos
+
 ## [0.0.5] - 2025-12-09
 ### Added
 - Adds a TodoListItem component and stylesheet that renders a list item, take in properties passed into it.
