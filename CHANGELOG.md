@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.5] - 2025-12-09
+### Added
+- Adds a TodoListItem component and stylesheet that renders a list item, take in properties passed into it.
+
+### Changed
+- Migrates stylesheet for li into new stylesheet for TodoListItem
+- Updates TodoList component to import new TodoListItem component and renders it, passing in the properties of the todos
+
 ## [0.0.4] - 2025-11-22
 
 ### Fixed
