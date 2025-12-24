@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.8] - 2025-12-23
 ### Added
 - Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
+- Todos can be marked as completed
+- Prevents empty todos from being added by conditionally disabling the add todo button based on length of workingTodoTitle
+
+### Changed
+- Form is converted from a basic form to a controlled component
 
 ## [0.0.7] - 2025-12-23
 ### Fixed

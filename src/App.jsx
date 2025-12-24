@@ -17,13 +17,14 @@ function App() {
     setTodoList([...todoList, newTodo]);
   };
   const completeTodo = completedId => {
-    todoList.map(todo => {
+    const updatedTodoList = todoList.map(todo => {
       if (todo.id === completedId) {
-        return { ...todo, isCompleted: true}
+        return { ...todo, isCompleted: true };
       }
-      return todo
-    }) 
-  }
+      return todo;
+    });
+    setTodoList(updatedTodoList);
+  };
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
