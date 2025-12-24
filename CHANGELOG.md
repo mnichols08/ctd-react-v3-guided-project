@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.8] - 2025-12-23
+### Added
+- Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
+
 ## [0.0.7] - 2025-12-23
 ### Fixed
 - Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
