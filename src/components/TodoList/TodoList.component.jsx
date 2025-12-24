@@ -2,12 +2,13 @@ import './TodoList.styles.css';
 import TodoListItem from '../TodoListItem/TodoListItem.component';
 
 function TodoList({ todoList, onCompleteTodo }) {
+  const filteredTodoList = todoList.filter(todo => !todo.isCompleted)
   return (
     <ul className="todo-list">
-      {todoList.length < 1 ? (
+      {filteredTodoList.length < 1 ? (
         <p>Add todo above to get started</p>
       ) : (
-        todoList.map(todo => (
+        filteredTodoList.map(todo => (
           <TodoListItem
             key={todo.id}
             todo={todo}
