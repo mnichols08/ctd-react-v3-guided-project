@@ -8,7 +8,9 @@ function App() {
   const addTodo = title => {
     const newTodo = {
       title,
-      id: Date.now(),
+      id: typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random()}`
     };
     setTodoList([...todoList, newTodo]);
   };
