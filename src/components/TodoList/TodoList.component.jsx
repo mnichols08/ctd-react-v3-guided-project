@@ -7,7 +7,13 @@ function TodoList({ todoList, onCompleteTodo }) {
       {todoList.length < 1 ? (
         <p>Add todo above to get started</p>
       ) : (
-        todoList.map(todo => <TodoListItem onCompleteTodo={onCompleteTodo} key={todo.id} todo={todo} />)
+        todoList.map(todo => (
+          <TodoListItem
+            key={todo.id}
+            todo={todo}
+            onCompleteTodo={onCompleteTodo}
+          />
+        ))
       )}
     </ul>
   );
