@@ -1,4 +1,4 @@
-import './ToDoList.styles.css';
+import './TodoList.styles.css';
 import TodoListItem from '../TodoListItem/TodoListItem.component';
 
 function TodoList({ todoList }) {
