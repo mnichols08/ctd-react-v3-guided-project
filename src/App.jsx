@@ -8,17 +8,27 @@ function App() {
   const addTodo = title => {
     const newTodo = {
       title,
-      id: typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      id:
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
           ? crypto.randomUUID()
-          : `${Date.now()}-${Math.random()}`
+          : `${Date.now()}-${Math.random()}`,
+      isCompleted: false,
     };
     setTodoList([...todoList, newTodo]);
   };
+  const completeTodo = completedId => {
+    todoList.map(todo => {
+      if (todo.id === completedId) {
+        return { ...todo, isCompleted: true}
+      }
+      return todo
+    }) 
+  }
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
       <TodoForm onAddTodo={addTodo} />
-      <TodoList todoList={todoList} />
+      <TodoList onCompleteTodo={completeTodo} todoList={todoList} />
     </div>
   );
 }
