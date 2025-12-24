@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.7] - 2025-12-23
+### Fixed
+- Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
+- Fixes casing typo while linking Stylesheets within TodoList and TodoForm components
+- Passes in a value of null into useRef instead of an empty string
+
 ## [0.0.6] - 2025-12-18
 ### Added
 - Utilizes new hooks useRef, useState to manage state and allow users to create new Todos
