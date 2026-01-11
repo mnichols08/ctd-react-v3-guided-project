@@ -4,8 +4,16 @@ import './TodoListItem.styles.css';
 
 function TodoListItem({ todo, onCompleteTodo }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [workingTitle, setWorkingTitle] = useState(todo.title);
+  const handleCancel = () => {
+    setWorkingTitle(todo.title);
+    setIsEditing(false);
+  };
   return isEditing ? (
-    <TextInputWithLabel value={todo.title} />
+    <>
+      <TextInputWithLabel value={todo.title} />
+      <input onClick={() => handleCancel()} type="button" value="Reset" />
+    </>
   ) : (
     <li>
       <label>
