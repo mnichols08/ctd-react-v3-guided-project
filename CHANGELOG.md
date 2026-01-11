@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.10] - 2026-01-11
 ### Added
 - Adds environment variable example file for Airtable fields, and attach personal credentials to it.
+- Establishes a transition state by declaring errorMessage and isLoading state variables
 
 ## [0.0.9] - 2026-01-10
 ### Added

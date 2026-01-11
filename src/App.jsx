@@ -5,6 +5,9 @@ import TodoForm from './features/TodoForm/TodoForm.component';
 
 function App() {
   const [todoList, setTodoList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
+
   const addTodo = title => {
     const newTodo = {
       title,
