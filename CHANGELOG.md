@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.9] - 2026-01-10
+### Added
+- Implements handleUpdate and handleCancel helper functions to allow users to maniulate state and add, update, cancel updating, or completing todos.
+- Creates a new submodule for the second assignment
+
 ## [0.0.8] - 2025-12-23
 ### Added
 - Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
