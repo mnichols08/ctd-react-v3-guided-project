@@ -18,18 +18,27 @@ function App() {
   };
   const completeTodo = completedId => {
     const updatedTodoList = todoList.map(todo => {
-      if (todo.id === completedId) {
-        return { ...todo, isCompleted: true };
-      }
+      if (todo.id === completedId) return { ...todo, isCompleted: true };
       return todo;
     });
     setTodoList(updatedTodoList);
+  };
+  const updateTodo = editedTodo => {
+    const updatedTodos = todos.map(todo => {
+      if (todo.id === editedTodo.id) return { editedTodo };
+      return todo;
+    });
+    setTodoList(updatedTodos);
   };
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
       <TodoForm onAddTodo={addTodo} />
-      <TodoList onCompleteTodo={completeTodo} todoList={todoList} />
+      <TodoList
+        onCompleteTodo={completeTodo}
+        todoList={todoList}
+        onUpdateTodo={updateTodo}
+      />
     </div>
   );
 }
