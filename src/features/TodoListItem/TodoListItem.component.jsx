@@ -9,9 +9,11 @@ function TodoListItem({ todo, onCompleteTodo }) {
     setWorkingTitle(todo.title);
     setIsEditing(false);
   };
+  const handleEdit = event => setWorkingTitle(event.target.value);
+  
   return isEditing ? (
     <>
-      <TextInputWithLabel value={todo.title} />
+      <TextInputWithLabel value={workingTitle} onChange={e => handleEdit(e)} />
       <input onClick={() => handleCancel()} type="button" value="Reset" />
     </>
   ) : (
