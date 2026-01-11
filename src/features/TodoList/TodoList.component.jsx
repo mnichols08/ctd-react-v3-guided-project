@@ -1,5 +1,5 @@
 import './TodoList.styles.css';
-import TodoListItem from '../TodoListItem/TodoListItem.component';
+import TodoListItem from '../../components/TodoListItem/TodoListItem.component';
 
 function TodoList({ todoList, onCompleteTodo }) {
   const filteredTodoList = todoList.filter(todo => !todo.isCompleted)
