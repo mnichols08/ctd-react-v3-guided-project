@@ -24,11 +24,11 @@ function App() {
     setTodoList(updatedTodoList);
   };
   const updateTodo = editedTodo => {
-    const updatedTodos = todos.map(todo => {
-      if (todo.id === editedTodo.id) return { editedTodo };
+    const updatedTodoList = todoList.map(todo => {
+      if (todo.id === editedTodo.id) return editedTodo;
       return todo;
     });
-    setTodoList(updatedTodos);
+    setTodoList(updatedTodoList);
   };
   return (
     <div>
