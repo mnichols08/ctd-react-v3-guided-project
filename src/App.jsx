@@ -79,6 +79,9 @@ function App() {
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
       />
+      {
+       errorMessage ? <div><hr/><p>{errorMessage}</p><input type="button" onClick={() => setErrorMessage(undefined)} value="Dismiss"></input></div> : ``
+      }
     </div>
   );
 }
