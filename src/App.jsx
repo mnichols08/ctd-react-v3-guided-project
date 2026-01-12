@@ -24,20 +24,23 @@ function App() {
     ],
   });
 
-  const createOptions = (method, payload) => ({
-    method,
-    headers,
-    ...(payload != null && { body: JSON.stringify(payload) }),
-  });
+  const createRequest = async (method, payload = null) => {
+    const options = {
+      method,
+      headers: method === 'GET' ? { Authorization: token } : headers,
+      ...(payload && { body: JSON.stringify(payload) }),
+    };
+
+    const resp = await fetch(url, options);
+    if (!resp.ok) throw new Error(`Request failed with status ${resp.status}`);
+    return resp.json();
+  };
 
   const addTodo = async newTodoTitle => {
     const payload = createPayload(null, { title: newTodoTitle });
-    const options = createOptions('POST', payload);
     try {
       setIsSaving(true);
-      const resp = await fetch(url, options);
-      if (!resp.ok) throw new Error();
-      const { records } = await resp.json();
+      const { records } = await createRequest('POST', payload);
 
       const savedTodo = {
         id: records[0].id,
@@ -59,11 +62,9 @@ function App() {
       title: originalTodo.title,
       isCompleted: !originalTodo.isCompleted,
     });
-    const options = createOptions('PATCH', payload);
     try {
       setIsSaving(true);
-      const resp = await fetch(url, options);
-      if (!resp.ok) throw new Error();
+      createRequest('PATCH', payload);
     } catch (err) {
       console.error(err.message);
       setErrorMessage(`${err.message}. Reverting todo. `);
@@ -84,12 +85,9 @@ function App() {
       title: editedTodo.title,
       isCompleted: editedTodo.isCompleted,
     });
-    const options = createOptions('PATCH', payload);
     try {
       setIsSaving(true);
-      const resp = await fetch(url, options);
-      const { records } = await resp.json();
-      if (!resp.ok) throw new Error();
+      const { records } = await createRequest('PATCH', payload);
       const updatedTodo = {
         id: records[0].id,
         ...records[0].fields,
@@ -112,12 +110,8 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
-      const options = createOptions('GET');
       try {
-        const resp = await fetch(url, options);
-        if (!resp.ok) throw new Error(resp.message);
-
-        const { records } = await resp.json();
+        const { records } = await createRequest('GET');
         const todos = records.map(record => {
           const todo = {
             id: record.id,
