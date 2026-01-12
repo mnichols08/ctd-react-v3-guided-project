@@ -15,6 +15,12 @@ function App() {
     'Content-Type': 'application/json',
   };
 
+  const createOptions = (method, payload) => ({
+    method,
+    headers,
+    ...(payload != null && { body: JSON.stringify(payload) }),
+  });
+
   const addTodo = async newTodoTitle => {
     const payload = {
       records: [
@@ -25,11 +31,7 @@ function App() {
         },
       ],
     };
-    const options = {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload),
-    };
+    const options = createOptions('POST', payload);
     try {
       setIsSaving(true);
       const resp = await fetch(url, options);
@@ -64,11 +66,7 @@ function App() {
       ],
     };
 
-    const options = {
-      method: 'PATCH',
-      headers,
-      body: JSON.stringify(payload),
-    };
+    const options = createOptions('PATCH', payload);
     try {
       setIsSaving(true);
       const resp = await fetch(url, options);
@@ -100,11 +98,7 @@ function App() {
         },
       ],
     };
-    const options = {
-      method: 'PATCH',
-      headers,
-      body: JSON.stringify(payload),
-    };
+    const options = createOptions('PATCH', payload);
     try {
       setIsSaving(true);
       const resp = await fetch(url, options);
@@ -116,7 +110,7 @@ function App() {
       };
       const updatedTodoList = todoList.map(todo => {
         if (todo.id === records[0].id) return updatedTodo;
-        return todo
+        return todo;
       });
       setTodoList([...updatedTodoList]);
     } catch (err) {
@@ -132,10 +126,7 @@ function App() {
   useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
-      const options = {
-        method: 'GET',
-        headers,
-      };
+      const options = createOptions('GET');
       try {
         const resp = await fetch(url, options);
         if (!resp.ok) throw new Error(resp.message);
