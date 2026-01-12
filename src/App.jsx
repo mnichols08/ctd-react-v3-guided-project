@@ -42,6 +42,20 @@ function App() {
     }
   };
 
+  const getErrorMessage = (action, error) => {
+  if (error.message.includes('fetch') || error.message.includes('network')) {
+    return "Unable to connect to database. Please check your internet connection.";
+  }
+  
+  const messages = {
+    add: "We couldn't save your todo. Please try again.",
+    update: "We couldn't update that todo. We've restored it to how it was.",
+    complete: "Couldn't mark that as complete. Please try again.",
+    fetch: "We're having trouble loading your todos. Please refresh the page.",
+  };
+  
+  return messages[action] || "Something went wrong. Please try again.";
+};
   const addTodo = async newTodoTitle => {
     const payload = createPayload(null, { title: newTodoTitle });
     try {
@@ -55,8 +69,8 @@ function App() {
       if (!records[0].fields.isCompleted) savedTodo.isCompleted = false;
       setTodoList([...todoList, savedTodo]);
     } catch (err) {
-      console.error(err.message);
-      setErrorMessage(err.message);
+      setErrorMessage(getErrorMessage('add', err))
+      console.error(errMessage);
     }
   };
   const completeTodo = async completedId => {
@@ -73,8 +87,8 @@ function App() {
       });
       setTodoList(updatedTodoList);
     } catch (err) {
-      console.error(err.message);
-      setErrorMessage(`${err.message}. Reverting todo. `);
+      setErrorMessage(getErrorMessage('complete', err))
+      console.error(errMessage);
       setTodoList(prev =>
         prev.map(todo => (todo.id === completedId ? originalTodo : todo))
       );
@@ -98,8 +112,8 @@ function App() {
       });
       setTodoList([...updatedTodoList]);
     } catch (err) {
-      console.error(err);
-      setErrorMessage(`${err.message}. Reverting todo...`);
+      setErrorMessage(getErrorMessage('edit', err))
+      console.error(errMessage);
       const revertedTodos = [...todoList, originalTodo];
       setTodoList([...revertedTodos]);
     }
@@ -122,7 +136,8 @@ function App() {
         });
         setTodoList([...todos]);
       } catch (err) {
-        setErrorMessage(err.message);
+        setErrorMessage(getErrorMessage('fetch', err))
+      console.error(errMessage);
       } finally {
         setIsLoading(false);
       }
