@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creates a helper function for setting error messages with more user friendly messages
 - Improves styling for edit/cancel interface
 - Refactors code for each request helper to change state with failsafes
+- Restyles TodoListItem so that user cannot accidently complete task by clicking on the label (which used to wrap entire list item)
 
 ## [0.0.9] - 2026-01-10
 

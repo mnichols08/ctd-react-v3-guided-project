@@ -20,9 +20,9 @@
   flex: 1;
 }
 
-.todo-list label {
+.todo-list .label-container {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.5rem;
   cursor: pointer;
 }
@@ -35,7 +35,6 @@
 .todo-list span:hover {
   transform: scale(1.1);
 }
-
 
 .todo-list form:has(input[type='text']) {
   background: var(--bg-subtle);

@@ -38,14 +38,15 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
         </>
       ) : (
         <li>
-          <label>
+          <div className="label-container">
             <input
               type="checkbox"
               checked={todo.isCompleted}
               onChange={() => onCompleteTodo(todo.id)}
             />
+           
             <span onClick={() => setIsEditing(true)}>{todo.title}</span>
-          </label>
+          </div>
         </li>
       )}
     </form>
