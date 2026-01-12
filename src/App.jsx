@@ -56,23 +56,26 @@ function App() {
   
   return messages[action] || "Something went wrong. Please try again.";
 };
-  const addTodo = async newTodoTitle => {
-    const payload = createPayload(null, { title: newTodoTitle });
-    try {
-      const { records } = await createRequest('POST', payload);
+const addTodo = async newTodoTitle => {
+  const payload = createPayload(null, { title: newTodoTitle });
 
-      const savedTodo = {
-        id: records[0].id,
-        title: newTodoTitle,
-        ...records[0].fields,
-      };
-      if (!records[0].fields.isCompleted) savedTodo.isCompleted = false;
-      setTodoList([...todoList, savedTodo]);
-    } catch (err) {
-      setErrorMessage(getErrorMessage('add', err))
-      console.error(errMessage);
-    }
-  };
+  try {
+    const { records } = await createRequest('POST', payload);
+    const fields = records?.[0]?.fields ?? {};
+
+    const savedTodo = {
+      id: records[0].id,
+      title: fields.title ?? newTodoTitle ?? '',
+      isCompleted: fields.isCompleted ?? false,
+    };
+
+    setTodoList(prev => [...prev, savedTodo]);
+  } catch (err) {
+    setErrorMessage(getErrorMessage('add', err));
+    console.error(err);
+  }
+};
+
   const completeTodo = async completedId => {
     const originalTodo = todoList.find(todo => todo.id === completedId);
     const payload = createPayload(completedId, {
@@ -94,30 +97,43 @@ function App() {
       );
     }
   };
-  const updateTodo = async editedTodo => {
-    const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
-    const payload = createPayload(editedTodo.id, {
-      title: editedTodo.title,
-      isCompleted: editedTodo.isCompleted,
-    });
-    try {
-      const { records } = await createRequest('PATCH', payload);
-      const updatedTodo = {
-        id: records[0].id,
-        ...records[0].fields,
-      };
-      const updatedTodoList = todoList.map(todo => {
-        if (todo.id === records[0].id) return updatedTodo;
-        return todo;
-      });
-      setTodoList([...updatedTodoList]);
-    } catch (err) {
-      setErrorMessage(getErrorMessage('edit', err))
-      console.error(errMessage);
-      const revertedTodos = [...todoList, originalTodo];
-      setTodoList([...revertedTodos]);
-    }
-  };
+const updateTodo = async editedTodo => {
+  const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
+
+  const payload = createPayload(editedTodo.id, {
+    title: editedTodo.title,
+    isCompleted: editedTodo.isCompleted,
+  });
+
+  try {
+    const { records } = await createRequest('PATCH', payload);
+
+    const airtableFields = records?.[0]?.fields ?? {};
+
+    const updatedTodo = {
+      id: records[0].id,
+      title: airtableFields.title ?? originalTodo.title ?? '',
+      isCompleted:
+        airtableFields.isCompleted ?? originalTodo.isCompleted ?? false,
+    };
+
+    setTodoList(prev =>
+      prev.map(todo =>
+        todo.id === updatedTodo.id ? updatedTodo : todo
+      )
+    );
+  } catch (err) {
+    setErrorMessage(getErrorMessage('edit', err));
+    console.error(err);
+
+    setTodoList(prev =>
+      prev.map(todo =>
+        todo.id === originalTodo.id ? originalTodo : todo
+      )
+    );
+  }
+};
+
 
   useEffect(() => {
     const fetchTodos = async () => {
