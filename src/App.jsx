@@ -7,19 +7,45 @@ function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  const addTodo = title => {
-    const newTodo = {
-      title,
-      id:
-        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-          ? crypto.randomUUID()
-          : `${Date.now()}-${Math.random()}`,
-      isCompleted: false,
+  const addTodo = async newTodoTitle => {
+    const payload = {
+      records: [
+        {
+          fields: {
+            title: newTodo.title,
+            isCompleted: newTodo.isCompleted,
+          },
+        },
+      ],
     };
-    setTodoList([...todoList, newTodo]);
+    const options = {
+      method: 'POST',
+      headers: { Authorization: token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    };
+    try {
+      setIsSaving(true);
+      const resp = await fetch(url, options);
+      if (!resp.ok) throw new Error();
+      const { records } = await resp.json();
+
+      const savedTodo = {
+        id: records[0].id,
+        title: newTodoTitle,
+        ...records[0].fields,
+      };
+      if (!records[0].fields.isCompleted) savedTodo.isCompleted = false;
+      setTodoList([...todoList, savedTodo]);
+    } catch (err) {
+      console.error(err.message);
+      setErrorMessage(err.message);
+    } finally {
+      setIsSaving(false);
+    }
   };
   const completeTodo = completedId => {
     const updatedTodoList = todoList.map(todo => {
@@ -62,26 +88,35 @@ function App() {
         setTodoList([...todos]);
       } catch (err) {
         setErrorMessage(err.message);
-      }
-       finally {
+      } finally {
         setIsLoading(false);
-       }
+      }
     };
     fetchTodos();
   }, []);
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
-      <TodoForm onAddTodo={addTodo} />
+      <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
       <TodoList
         onCompleteTodo={completeTodo}
         todoList={todoList}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
       />
-      {
-       errorMessage ? <div><hr/><p>{errorMessage}</p><input type="button" onClick={() => setErrorMessage(undefined)} value="Dismiss"></input></div> : ``
-      }
+      {errorMessage ? (
+        <div>
+          <hr />
+          <p>{errorMessage}</p>
+          <input
+            type="button"
+            onClick={() => setErrorMessage(undefined)}
+            value="Dismiss"
+          ></input>
+        </div>
+      ) : (
+        ``
+      )}
     </div>
   );
 }
