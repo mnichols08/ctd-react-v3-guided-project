@@ -77,6 +77,7 @@ function App() {
         onCompleteTodo={completeTodo}
         todoList={todoList}
         onUpdateTodo={updateTodo}
+        isLoading={isLoading}
       />
     </div>
   );

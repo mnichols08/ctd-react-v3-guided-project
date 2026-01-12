@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Adds environment variable example file for Airtable fields, and attach personal credentials to it.
 - Establishes a transition state by declaring errorMessage and isLoading state variables
-- Adds fetchTodos helper function to read from Airtable database to establish up to the date state 
+- Adds fetchTodos helper function to read from Airtable database to establish up to the date state
+- Passes isLoading into TodoList compoonent and conditionally renders a loading message while async code is running
 ## [0.0.9] - 2026-01-10
 ### Added
 - Implements handleUpdate and handleCancel helper functions to allow users to maniulate state and add, update, cancel updating, or completing todos.
