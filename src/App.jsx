@@ -25,21 +25,26 @@ function App() {
   });
 
   const createRequest = async (method, payload = null) => {
-    const options = {
-      method,
-      headers: method === 'GET' ? { Authorization: token } : headers,
-      ...(payload && { body: JSON.stringify(payload) }),
-    };
+    try {
+      setIsSaving(true);
+      const options = {
+        method,
+        headers: method === 'GET' ? { Authorization: token } : headers,
+        ...(payload && { body: JSON.stringify(payload) }),
+      };
 
-    const resp = await fetch(url, options);
-    if (!resp.ok) throw new Error(`Request failed with status ${resp.status}`);
-    return resp.json();
+      const resp = await fetch(url, options);
+      if (!resp.ok)
+        throw new Error(`Request failed with status ${resp.status}`);
+      return resp.json();
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const addTodo = async newTodoTitle => {
     const payload = createPayload(null, { title: newTodoTitle });
     try {
-      setIsSaving(true);
       const { records } = await createRequest('POST', payload);
 
       const savedTodo = {
@@ -52,8 +57,6 @@ function App() {
     } catch (err) {
       console.error(err.message);
       setErrorMessage(err.message);
-    } finally {
-      setIsSaving(false);
     }
   };
   const completeTodo = async completedId => {
@@ -63,21 +66,19 @@ function App() {
       isCompleted: !originalTodo.isCompleted,
     });
     try {
-      setIsSaving(true);
-      createRequest('PATCH', payload);
+      await createRequest('PATCH', payload);
+      const updatedTodoList = todoList.map(todo => {
+        if (todo.id === completedId) return { ...todo, isCompleted: true };
+        return todo;
+      });
+      setTodoList(updatedTodoList);
     } catch (err) {
       console.error(err.message);
       setErrorMessage(`${err.message}. Reverting todo. `);
-      const revertedTodos = [...todoList, originalTodo];
-      setTodoList([...revertedTodos]);
-    } finally {
-      setIsSaving(false);
+      setTodoList(prev =>
+        prev.map(todo => (todo.id === completedId ? originalTodo : todo))
+      );
     }
-    const updatedTodoList = todoList.map(todo => {
-      if (todo.id === completedId) return { ...todo, isCompleted: true };
-      return todo;
-    });
-    setTodoList(updatedTodoList);
   };
   const updateTodo = async editedTodo => {
     const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
@@ -86,7 +87,6 @@ function App() {
       isCompleted: editedTodo.isCompleted,
     });
     try {
-      setIsSaving(true);
       const { records } = await createRequest('PATCH', payload);
       const updatedTodo = {
         id: records[0].id,
@@ -102,8 +102,6 @@ function App() {
       setErrorMessage(`${err.message}. Reverting todo...`);
       const revertedTodos = [...todoList, originalTodo];
       setTodoList([...revertedTodos]);
-    } finally {
-      setIsSaving(false);
     }
   };
 
