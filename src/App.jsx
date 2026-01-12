@@ -10,6 +10,10 @@ function App() {
   const [isSaving, setIsSaving] = useState(false);
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
+  const headers = {
+    Authorization: token,
+    'Content-Type': 'application/json',
+  };
 
   const addTodo = async newTodoTitle => {
     const payload = {
@@ -23,7 +27,7 @@ function App() {
     };
     const options = {
       method: 'POST',
-      headers: { Authorization: token, 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(payload),
     };
     try {
@@ -62,7 +66,7 @@ function App() {
 
     const options = {
       method: 'PATCH',
-      headers: { Authorization: token, 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(payload),
     };
     try {
@@ -98,7 +102,7 @@ function App() {
     };
     const options = {
       method: 'PATCH',
-      headers: { Authorization: token, 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(payload),
     };
     try {
@@ -111,9 +115,9 @@ function App() {
         ...records[0].fields,
       };
       const updatedTodoList = todoList.map(todo => {
-        if (todo.id === records[0].id) return updatedTodo
+        if (todo.id === records[0].id) return updatedTodo;
         return todo
-      })
+      });
       setTodoList([...updatedTodoList]);
     } catch (err) {
       console.error(err);
@@ -130,7 +134,7 @@ function App() {
       setIsLoading(true);
       const options = {
         method: 'GET',
-        headers: { Authorization: token },
+        headers,
       };
       try {
         const resp = await fetch(url, options);
