@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.11] - 2026-01-12
+
+### Added
+- Migrates lesson and assignment into submodule
+
 ## [0.0.10] - 2026-01-11
 
 ### Added
