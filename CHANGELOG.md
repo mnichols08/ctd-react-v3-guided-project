@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -  -->
 
 ## [0.0.10] - 2026-01-11
+
 ### Added
+
 - Adds environment variable example file for Airtable fields, and attach personal credentials to it.
 - Establishes a transition state by declaring errorMessage and isLoading state variables
 - Adds fetchTodos helper function to read from Airtable database to establish up to the date state
@@ -22,36 +24,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creates a conditional error message paragraph with a dismiss button at the bottom of the page
 - Connects Airtable to Add New Todo functionality, complete with an isSaving state
 - Builds functionality for editing todos with an optimistic UI
+- Finalizes CRU(-D) Operations, adding functionality for completing tasks
 
 ## [0.0.9] - 2026-01-10
+
 ### Added
+
 - Implements handleUpdate and handleCancel helper functions to allow users to maniulate state and add, update, cancel updating, or completing todos.
 - Creates a new submodule for the second assignment
 
 ## [0.0.8] - 2025-12-23
+
 ### Added
+
 - Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
 - Todos can be marked as completed
 - Prevents empty todos from being added by conditionally disabling the add todo button based on length of workingTodoTitle
 
 ### Changed
+
 - Form is converted from a basic form to a controlled component
 
 ## [0.0.7] - 2025-12-23
+
 ### Fixed
+
 - Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
 - Fixes casing typo while linking Stylesheets within TodoList and TodoForm components
 - Passes in a value of null into useRef instead of an empty string
 
 ## [0.0.6] - 2025-12-18
+
 ### Added
+
 - Utilizes new hooks useRef, useState to manage state and allow users to create new Todos
 
 ## [0.0.5] - 2025-12-09
+
 ### Added
+
 - Adds a TodoListItem component and stylesheet that renders a list item, take in properties passed into it.
 
 ### Changed
+
 - Migrates stylesheet for li into new stylesheet for TodoListItem
 - Updates TodoList component to import new TodoListItem component and renders it, passing in the properties of the todos
 
