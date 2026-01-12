@@ -15,6 +15,15 @@ function App() {
     'Content-Type': 'application/json',
   };
 
+  const createPayload = (id, fields) => ({
+    records: [
+      {
+        ...(id && { id }),
+        fields,
+      },
+    ],
+  });
+
   const createOptions = (method, payload) => ({
     method,
     headers,
@@ -22,15 +31,7 @@ function App() {
   });
 
   const addTodo = async newTodoTitle => {
-    const payload = {
-      records: [
-        {
-          fields: {
-            title: newTodoTitle,
-          },
-        },
-      ],
-    };
+    const payload = createPayload(null, { title: newTodoTitle });
     const options = createOptions('POST', payload);
     try {
       setIsSaving(true);
@@ -54,18 +55,10 @@ function App() {
   };
   const completeTodo = async completedId => {
     const originalTodo = todoList.find(todo => todo.id === completedId);
-    const payload = {
-      records: [
-        {
-          id: originalTodo.id,
-          fields: {
-            title: originalTodo.title,
-            isCompleted: !originalTodo.isCompleted,
-          },
-        },
-      ],
-    };
-
+    const payload = createPayload(completedId, {
+      title: originalTodo.title,
+      isCompleted: !originalTodo.isCompleted,
+    });
     const options = createOptions('PATCH', payload);
     try {
       setIsSaving(true);
@@ -87,17 +80,10 @@ function App() {
   };
   const updateTodo = async editedTodo => {
     const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
-    const payload = {
-      records: [
-        {
-          id: editedTodo.id,
-          fields: {
-            title: editedTodo.title,
-            isCompleted: editedTodo.isCompleted,
-          },
-        },
-      ],
-    };
+    const payload = createPayload(editedTodo.id, {
+      title: editedTodo.title,
+      isCompleted: editedTodo.isCompleted,
+    });
     const options = createOptions('PATCH', payload);
     try {
       setIsSaving(true);
