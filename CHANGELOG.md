@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Connects Airtable to Add New Todo functionality, complete with an isSaving state
 - Builds functionality for editing todos with an optimistic UI
 - Finalizes CRU(-D) Operations, adding functionality for completing tasks
+- Minimizes repeated code by creating a headers variable and helper functions
 
 ## [0.0.9] - 2026-01-10
 
