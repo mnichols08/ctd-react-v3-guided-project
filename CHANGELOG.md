@@ -73,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - In App.jsx, moves utility functions createPayload and getErrorMessage outside of App component in order to improve performance
 - Improves error handling by handling catch blocks within createRequest
+- Removes logic to set state pessimisticly and refrains from doing so in each request fuction
 
 ## [0.0.9] - 2026-01-10
 

@@ -84,21 +84,7 @@ function App() {
     ];
     setTodoList(optimisticTodos);
     try {
-      const { records } = await createRequest('POST', payload);
-      const firstRecord = records?.[0];
-      const fields = firstRecord?.fields ?? {};
-
-      if (!firstRecord?.id) throw new Error('No record returned from API');
-
-      const savedTodo = {
-        id: firstRecord.id,
-        title: fields.title ?? newTodoTitle ?? '',
-        isCompleted: fields.isCompleted ?? false,
-      };
-
-      const updatedTodos = [...previousTodos, savedTodo];
-
-      setTodoList(updatedTodos);
+      await createRequest('POST', payload);
     } catch (err) {
       setErrorMessage(getErrorMessage('add', err));
       console.error(getErrorMessage('add', err));
@@ -120,18 +106,12 @@ function App() {
     );
 
     setTodoList(optimisticTodos);
-
     const payload = createPayload(completedId, {
       title: originalTodo.title,
       isCompleted: !originalTodo.isCompleted,
     });
     try {
       await createRequest('PATCH', payload);
-      const updatedTodoList = todoList.map(todo => {
-        if (todo.id === completedId) return { ...todo, isCompleted: true };
-        return todo;
-      });
-      setTodoList(updatedTodoList);
     } catch (err) {
       setErrorMessage(getErrorMessage('complete', err));
       console.error(getErrorMessage('complete', err));
@@ -140,10 +120,11 @@ function App() {
   };
   const updateTodo = async editedTodo => {
     const previousTodos = todoList;
-
-    setTodoList(prev =>
-      prev.map(todo => (todo.id === editedTodo.id ? editedTodo : todo))
+    const optimisticTodos = previousTodos.map(todo =>
+      todo.id === editedTodo.id ? editedTodo : todo
     );
+
+    setTodoList(optimisticTodos);
 
     const payload = createPayload(editedTodo.id, {
       title: editedTodo.title,
@@ -151,18 +132,7 @@ function App() {
     });
 
     try {
-      const { records } = await createRequest('PATCH', payload);
-
-      const airtableFields = records?.[0]?.fields ?? {};
-
-      const updatedTodo = {
-        id: records[0].id,
-        title: airtableFields.title ?? editedTodo.title,
-        isCompleted: airtableFields.isCompleted ?? editedTodo.isCompleted,
-      };
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo))
-      );
+      await createRequest('PATCH', payload);
     } catch (err) {
       setErrorMessage(getErrorMessage('update', err));
       console.error(getErrorMessage('update', err));
