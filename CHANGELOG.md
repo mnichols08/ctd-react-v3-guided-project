@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Migrates lesson and assignment into submodule
+- Applies styles akin to rest of app for the error message button
 
 ## [0.0.10] - 2026-01-11
 
