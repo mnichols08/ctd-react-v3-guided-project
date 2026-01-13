@@ -107,14 +107,12 @@ function App() {
       console.warn(`Todo with id ${completedId} not found`);
       return;
     }
-    const optimisticTodos = [
-      ...previousTodos,
-      {
-        id: completedId,
-        title: originalTodo.title,
-        isCompleted: !originalTodo.isCompleted,
-      },
-    ];
+    const optimisticTodos = previousTodos.map(todo =>
+      todo.id === completedId
+        ? { ...todo, isCompleted: !todo.isCompleted }
+        : todo
+    );
+
     setTodoList(optimisticTodos);
 
     const payload = createPayload(completedId, {
