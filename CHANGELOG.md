@@ -61,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrects CSS to reflect submit button after changing jsx for semantics within TodoListItem component
 - Setting errorMessage to undefined is inconsistent with its initial state of empty string. Using empty string '' for consistency.
 - Empty template literal is unnecessary. Changes ternary to an AND evaluation
-- Corrects the application to be have a truly "optmisitc" UI by prematurely updating the state before communicating with the server.
+- Corrects the application to be have a truly "optimistic" UI by prematurely updating the state before communicating with the server.
 - Remove unnecessary spread operator in fetchTodos
 - Corrects how errors are being logged
 - Improves performance by declaring url, headers, and token at the top level
