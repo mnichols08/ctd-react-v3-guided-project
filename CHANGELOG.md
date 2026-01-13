@@ -64,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrects the application to be have a truly "optmisitc" UI by prematurely updating the state before communicating with the server.
 - Remove unnecessary spread operator in fetchTodos
 - Corrects how errors are being logged
+- Improves performance by declaring url, headers, and token at the top level
+
 ### Changed
 
 - In App.jsx, moves utility functions createPayload and getErrorMessage outside of App component in order to improve performance

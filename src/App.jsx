@@ -1,7 +1,15 @@
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
+
+const BASE_URL = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
+
+const DEFAULT_HEADERS = {
+  Authorization: AUTH_TOKEN,
+  'Content-Type': 'application/json',
+};
 
 const createPayload = (id, fields) => ({
   records: [
@@ -32,15 +40,6 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
-  const token = `Bearer ${import.meta.env.VITE_PAT}`;
-  const headers = useMemo(
-    () => ({
-      Authorization: token,
-      'Content-Type': 'application/json',
-    }),
-    [token]
-  );
 
   const createRequest = useCallback(
     async (method, payload = null) => {
@@ -48,11 +47,11 @@ function App() {
         setIsSaving(true);
         const options = {
           method,
-          headers: method === 'GET' ? { Authorization: token } : headers,
+          headers: method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
           ...(payload && { body: JSON.stringify(payload) }),
         };
 
-        const resp = await fetch(url, options);
+        const resp = await fetch(BASE_URL, options);
         if (!resp.ok)
           throw new Error(`Request failed with status ${resp.status}`);
         return resp.json();
@@ -60,7 +59,7 @@ function App() {
         setIsSaving(false);
       }
     },
-    [url, headers, token]
+    []
   );
 
   const addTodo = async newTodoTitle => {
