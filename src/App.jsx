@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
@@ -34,10 +34,13 @@ function App() {
   const [isSaving, setIsSaving] = useState(false);
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
-  const headers = {
-    Authorization: token,
-    'Content-Type': 'application/json',
-  };
+  const headers = useMemo(
+    () => ({
+      Authorization: token,
+      'Content-Type': 'application/json',
+    }),
+    [token]
+  );
 
   const createRequest = useCallback(
     async (method, payload = null) => {

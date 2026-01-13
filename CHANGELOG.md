@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.11] - 2026-01-12
 
 ### Added
+
 - Migrates lesson and assignment into submodule
 - Applies styles akin to rest of app for the error message button
 - Creates an encodeUrl utility function and uses within createRequest to maintain consistent sorting direction and sorted by fields
@@ -26,9 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - The second for picking whether to sort ascending or descending
 - Imports TodosViewForm into app and places it underneath the TodoList component
 - Passes properties of sortField, setSortField, sortDirection, setSortDirection into TodosViewForm from app
-- Destructures `sortDirection`, `setSortDirection`, `sortField`, and `setSortField` out of the component's props. 
+- Destructures `sortDirection`, `setSortDirection`, `sortField`, and `setSortField` out of the component's props.
 
 ### Changed
+
 - Restructures JSX for TodosViewForm to wrap form in a class of todos-view-form to prevent styles from leaking and adds a divider
 
 ## [0.0.10] - 2026-01-11
@@ -50,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactors code for each request helper to change state with failsafes
 - Restyles TodoListItem so that user cannot accidently complete task by clicking on the label (which used to wrap entire list item)
 - Imports useCallback to optimize createPayload in order to reduce unnecessary rerenders.
+- Stabilizes headers variable by importing and utilizing useMemo
 
 ### Fixed
 
