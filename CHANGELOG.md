@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Applies styles akin to rest of app for the error message button
 - Creates an encodeUrl utility function and uses within createRequest to maintain consistent sorting direction and sorted by fields
 - Builds a new TodosViewForm for changing the sort parameters that:
+  - Has two labels, one for sort-by and another for direction.
+    - Each one has associated select inputs
+      - The first one with options for sorting by Title, or Time Created
+      - The second for picking whether to sort ascending or descending
 
 ## [0.0.10] - 2026-01-11
 
