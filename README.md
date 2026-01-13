@@ -1,16 +1,53 @@
-# React + Vite
+# Simple React Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A basic todo list application built with React and Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+To be determined
 
-## React Compiler
+## Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Follow these instructions to get the project up and running on your local machine.
+
+### Prerequisites
+
+Make sure you have Node.js and npm installed.
+
+- Node.js ^20.19.0 or >=22.12.0
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+   git clone https://github.com/mnichols08/ctd-react-v3-guided-project.git
+   cd ctd-react-v3-guided-project
+```
+
+2. Install dependencies:
+
+```bash
+   npm install
+```
+
+### Running the Development Server
+
+Start the development server with:
+
+```bash
+npm run dev
+```
+
+The application will open in your browser at `http://localhost:5173` (or another port if 5173 is already in use).
+
+## Available Scripts
+
+- `npm run dev` - Starts the development server
+- `npm run build` - Builds the app for production
+- `npm run preview` - Preview the production build locally
