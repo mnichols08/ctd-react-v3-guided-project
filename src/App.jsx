@@ -116,7 +116,7 @@ function App() {
     setTodoList(optimisticTodos);
 
     const payload = createPayload(completedId, {
-      title: originalTodo?.title,
+      title: originalTodo.title,
       isCompleted: !originalTodo.isCompleted,
     });
     try {
