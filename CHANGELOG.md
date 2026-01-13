@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - In App.jsx, corrects `errMessage` typo as `errorMessage`, displaying the correct message within fetchTodos, addTodos and completeTodo functions
+- Fixes css typo after changing jsx for semantics within TodoListItem component
 
 ## [0.0.9] - 2026-01-10
 

@@ -48,7 +48,7 @@
   font-size: 1rem;
 }
 
-.todo-list input[type='button'] {
+.todo-list input[type='submit'], .todo-list input[type='button'] {
   padding: 0.4rem 0.75rem;
   border-radius: 4px;
   border: 1px solid var(--border);
@@ -57,7 +57,7 @@
   font-size: 0.9rem;
 }
 
-.todo-list input[type='button']:hover {
+.todo-list input[type='submit']:hover {
   background: var(--accent);
   color: white;
   border-color: var(--accent);
