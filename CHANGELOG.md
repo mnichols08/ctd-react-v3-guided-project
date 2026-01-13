@@ -15,11 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.9] - 2026-01-10
 ### Added
-- Implements handleUpdate and handleCancel helper functions to allow users to maniulate state and add, update, cancel updating, or completing todos.
+- Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
 - Creates a new submodule for the second assignment
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
 - Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
+- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
 
 ## [0.0.8] - 2025-12-23
 ### Added
