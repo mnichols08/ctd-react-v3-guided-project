@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.11] - 2026-01-12
+
+### Added
+- Migrates lesson and assignment into submodule
+- Applies styles akin to rest of app for the error message button
+- Creates an encodeUrl utility function and uses within createRequest to maintain consistent sorting direction and sorted by fields
+- Builds a new TodosViewForm for changing the sort parameters that:
+  - Has two labels, one for sort-by and another for direction.
+    - Each one has associated select inputs
+      - The first one with options for sorting by Title, or Time Created
+      - The second for picking whether to sort ascending or descending
+- Imports TodosViewForm into app and places it underneath the TodoList component
+- Passes properties of sortField, setSortField, sortDirection, setSortDirection into TodosViewForm from app
+- Destructures `sortDirection`, `setSortDirection`, `sortField`, and `setSortField` out of the component's props. 
+
+### Changed
+- Restructures JSX for TodosViewForm to wrap form in a class of todos-view-form to prevent styles from leaking and adds a divider
+
 ## [0.0.10] - 2026-01-11
 
 ### Added
@@ -38,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrects CSS to reflect submit button after changing jsx for semantics within TodoListItem component
 - Setting errorMessage to undefined is inconsistent with its initial state of empty string. Using empty string '' for consistency.
 - Empty template literal is unnecessary. Changes ternary to an AND evaluation
+- Corrects the application to be have a truly "optmisitc" UI by prematurely updating the state before communicating with the server.
 
 ## [0.0.9] - 2026-01-10
 

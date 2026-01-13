@@ -58,8 +58,22 @@ function App() {
     return messages[action] || 'Something went wrong. Please try again.';
   };
   const addTodo = async newTodoTitle => {
+    const previousTodos = todoList;
     const payload = createPayload(null, { title: newTodoTitle });
 
+    const optimisticTodos = [
+      ...previousTodos,
+      {
+        id:
+          typeof crypto !== 'undefined' &&
+          typeof crypto.randomUUID === 'function'
+            ? crypto.randomUUID()
+            : `${Date.now()}-${Math.random()}`,
+        title: newTodoTitle,
+        isCompleted: false,
+      },
+    ];
+    setTodoList(optimisticTodos);
     try {
       const { records } = await createRequest('POST', payload);
       const fields = records?.[0]?.fields ?? {};
@@ -70,15 +84,30 @@ function App() {
         isCompleted: fields.isCompleted ?? false,
       };
 
-      setTodoList(prev => [...prev, savedTodo]);
+      const updatedTodos = [...previousTodos, savedTodo];
+
+      setTodoList(updatedTodos);
     } catch (err) {
       setErrorMessage(getErrorMessage('add', err));
       console.error(errorMessage);
+      setTodoList(previousTodos);
     }
   };
 
   const completeTodo = async completedId => {
+    const previousTodos = todoList;
     const originalTodo = todoList.find(todo => todo.id === completedId);
+
+    const optimisticTodos = [
+      ...previousTodos,
+      {
+        id: completedId,
+        title: originalTodo.title,
+        isCompleted: !originalTodo.isCompleted,
+      },
+    ];
+    setTodoList(optimisticTodos);
+
     const payload = createPayload(completedId, {
       title: originalTodo.title,
       isCompleted: !originalTodo.isCompleted,
@@ -93,13 +122,15 @@ function App() {
     } catch (err) {
       setErrorMessage(getErrorMessage('complete', err));
       console.error(errorMessage);
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === completedId ? originalTodo : todo))
-      );
+      setTodoList(previousTodos);
     }
   };
   const updateTodo = async editedTodo => {
-    const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
+    const previousTodos = todoList;
+
+    setTodoList(prev =>
+      prev.map(todo => (todo.id === editedTodo.id ? editedTodo : todo))
+    );
 
     const payload = createPayload(editedTodo.id, {
       title: editedTodo.title,
@@ -113,11 +144,9 @@ function App() {
 
       const updatedTodo = {
         id: records[0].id,
-        title: airtableFields.title ?? originalTodo.title ?? '',
-        isCompleted:
-          airtableFields.isCompleted ?? originalTodo.isCompleted ?? false,
+        title: airtableFields.title ?? editedTodo.title,
+        isCompleted: airtableFields.isCompleted ?? editedTodo.isCompleted,
       };
-
       setTodoList(prev =>
         prev.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo))
       );
@@ -125,9 +154,7 @@ function App() {
       setErrorMessage(getErrorMessage('edit', err));
       console.error(errorMessage);
 
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === originalTodo.id ? originalTodo : todo))
-      );
+      setTodoList(previousTodos);
     }
   };
 
