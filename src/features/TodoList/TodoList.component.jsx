@@ -1,8 +1,8 @@
 import './TodoList.styles.css';
-import TodoListItem from '../TodoListItem/TodoListItem.component';
+import TodoListItem from '../../features/TodoListItem/TodoListItem.component';
 
-function TodoList({ todoList, onCompleteTodo }) {
-  const filteredTodoList = todoList.filter(todo => !todo.isCompleted)
+function TodoList({ todoList, onCompleteTodo, onUpdateTodo }) {
+  const filteredTodoList = todoList.filter(todo => !todo.isCompleted);
   return (
     <ul className="todo-list">
       {filteredTodoList.length < 1 ? (
@@ -13,6 +13,7 @@ function TodoList({ todoList, onCompleteTodo }) {
             key={todo.id}
             todo={todo}
             onCompleteTodo={onCompleteTodo}
+            onUpdateTodo={onUpdateTodo}
           />
         ))
       )}
