@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactors code for each request helper to change state with failsafes
 - Restyles TodoListItem so that user cannot accidently complete task by clicking on the label (which used to wrap entire list item)
 
+### Fixed
+
+- In App.jsx, corrects `errMessage` typo as `errorMessage`, displaying the correct message within fetchTodos, addTodos and completeTodo functions
+
 ## [0.0.9] - 2026-01-10
 
 ### Added
