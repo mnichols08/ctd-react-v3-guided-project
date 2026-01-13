@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creates a new submodule for the second assignment
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
+- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
 
 ## [0.0.8] - 2025-12-23
 ### Added
