@@ -16,7 +16,6 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     onUpdateTodo({
       ...todo,
       title: workingTitle,
-      id: todo.id
     });
     setIsEditing(false);
   };
