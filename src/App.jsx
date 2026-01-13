@@ -3,6 +3,30 @@ import { useState, useEffect } from 'react';
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
 
+const createPayload = (id, fields) => ({
+  records: [
+    {
+      ...(id && { id }),
+      fields,
+    },
+  ],
+});
+
+const getErrorMessage = (action, error) => {
+  if (error.message.includes('fetch') || error.message.includes('network')) {
+    return 'Unable to connect to database. Please check your internet connection.';
+  }
+
+  const messages = {
+    add: "We couldn't save your todo. Please try again.",
+    update: "We couldn't update that todo. We've restored it to how it was.",
+    complete: "Couldn't mark that as complete. Please try again.",
+    fetch: "We're having trouble loading your todos. Please refresh the page.",
+  };
+
+  return messages[action] || 'Something went wrong. Please try again.';
+};
+
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -14,15 +38,6 @@ function App() {
     Authorization: token,
     'Content-Type': 'application/json',
   };
-
-  const createPayload = (id, fields) => ({
-    records: [
-      {
-        ...(id && { id }),
-        fields,
-      },
-    ],
-  });
 
   const createRequest = async (method, payload = null) => {
     try {
@@ -42,21 +57,6 @@ function App() {
     }
   };
 
-  const getErrorMessage = (action, error) => {
-    if (error.message.includes('fetch') || error.message.includes('network')) {
-      return 'Unable to connect to database. Please check your internet connection.';
-    }
-
-    const messages = {
-      add: "We couldn't save your todo. Please try again.",
-      update: "We couldn't update that todo. We've restored it to how it was.",
-      complete: "Couldn't mark that as complete. Please try again.",
-      fetch:
-        "We're having trouble loading your todos. Please refresh the page.",
-    };
-
-    return messages[action] || 'Something went wrong. Please try again.';
-  };
   const addTodo = async newTodoTitle => {
     const previousTodos = todoList;
     const payload = createPayload(null, { title: newTodoTitle });

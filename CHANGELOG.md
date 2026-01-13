@@ -58,6 +58,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Empty template literal is unnecessary. Changes ternary to an AND evaluation
 - Corrects the application to be have a truly "optmisitc" UI by prematurely updating the state before communicating with the server.
 
+### Changed
+
+- In App.jsx, moves utility functions createPayload and getErrorMessage outside of App component in order to improve performance
+
 ## [0.0.9] - 2026-01-10
 
 ### Added
