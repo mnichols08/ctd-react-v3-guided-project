@@ -21,9 +21,9 @@ const createPayload = (id, fields) => ({
 });
 
 const getErrorMessage = (action, error) => {
-  if (error.message.includes('fetch') || error.message.includes('network')) {
+  if (error.code === 'NETWORK_ERROR')
     return 'Unable to connect to database. Please check your internet connection.';
-  }
+  if (error.status >= 500) return 'Server error. Please try again later.';
 
   const messages = {
     add: "We couldn't save your todo. Please try again.",
@@ -41,26 +41,30 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const createRequest = useCallback(
-    async (method, payload = null) => {
-      try {
-        setIsSaving(true);
-        const options = {
-          method,
-          headers: method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
-          ...(payload && { body: JSON.stringify(payload) }),
-        };
+  const createRequest = useCallback(async (method, payload = null) => {
+    try {
+      setIsSaving(true);
+      const options = {
+        method,
+        headers:
+          method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
+        ...(payload && { body: JSON.stringify(payload) }),
+      };
 
-        const resp = await fetch(BASE_URL, options);
-        if (!resp.ok)
-          throw new Error(`Request failed with status ${resp.status}`);
-        return resp.json();
-      } finally {
-        setIsSaving(false);
+      const resp = await fetch(BASE_URL, options);
+      if (!resp.ok) {
+        const error = new Error('HTTP_ERROR');
+        error.status = resp.status;
+        throw error;
       }
-    },
-    []
-  );
+      return resp.json();
+    } catch (err) {
+      if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
+      throw err;
+    } finally {
+      setIsSaving(false);
+    }
+  }, []);
 
   const addTodo = async newTodoTitle => {
     const previousTodos = todoList;
