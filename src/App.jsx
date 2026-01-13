@@ -43,38 +43,39 @@ function App() {
   };
 
   const getErrorMessage = (action, error) => {
-  if (error.message.includes('fetch') || error.message.includes('network')) {
-    return "Unable to connect to database. Please check your internet connection.";
-  }
-  
-  const messages = {
-    add: "We couldn't save your todo. Please try again.",
-    update: "We couldn't update that todo. We've restored it to how it was.",
-    complete: "Couldn't mark that as complete. Please try again.",
-    fetch: "We're having trouble loading your todos. Please refresh the page.",
-  };
-  
-  return messages[action] || "Something went wrong. Please try again.";
-};
-const addTodo = async newTodoTitle => {
-  const payload = createPayload(null, { title: newTodoTitle });
+    if (error.message.includes('fetch') || error.message.includes('network')) {
+      return 'Unable to connect to database. Please check your internet connection.';
+    }
 
-  try {
-    const { records } = await createRequest('POST', payload);
-    const fields = records?.[0]?.fields ?? {};
-
-    const savedTodo = {
-      id: records[0].id,
-      title: fields.title ?? newTodoTitle ?? '',
-      isCompleted: fields.isCompleted ?? false,
+    const messages = {
+      add: "We couldn't save your todo. Please try again.",
+      update: "We couldn't update that todo. We've restored it to how it was.",
+      complete: "Couldn't mark that as complete. Please try again.",
+      fetch:
+        "We're having trouble loading your todos. Please refresh the page.",
     };
 
-    setTodoList(prev => [...prev, savedTodo]);
-  } catch (err) {
-    setErrorMessage(getErrorMessage('add', err));
-    console.error(err);
-  }
-};
+    return messages[action] || 'Something went wrong. Please try again.';
+  };
+  const addTodo = async newTodoTitle => {
+    const payload = createPayload(null, { title: newTodoTitle });
+
+    try {
+      const { records } = await createRequest('POST', payload);
+      const fields = records?.[0]?.fields ?? {};
+
+      const savedTodo = {
+        id: records[0].id,
+        title: fields.title ?? newTodoTitle ?? '',
+        isCompleted: fields.isCompleted ?? false,
+      };
+
+      setTodoList(prev => [...prev, savedTodo]);
+    } catch (err) {
+      setErrorMessage(getErrorMessage('add', err));
+      console.error(errorMessage);
+    }
+  };
 
   const completeTodo = async completedId => {
     const originalTodo = todoList.find(todo => todo.id === completedId);
@@ -90,50 +91,45 @@ const addTodo = async newTodoTitle => {
       });
       setTodoList(updatedTodoList);
     } catch (err) {
-      setErrorMessage(getErrorMessage('complete', err))
-      console.error(errMessage);
+      setErrorMessage(getErrorMessage('complete', err));
+      console.error(errorMessage);
       setTodoList(prev =>
         prev.map(todo => (todo.id === completedId ? originalTodo : todo))
       );
     }
   };
-const updateTodo = async editedTodo => {
-  const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
+  const updateTodo = async editedTodo => {
+    const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
 
-  const payload = createPayload(editedTodo.id, {
-    title: editedTodo.title,
-    isCompleted: editedTodo.isCompleted,
-  });
+    const payload = createPayload(editedTodo.id, {
+      title: editedTodo.title,
+      isCompleted: editedTodo.isCompleted,
+    });
 
-  try {
-    const { records } = await createRequest('PATCH', payload);
+    try {
+      const { records } = await createRequest('PATCH', payload);
 
-    const airtableFields = records?.[0]?.fields ?? {};
+      const airtableFields = records?.[0]?.fields ?? {};
 
-    const updatedTodo = {
-      id: records[0].id,
-      title: airtableFields.title ?? originalTodo.title ?? '',
-      isCompleted:
-        airtableFields.isCompleted ?? originalTodo.isCompleted ?? false,
-    };
+      const updatedTodo = {
+        id: records[0].id,
+        title: airtableFields.title ?? originalTodo.title ?? '',
+        isCompleted:
+          airtableFields.isCompleted ?? originalTodo.isCompleted ?? false,
+      };
 
-    setTodoList(prev =>
-      prev.map(todo =>
-        todo.id === updatedTodo.id ? updatedTodo : todo
-      )
-    );
-  } catch (err) {
-    setErrorMessage(getErrorMessage('edit', err));
-    console.error(err);
+      setTodoList(prev =>
+        prev.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo))
+      );
+    } catch (err) {
+      setErrorMessage(getErrorMessage('edit', err));
+      console.error(errorMessage);
 
-    setTodoList(prev =>
-      prev.map(todo =>
-        todo.id === originalTodo.id ? originalTodo : todo
-      )
-    );
-  }
-};
-
+      setTodoList(prev =>
+        prev.map(todo => (todo.id === originalTodo.id ? originalTodo : todo))
+      );
+    }
+  };
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -152,8 +148,8 @@ const updateTodo = async editedTodo => {
         });
         setTodoList([...todos]);
       } catch (err) {
-        setErrorMessage(getErrorMessage('fetch', err))
-      console.error(errMessage);
+        setErrorMessage(getErrorMessage('fetch', err));
+        console.error(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -170,18 +166,16 @@ const updateTodo = async editedTodo => {
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
       />
-      {errorMessage ? (
+      {errorMessage && (
         <div>
           <hr />
           <p>{errorMessage}</p>
           <input
             type="button"
-            onClick={() => setErrorMessage(undefined)}
+            onClick={() => setErrorMessage('')}
             value="Dismiss"
           ></input>
         </div>
-      ) : (
-        ``
       )}
     </div>
   );
