@@ -68,6 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevents potential null reference error by declaring a firstRecord variable and throwing an error if not found
 - Removes stray '75' string from TodoListItem component
 - Corrects a typo for updateTodo error message
+- Prevent potential stale closure issues by adding createRequest to the dependency array of the useEffect that calls fetchTodos.
 
 ### Changed
 

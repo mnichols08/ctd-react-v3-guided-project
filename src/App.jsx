@@ -165,7 +165,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, []);
+  }, [createRequest]);
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
