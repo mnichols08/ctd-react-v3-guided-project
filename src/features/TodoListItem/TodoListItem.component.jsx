@@ -28,8 +28,8 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
             value={workingTitle}
             onChange={e => handleEdit(e)}
           />
-          <input onClick={e => handleCancel(e)} type="button" value="Cancel" />
-          <input onClick={e => handleUpdate(e)} type="button" value="Update" />
+          <input onClick={handleCancel} type="button" value="Cancel" />
+          <input onClick={handleUpdate} type="button" value="Update" />
         </>
       ) : (
         <li>
