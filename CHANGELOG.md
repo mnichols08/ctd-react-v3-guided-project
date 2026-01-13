@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.3.0] - 2025-01-13
+## Changed
+- Bumps week 04 basic hooks minor version to 0.3.0
+
 ## [0.0.7] - 2025-12-23
 ### Fixed
 - Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
