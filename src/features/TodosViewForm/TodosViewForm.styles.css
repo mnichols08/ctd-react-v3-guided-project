@@ -1,3 +1,67 @@
-form .form-controls {
-    display: flex;
+.todos-view-form {
+  margin-bottom: 1.5rem;
+}
+
+.todos-view-form .form-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.todos-view-form .form-controls:hover,
+.todos-view-form .form-controls:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.todos-view-form label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.todos-view-form select {
+  background-color: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.todos-view-form select:hover {
+  border-color: var(--accent);
+}
+
+.todos-view-form select:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.todos-view-form .divider {
+  width: 1px;
+  height: 1.75rem;
+  background: var(--border);
+}
+
+@media (max-width: 600px) {
+  .todos-view-form .form-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .todos-view-form .divider {
+    display: none;
+  }
 }
