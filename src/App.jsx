@@ -172,7 +172,7 @@ function App() {
           <p>{errorMessage}</p>
           <input
             type="button"
-            onClick={() => setErrorMessage(undefined)}
+            onClick={() => setErrorMessage('')}
             value="Dismiss"
           ></input>
         </div>
