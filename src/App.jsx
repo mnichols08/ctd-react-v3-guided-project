@@ -164,8 +164,8 @@ function App() {
         prev.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo))
       );
     } catch (err) {
-      setErrorMessage(getErrorMessage('edit', err));
-      console.error(getErrorMessage('edit', err));
+      setErrorMessage(getErrorMessage('update', err));
+      console.error(getErrorMessage('update', err));
 
       setTodoList(previousTodos);
     }
