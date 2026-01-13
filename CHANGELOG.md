@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Each one has associated select inputs
       - The first one with options for sorting by Title, or Time Created
       - The second for picking whether to sort ascending or descending
+- Imports TodosViewForm into app and places it underneath the TodoList component
 
 ## [0.0.10] - 2026-01-11
 

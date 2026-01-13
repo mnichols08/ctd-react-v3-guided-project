@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
+import TodosViewForm from './features/TodosViewForm/TodosViewForm.component';
 
 const encodeUrl = ({ sortField, sortDirection }) => {
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
@@ -177,6 +178,8 @@ function App() {
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
       />
+      <hr />
+      <TodosViewForm />
       {errorMessage && (
         <div className="error-message">
           <hr />
