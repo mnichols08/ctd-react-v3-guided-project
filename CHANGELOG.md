@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.4.0] - 2025-01-13
+- Bumps week 05 conditional rendering to minor version v0.4.0
+
+## [0.3.0] - 2025-01-13
+## Changed
+- Bumps week 04 basic hooks minor version to v0.3.0
+
 ## [0.0.9] - 2026-01-10
 ### Added
 - Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
