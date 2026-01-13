@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In App.jsx, corrects `errMessage` typo as `errorMessage`, displaying the correct message within fetchTodos, addTodos and completeTodo functions
 - Corrects CSS to reflect submit button after changing jsx for semantics within TodoListItem component
 - Setting errorMessage to undefined is inconsistent with its initial state of empty string. Using empty string '' for consistency.
+- Empty template literal is unnecessary. Changes ternary to an AND evaluation
 
 ## [0.0.9] - 2026-01-10
 
@@ -47,11 +48,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
 - Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
 
-### Removed 
+### Removed
+
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
 
 ### Changed
+
 - Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
 - Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
 

@@ -166,7 +166,7 @@ function App() {
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
       />
-      {errorMessage ? (
+      {errorMessage && (
         <div>
           <hr />
           <p>{errorMessage}</p>
@@ -176,8 +176,6 @@ function App() {
             value="Dismiss"
           ></input>
         </div>
-      ) : (
-        ``
       )}
     </div>
   );
