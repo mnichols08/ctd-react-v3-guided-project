@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
@@ -39,23 +39,26 @@ function App() {
     'Content-Type': 'application/json',
   };
 
-  const createRequest = async (method, payload = null) => {
-    try {
-      setIsSaving(true);
-      const options = {
-        method,
-        headers: method === 'GET' ? { Authorization: token } : headers,
-        ...(payload && { body: JSON.stringify(payload) }),
-      };
+  const createRequest = useCallback(
+    async (method, payload = null) => {
+      try {
+        setIsSaving(true);
+        const options = {
+          method,
+          headers: method === 'GET' ? { Authorization: token } : headers,
+          ...(payload && { body: JSON.stringify(payload) }),
+        };
 
-      const resp = await fetch(url, options);
-      if (!resp.ok)
-        throw new Error(`Request failed with status ${resp.status}`);
-      return resp.json();
-    } finally {
-      setIsSaving(false);
-    }
-  };
+        const resp = await fetch(url, options);
+        if (!resp.ok)
+          throw new Error(`Request failed with status ${resp.status}`);
+        return resp.json();
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [url, headers, token]
+  );
 
   const addTodo = async newTodoTitle => {
     const previousTodos = todoList;
