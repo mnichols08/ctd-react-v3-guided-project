@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.3.0] - 2025-01-13
+## Changed
+- Bumps week 04 basic hooks minor version to 0.3.0
+
 ## [0.0.8] - 2025-12-23
 ### Added
 - Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
