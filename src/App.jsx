@@ -3,13 +3,21 @@ import { useState, useEffect } from 'react';
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
 
+const encodeUrl = ({ sortField, sortDirection }) => {
+  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+  return encodeURI(`${url}?${sortQuery}`);
+};
+
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  const [sortField, setSortField] = useState('createdTime');
+  const [sortDirection, setSortDirection] = useState('desc');
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
+
   const headers = {
     Authorization: token,
     'Content-Type': 'application/json',
@@ -33,7 +41,10 @@ function App() {
         ...(payload && { body: JSON.stringify(payload) }),
       };
 
-      const resp = await fetch(url, options);
+      const resp = await fetch(
+        encodeUrl({ sortField, sortDirection }),
+        options
+      );
       if (!resp.ok)
         throw new Error(`Request failed with status ${resp.status}`);
       return resp.json();
@@ -155,7 +166,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, []);
+  }, [sortDirection, sortField]);
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
@@ -167,7 +178,7 @@ function App() {
         isLoading={isLoading}
       />
       {errorMessage && (
-        <div>
+        <div className="error-message">
           <hr />
           <p>{errorMessage}</p>
           <input
