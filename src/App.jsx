@@ -95,7 +95,7 @@ function App() {
       setTodoList(updatedTodos);
     } catch (err) {
       setErrorMessage(getErrorMessage('add', err));
-      console.error(errorMessage);
+      console.error(getErrorMessage('add', err));
       setTodoList(previousTodos);
     }
   };
@@ -128,7 +128,7 @@ function App() {
       setTodoList(updatedTodoList);
     } catch (err) {
       setErrorMessage(getErrorMessage('complete', err));
-      console.error(errorMessage);
+      console.error(getErrorMessage('complete', err));
       setTodoList(previousTodos);
     }
   };
@@ -159,7 +159,7 @@ function App() {
       );
     } catch (err) {
       setErrorMessage(getErrorMessage('edit', err));
-      console.error(errorMessage);
+      console.error(getErrorMessage('edit', err));
 
       setTodoList(previousTodos);
     }
@@ -180,10 +180,10 @@ function App() {
           }
           return todo;
         });
-        setTodoList([...todos]);
+        setTodoList(todos);
       } catch (err) {
         setErrorMessage(getErrorMessage('fetch', err));
-        console.error(errorMessage);
+        console.error(getErrorMessage('fetch', err));
       } finally {
         setIsLoading(false);
       }

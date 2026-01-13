@@ -62,7 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setting errorMessage to undefined is inconsistent with its initial state of empty string. Using empty string '' for consistency.
 - Empty template literal is unnecessary. Changes ternary to an AND evaluation
 - Corrects the application to be have a truly "optmisitc" UI by prematurely updating the state before communicating with the server.
-
+- Remove unnecessary spread operator in fetchTodos
+- Corrects how errors are being logged
 ### Changed
 
 - In App.jsx, moves utility functions createPayload and getErrorMessage outside of App component in order to improve performance
