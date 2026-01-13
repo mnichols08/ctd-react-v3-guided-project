@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 import './TodoForm.styles.css';
 
-function TodoForm({ onAddTodo }) {
+function TodoForm({ onAddTodo, isSaving }) {
   const todoTitleInput = useRef(null);
   const [workingTodoTitle, setWorkingTodoTitle] = useState('');
   const handleAddTodo = event => {
@@ -13,11 +13,15 @@ function TodoForm({ onAddTodo }) {
   };
   return (
     <form className="todo-form" onSubmit={handleAddTodo}>
-      <TextInputWithLabel ref={todoTitleInput}
+      <TextInputWithLabel
+        ref={todoTitleInput}
         value={workingTodoTitle}
-        onChange={e => setWorkingTodoTitle(e.target.value)} elementId={'id'} labelText="Todo" />
-      <button disabled={workingTodoTitle.length < 1 ? true : false}>
-        Add Todo
+        onChange={e => setWorkingTodoTitle(e.target.value)}
+        elementId={'id'}
+        labelText="Todo"
+      />
+      <button disabled={workingTodoTitle.length < 1 || isSaving ? true : false}>
+        {isSaving ? `Saving...` : `Add Todo`}
       </button>
     </form>
   );

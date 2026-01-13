@@ -13,15 +13,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.0.10] - 2026-01-11
+### Added
+- Adds environment variable example file for Airtable fields, and attach personal credentials to it.
+- Establishes a transition state by declaring errorMessage and isLoading state variables
+- Adds fetchTodos helper function to read from Airtable database to establish up to the date state
+- Passes isLoading into TodoList compoonent and conditionally renders a loading message while async code is running
+- Creates a conditional error message paragraph with a dismiss button at the bottom of the page
+- Connects Airtable to Add New Todo functionality, complete with an isSaving state
+- Builds functionality for editing todos with an optimistic UI
+
 ## [0.0.9] - 2026-01-10
 ### Added
 - Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
 - Creates a new submodule for the second assignment
+- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
+- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
+
+### Removed 
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
+
+### Changed
 - Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
-- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
+- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
 
 ## [0.0.8] - 2025-12-23
 ### Added
@@ -49,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Migrates stylesheet for li into new stylesheet for TodoListItem
 - Updates TodoList component to import new TodoListItem component and renders it, passing in the properties of the todos
+
+## [0.0.4] - 2025-11-22
 
 ### Fixed
 
