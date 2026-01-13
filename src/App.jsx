@@ -85,10 +85,13 @@ function App() {
     setTodoList(optimisticTodos);
     try {
       const { records } = await createRequest('POST', payload);
-      const fields = records?.[0]?.fields ?? {};
+      const firstRecord = records?.[0];
+      const fields = firstRecord?.fields ?? {};
+
+      if (!firstRecord?.id) throw new Error('No record returned from API');
 
       const savedTodo = {
-        id: records[0].id,
+        id: firstRecord.id,
         title: fields.title ?? newTodoTitle ?? '',
         isCompleted: fields.isCompleted ?? false,
       };

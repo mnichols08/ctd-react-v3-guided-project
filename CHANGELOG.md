@@ -65,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove unnecessary spread operator in fetchTodos
 - Corrects how errors are being logged
 - Improves performance by declaring url, headers, and token at the top level
+- Prevents potential null reference error by declaring a firstRecord variable and throwing an error if not found
 
 ### Changed
 
