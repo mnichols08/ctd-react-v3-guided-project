@@ -13,7 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.1.0] - 2025-01-13
+
+### Changed
+- Updates week 02 code to a minor patch 0.1.0
+
 ## [0.0.8] - 2025-12-23
+
 ### Added
 - Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
 - Todos can be marked as completed
