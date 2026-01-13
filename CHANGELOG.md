@@ -17,11 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
 - Creates a new submodule for the second assignment
+- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
+- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
+
+### Removed 
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
+
+### Changed
 - Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
-- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
+- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
 
 ## [0.0.8] - 2025-12-23
 ### Added
