@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 import './TodoListItem.styles.css';
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
   const [workingTitle, setWorkingTitle] = useState(todo.title);
+  const inputRef = useRef(null);
   const handleCancel = () => {
     setWorkingTitle(todo.title);
     setIsEditing(false);
   };
   const handleEdit = event => setWorkingTitle(event.target.value);
+
+  const toggleIsEditing = () => setIsEditing(!isEditing)
   const handleUpdate = event => {
     event.preventDefault();
     if (!isEditing) return;
@@ -20,6 +23,11 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     setIsEditing(false);
   };
 
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
   return (
     <form onSubmit={handleUpdate}>
       {isEditing ? (
@@ -28,7 +36,8 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
             elementId={`todo-${todo.id}-title`}
             label="Todo title"
             value={workingTitle}
-            onChange={e => handleEdit(e)}
+            onChange={handleEdit}
+            ref={inputRef}
           />
           <input onClick={handleCancel} type="button" value="Cancel" />
           <input type="submit" value="Update" />
@@ -41,7 +50,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
               checked={todo.isCompleted}
               onChange={() => onCompleteTodo(todo.id)}
             />
-            <span onClick={() => setIsEditing(true)}>{todo.title}</span>
+            <span onClick={toggleIsEditing}>{todo.title}</span>
           </label>
         </li>
       )}
