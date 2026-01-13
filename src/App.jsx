@@ -103,7 +103,10 @@ function App() {
   const completeTodo = async completedId => {
     const previousTodos = todoList;
     const originalTodo = todoList.find(todo => todo.id === completedId);
-
+    if (!originalTodo) {
+      console.warn(`Todo with id ${completedId} not found`);
+      return;
+    }
     const optimisticTodos = [
       ...previousTodos,
       {
@@ -115,7 +118,7 @@ function App() {
     setTodoList(optimisticTodos);
 
     const payload = createPayload(completedId, {
-      title: originalTodo.title,
+      title: originalTodo?.title,
       isCompleted: !originalTodo.isCompleted,
     });
     try {

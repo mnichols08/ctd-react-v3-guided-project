@@ -53,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restyles TodoListItem so that user cannot accidently complete task by clicking on the label (which used to wrap entire list item)
 - Imports useCallback to optimize createPayload in order to reduce unnecessary rerenders.
 - Stabilizes headers variable by importing and utilizing useMemo
+- Adds a guard clause to prevent the app from crashing if somehow an originalTodo is not found (which is theoretically impossible but a good practice)
 
 ### Fixed
 
