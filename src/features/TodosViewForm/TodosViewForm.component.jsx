@@ -1,6 +1,11 @@
 import './TodosViewForm.styles.css';
 
-function TodosViewForm() {
+function TodosViewForm({
+  sortField,
+  setSortField,
+  sortDirection,
+  setSortDirection,
+}) {
   return (
     <form className="todos-view-form">
       <div className="form-controls">

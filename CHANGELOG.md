@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - The second for picking whether to sort ascending or descending
 - Imports TodosViewForm into app and places it underneath the TodoList component
 - Passes properties of sortField, setSortField, sortDirection, setSortDirection into TodosViewForm from app
+- Destructures `sortDirection`, `setSortDirection`, `sortField`, and `setSortField` out of the component's props. 
 
 ### Changed
 - Restructures JSX for TodosViewForm to wrap form in a class of todos-view-form to prevent styles from leaking and adds a divider
