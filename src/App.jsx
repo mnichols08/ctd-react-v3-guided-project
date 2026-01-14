@@ -213,16 +213,6 @@ function App() {
     <div>
       <h1 className="todos-title">My Todos</h1>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
-      {renderTodosForm(10) && (
-        <TodosViewForm
-          sortField={sortField}
-          setSortField={setSortField}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-          queryString={queryString}
-          setQueryString={setQueryString}
-        />
-      )}
       <TodoList
         onCompleteTodo={completeTodo}
         todoList={todoList}
@@ -233,16 +223,16 @@ function App() {
         queryString={queryString}
         setQueryString={setQueryString}
       />
-      {renderTodosForm(1) && (
-        <TodosViewForm
-          sortField={sortField}
-          setSortField={setSortField}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-          queryString={queryString}
-          setQueryString={setQueryString}
-        />
-      )}
+
+      <TodosViewForm
+        sortField={sortField}
+        setSortField={setSortField}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+        queryString={queryString}
+        setQueryString={setQueryString}
+      />
+
       {errorMessage && (
         <div className="error-message">
           <hr />
