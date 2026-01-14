@@ -21,8 +21,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.7.1] - 2026-01-13
 
+### Added
+- Within TodosViewForm component, adds value of `sortField` to sort-by `<select>` and `sortDirection` to the direction `<select>`
+
 ### Changed
-- Restructure and normalize changelog for clarity and reuse
+- Restructure and normalizes changelog for clarity and reuse
 
 ---
 
