@@ -121,6 +121,7 @@ function App() {
         title: newTodoTitle,
         isCompleted: false,
         createdTime: new Date().toISOString(),
+        isStillSaving: true
       },
     ];
     setTodoList(optimisticTodos);
