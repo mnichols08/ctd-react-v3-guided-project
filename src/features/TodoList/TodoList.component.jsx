@@ -23,7 +23,7 @@ function TodoList({
   isLoading,
   sortField,
   sortDirection,
-  queryString,
+  workingTodoTitle,
 }) {
   const [sortedAndFilteredTodoList, setSortedAndFilteredTodoList] = useState(
     []
@@ -33,14 +33,14 @@ function TodoList({
     sortTodos(
       todoList
         .filter(todo => !todo.isCompleted)
-        .filter(todo => todo.title.includes(queryString)),
+        .filter(todo => todo.title.includes(workingTodoTitle)),
       sortField,
       sortDirection
     );
 
   useEffect(() => {
     setSortedAndFilteredTodoList(sortAndFilterTodoList());
-  }, [sortField, sortDirection, queryString, todoList]);
+  }, [sortField, sortDirection, workingTodoTitle, todoList]);
   return (
     <ul className="todo-list">
       {sortedAndFilteredTodoList.length < 1 ? (

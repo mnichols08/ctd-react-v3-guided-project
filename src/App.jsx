@@ -48,6 +48,7 @@ const getErrorMessage = (action, error) => {
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [workingTodoTitle, setWorkingTodoTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [queryString, setQueryString] = useState('');
@@ -201,8 +202,6 @@ function App() {
       setTodoList(previousTodos);
     }
   };
-  const incompleteTodos = todoList.filter(todo => !todo.isCompleted);
-  const renderTodosForm = n => incompleteTodos.length > n;
 
   useEffect(() => {
     fetchTodos();
@@ -211,16 +210,18 @@ function App() {
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
-      <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
+      <TodoForm
+        onAddTodo={addTodo}
+        isSaving={isSaving}
+        workingTodoTitle={workingTodoTitle}
+        setWorkingTodoTitle={setWorkingTodoTitle}
+      />
       <TodoList
         onCompleteTodo={completeTodo}
         todoList={todoList}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
-        sortField={sortField}
-        sortDirection={sortDirection}
-        queryString={queryString}
-        setQueryString={setQueryString}
+        workingTodoTitle={workingTodoTitle}
       />
 
       <TodosViewForm
