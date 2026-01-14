@@ -13,6 +13,7 @@ function TodosViewForm({
         <select
           name="sort-by"
           id="sort-by"
+          onChange={e => setSortField(e.target.name)}
           value={sortField}
         >
           <option value="Title">Title</option>
@@ -22,7 +23,12 @@ function TodosViewForm({
         <span className="divider" aria-hidden="true" />
 
         <label htmlFor="direction">Direction</label>
-        <select name="direction" id="direction" value={sortDirection}>
+        <select
+          name="direction"
+          id="direction"
+          onChange={e => setSortDirection(e.target.name)}
+          value={sortDirection}
+        >
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
         </select>
