@@ -10,15 +10,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
--
+- ***
 
 ### Changed
 
--
+- ***
 
 ### Fixed
 
 - ***
+
+## [0.7.2] - 2026-01-14
+
+### Added
+
+- In `App`, creates the state value (and update function) for `queryString` with an empty string for an initial value.
+- In `App` passes `queryString` and `setQueryString` into both TodosViewForm and the TodoList component
+- In TodosViewForm:
+  - Destructures queryString and setQueryString
+  - Creates a new div for search controls and adds jsx to render a functional search input that can be cleared
+  - Adds functionality to filter out the rendered todos to help the user avoid making multiple of the same todo
+  - Adds logic to clear the working title if a user begins to search to avoid the filter on that input from mitigating results
+
+### Changed
+
+- Updates encodeUrl to take in the queryString state and defines its output as part of the return statement
+- Removes condtional logic to always display the search and sort inputs
+- Optimistcally updates the UI before querying the server for new Todos, which does not work as hoped for
+
+### Fixed
+
+- Applies better styling to match the rest of the UI within TodosViewForm
 
 ## [0.7.1] - 2026-01-14
 

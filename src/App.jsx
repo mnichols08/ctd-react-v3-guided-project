@@ -208,11 +208,9 @@ function App() {
       setTodoList(previousTodos);
     }
   };
-  const incompleteTodos = todoList.filter(todo => !todo.isCompleted)
-  const renderTodosForm = n => incompleteTodos.length > n
 
   const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
-
+  
   useEffect(() => {
     fetchTodos();
   }, [createRequest]);
@@ -220,22 +218,18 @@ function App() {
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
-      <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
-      {renderTodosForm(10) &&(
-        <TodosViewForm
-          sortField={sortField}
-          setSortField={setSortField}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-        />
-      )}
+      <TodoForm
+        onAddTodo={addTodo}
+        isSaving={isSaving}
+        workingTodoTitle={workingTodoTitle}
+        setWorkingTodoTitle={setWorkingTodoTitle}
+      />
       <TodoList
         onCompleteTodo={completeTodo}
         todoList={todoList}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
-        sortField={sortField}
-        sortDirection={sortDirection}
+        workingTodoTitle={workingTodoTitle}
       />
 
       <TodosViewForm
