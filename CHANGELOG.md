@@ -28,10 +28,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Adds value of `sortField` to sort-by `<select>` and `sortDirection` to the direction `<select>`
   - Adds onChange event handlers to each `<select>` and passes in anonymous functions to use `setSortField` and `setSortDirection`, passing in the events target name
   - Defines a function `preventRefresh` which prevents the page from refreshing if the user accidentally hits enter while working with this form, passes into the `onSubmit` property
+- Creates a new setResponseStatus that flips between loading and saving states
 
 ### Changed
 
 - Restructure and normalizes changelog for clarity and reuse
+- Refactors App.jsx to move app-wide variables to very top.
+- 
 
 ### Fixed
 
