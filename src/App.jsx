@@ -84,6 +84,28 @@ function App() {
     [sortField, sortDirection]
   );
 
+  const fetchTodos = async () => {
+    const previousTodos = todoList;
+    try {
+      const { records } = await createRequest('GET');
+      const todos = records.map(record => {
+        const todo = {
+          id: record.id,
+          ...record.fields,
+        };
+        if (!todo.isCompleted) {
+          todo.isCompleted = false;
+        }
+        return todo;
+      });
+      setTodoList(todos);
+    } catch (err) {
+      setErrorMessage(getErrorMessage('fetch', err));
+      console.error(getErrorMessage('fetch', err));
+      setTodoList(previousTodos);
+    }
+  };
+
   const addTodo = async newTodoTitle => {
     const previousTodos = todoList;
     const payload = createPayload(null, { title: newTodoTitle });
@@ -160,27 +182,6 @@ function App() {
   };
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      const previousTodos = todoList;
-      try {
-        const { records } = await createRequest('GET');
-        const todos = records.map(record => {
-          const todo = {
-            id: record.id,
-            ...record.fields,
-          };
-          if (!todo.isCompleted) {
-            todo.isCompleted = false;
-          }
-          return todo;
-        });
-        setTodoList(todos);
-      } catch (err) {
-        setErrorMessage(getErrorMessage('fetch', err));
-        console.error(getErrorMessage('fetch', err));
-        setTodoList(previousTodos);
-      }
-    };
     fetchTodos();
   }, [createRequest]);
   return (

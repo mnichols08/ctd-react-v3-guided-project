@@ -34,7 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Restructure and normalizes changelog for clarity and reuse
 - Refactors App.jsx to move app-wide variables to very top.
-- 
+- Within App.jsx moves fetchTodos outside of useEffect
 
 ### Fixed
 
