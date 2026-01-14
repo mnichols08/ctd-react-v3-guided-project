@@ -10,11 +10,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
--
+- ***
 
 ### Changed
 
--
+- ***
+
+### Fixed
+
+- ***
+
+## [0.7.2] - 2026-01-14
+
+### Added
+
+- In `App`, creates the state value (and update function) for `queryString` with an empty string for an initial value.
+
+### Changed
+
+- ***
 
 ### Fixed
 
