@@ -133,6 +133,7 @@ function App() {
         id: firstRecord.id,
         title: fields.title ?? newTodoTitle ?? '',
         isCompleted: fields.isCompleted ?? false,
+        isStillSaving: true,
         createdTime: fields.createdTime ?? new Date().toISOString(),
       };
 
