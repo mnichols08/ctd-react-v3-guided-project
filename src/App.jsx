@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
+import TodosViewForm from './features/TodosViewForm/TodosViewForm.component';
 
 const BASE_URL = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -9,6 +10,12 @@ const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
 const DEFAULT_HEADERS = {
   Authorization: AUTH_TOKEN,
   'Content-Type': 'application/json',
+};
+
+const encodeUrl = ({ sortField, sortDirection }) => {
+  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+  return encodeURI(`${url}?${sortQuery}`);
 };
 
 const createPayload = (id, fields) => ({
@@ -37,48 +44,45 @@ const getErrorMessage = (action, error) => {
 
 function App() {
   const [todoList, setTodoList] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [sortField, setSortField] = useState('createdTime');
+  const [sortDirection, setSortDirection] = useState('desc');
 
-const createRequest = useCallback(
-  async (method, payload = null) => {
-    try {
-      setIsSaving(true);
+  const createRequest = useCallback(
+    async (method, payload = null) => {
+      const setResponseStatus = method === 'GET' ? setIsLoading : setIsSaving;
+      try {
+        setResponseStatus(true);
+        const url =
+          method === 'GET' ? encodeUrl({ sortField, sortDirection }) : BASE_URL;
 
-      const url =
-        method === 'GET'
-          ? encodeUrl({ sortField, sortDirection })
-          : BASE_URL;
+        const options = {
+          method,
+          headers:
+            method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
+          ...(payload && { body: JSON.stringify(payload) }),
+        };
 
-      const options = {
-        method,
-        headers:
-          method === 'GET'
-            ? { Authorization: AUTH_TOKEN }
-            : DEFAULT_HEADERS,
-        ...(payload && { body: JSON.stringify(payload) }),
-      };
+        const resp = await fetch(url, options);
 
-      const resp = await fetch(url, options);
+        if (!resp.ok) {
+          const error = new Error('HTTP_ERROR');
+          error.status = resp.status;
+          throw error;
+        }
 
-      if (!resp.ok) {
-        const error = new Error('HTTP_ERROR');
-        error.status = resp.status;
-        throw error;
+        return resp.json();
+      } catch (err) {
+        if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
+        throw err;
+      } finally {
+        setResponseStatus(false);
       }
-
-      return resp.json();
-    } catch (err) {
-      if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
-      throw err;
-    } finally {
-      setIsSaving(false);
-    }
-  },
-  [sortField, sortDirection]
-);
-
+    },
+    [sortField, sortDirection]
+  );
 
   const addTodo = async newTodoTitle => {
     const previousTodos = todoList;
@@ -170,7 +174,7 @@ const createRequest = useCallback(
 
   useEffect(() => {
     const fetchTodos = async () => {
-      setIsLoading(true);
+      const previousTodos = todoList;
       try {
         const { records } = await createRequest('GET');
         const todos = records.map(record => {
@@ -187,8 +191,7 @@ const createRequest = useCallback(
       } catch (err) {
         setErrorMessage(getErrorMessage('fetch', err));
         console.error(getErrorMessage('fetch', err));
-      } finally {
-        setIsLoading(false);
+        setTodoList(previousTodos);
       }
     };
     fetchTodos();
@@ -202,6 +205,13 @@ const createRequest = useCallback(
         todoList={todoList}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
+      />
+      <hr />
+      <TodosViewForm
+        sortField={sortField}
+        setSortField={setSortField}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
       />
       {errorMessage && (
         <div className="error-message">
