@@ -143,7 +143,7 @@ function App() {
         id: firstRecord.id,
         title: fields.title ?? newTodoTitle ?? '',
         isCompleted: fields.isCompleted ?? false,
-        createdTime: fields.createdTime ?? new Date().getISOString(),
+        createdTime: fields.createdTime ?? new Date().toISOString(),
       };
 
       const updatedTodos = [...previousTodos, savedTodo];
@@ -205,7 +205,7 @@ function App() {
   };
 
   const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
-  
+
   useEffect(() => {
     fetchTodos();
   }, [createRequest]);
