@@ -12,10 +12,12 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
 
-const encodeUrl = ({ sortField, sortDirection }) => {
+const encodeUrl = ({ sortField, sortDirection, queryString }) => {
+  let searchQuery = '';
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  return encodeURI(`${url}?${sortQuery}`);
+  if (queryString) searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`
+  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
 };
 
 const createPayload = (id, fields) => ({
@@ -57,7 +59,7 @@ function App() {
       try {
         setResponseStatus(true);
         const url =
-          method === 'GET' ? encodeUrl({ sortField, sortDirection }) : BASE_URL;
+          method === 'GET' ? encodeUrl({ sortField, sortDirection, queryString }) : BASE_URL;
 
         const options = {
           method,
@@ -82,7 +84,7 @@ function App() {
         setResponseStatus(false);
       }
     },
-    [sortField, sortDirection]
+    [sortField, sortDirection, queryString]
   );
 
   const fetchTodos = async () => {
