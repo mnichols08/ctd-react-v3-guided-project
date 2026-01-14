@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.5.0] - 2025-01-13
+- Bumps week 06 reusable components to minor version v0.5.0
+
 ## [0.4.0] - 2025-01-13
 - Bumps week 05 conditional rendering to minor version v0.4.0
 
