@@ -204,6 +204,8 @@ function App() {
     }
   };
 
+  const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
+  
   useEffect(() => {
     fetchTodos();
   }, [createRequest]);
@@ -232,6 +234,7 @@ function App() {
         setSortDirection={setSortDirection}
         queryString={queryString}
         setQueryString={setQueryString}
+        clearWorkingTodoTitle={clearWorkingTodoTitle}
       />
 
       {errorMessage && (

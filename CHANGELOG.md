@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Destructures queryString and setQueryString
   - Creates a new div for search controls and adds jsx to render a functional search input that can be cleared
   - Adds functionality to filter out the rendered todos to help the user avoid making multiple of the same todo
+  - Adds logic to clear the working title if a user begins to search to avoid the filter on that input from mitigating results
 
 ### Changed
 
