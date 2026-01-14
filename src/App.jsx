@@ -42,19 +42,6 @@ const getErrorMessage = (action, error) => {
   return messages[action] || 'Something went wrong. Please try again.';
 };
 
-const sortTodos = (todos, field, direction) => {
-  const sorted = [...todos].sort((a, b) => {
-    const aVal = a[field];
-    const bVal = b[field];
-
-    if (aVal < bVal) return direction === 'asc' ? -1 : 1;
-    if (aVal > bVal) return direction === 'asc' ? 1 : -1;
-    return 0;
-  });
-
-  return sorted;
-};
-
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -114,7 +101,7 @@ function App() {
       setTodoList(todos);
     } catch (err) {
       setErrorMessage(getErrorMessage('fetch', err));
-      console.error(getErrorMessage('fetch', err));
+      console.error(err);
       setTodoList(previousTodos);
     }
   };
@@ -133,14 +120,29 @@ function App() {
             : `${Date.now()}-${Math.random()}`,
         title: newTodoTitle,
         isCompleted: false,
+        createdTime: new Date().toISOString(),
       },
     ];
     setTodoList(optimisticTodos);
     try {
-      await createRequest('POST', payload);
+      const { records } = await createRequest('POST', payload);
+      const firstRecord = records?.[0];
+      const fields = firstRecord?.fields ?? {};
+
+      if (!firstRecord?.id) throw new Error('No record returned from API');
+
+      const savedTodo = {
+        id: firstRecord.id,
+        title: fields.title ?? newTodoTitle ?? '',
+        isCompleted: fields.isCompleted ?? false,
+        createdTime: fields.createdTime ?? new Date().getISOString()
+      };
+
+      const updatedTodos = [...previousTodos, savedTodo];
+      setTodoList(updatedTodos);
     } catch (err) {
       setErrorMessage(getErrorMessage('add', err));
-      console.error(getErrorMessage('add', err));
+      console.error(err);
       setTodoList(previousTodos);
     }
   };
@@ -167,7 +169,7 @@ function App() {
       await createRequest('PATCH', payload);
     } catch (err) {
       setErrorMessage(getErrorMessage('complete', err));
-      console.error(getErrorMessage('complete', err));
+      console.error(err);
       setTodoList(previousTodos);
     }
   };
@@ -188,14 +190,13 @@ function App() {
       await createRequest('PATCH', payload);
     } catch (err) {
       setErrorMessage(getErrorMessage('update', err));
-      console.error(getErrorMessage('update', err));
+      console.error(err);
 
       setTodoList(previousTodos);
     }
   };
 
   useEffect(() => {
-    setTodoList(prev => sortTodos(prev, sortField, sortDirection));
     fetchTodos();
   }, [createRequest]);
 
@@ -208,6 +209,8 @@ function App() {
         todoList={todoList}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
+        sortField={sortField}
+        sortDirection={sortDirection}
       />
       <hr />
       <TodosViewForm

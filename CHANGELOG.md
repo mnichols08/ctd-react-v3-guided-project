@@ -30,12 +30,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Defines a function `preventRefresh` which prevents the page from refreshing if the user accidentally hits enter while working with this form, passes into the `onSubmit` property
 - Creates a new setResponseStatus that flips between loading and saving states
 - Adds a sortTodos helper function to optimistically sort UI before server returns the response and calls it before calling fetchTodos in the Apps useEffect
+- Adds optimistic todo on add so that the user does't have to wait on the server to see the new todo added to list
+- Applies logic in TodoList to maintain the same sort order that the user has set even while adding new todos
 
 ### Changed
 
 - Restructure and normalizes changelog for clarity and reuse
 - Refactors App.jsx to move app-wide variables to very top.
 - Within App.jsx moves fetchTodos outside of useEffect
+- Reverts console errors to displaying the actual error for better debugging
+- Migrates sortTodos from App.jsx into TodoList component
 
 ### Fixed
 
