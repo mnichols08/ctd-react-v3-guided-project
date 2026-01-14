@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Updates encodeUrl to take in the queryString state and defines its output as part of the return statement
 - Removes condtional logic to always display the search and sort inputs
+- Optimistcally updates the UI before querying the server for new Todos, which does not work as hoped for
 
 ### Fixed
 
