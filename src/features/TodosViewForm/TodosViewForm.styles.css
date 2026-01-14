@@ -1,0 +1,78 @@
+.todos-view-form {
+  margin-bottom: 1.5rem;
+}
+
+.todos-view-form .form-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+
+  transition: border-color 0.15s ease;
+}
+
+.todos-view-form .form-controls:focus-within {
+  border-color: var(--accent);
+}
+
+.todos-view-form .search-controls,
+.todos-view-form .sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.todos-view-form label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.todos-view-form input[type='text'],
+.todos-view-form select {
+  background-color: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.todos-view-form input:focus,
+.todos-view-form select:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.todos-view-form input[type='button'],
+.todos-view-form button {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.todos-view-form input[type='button']:hover,
+.todos-view-form button:hover {
+  opacity: 0.9;
+}
+
+.todos-view-form input[type='button']:focus-visible,
+.todos-view-form button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.todos-view-form .divider {
+  width: 1px;
+  height: 2rem;
+  background: var(--border);
+  margin: 0 0.25rem;
+}

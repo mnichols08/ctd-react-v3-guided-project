@@ -12,10 +12,13 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
 
-const encodeUrl = ({ sortField, sortDirection }) => {
+const encodeUrl = ({ sortField, sortDirection, queryString }) => {
+  let searchQuery = '';
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  return encodeURI(`${url}?${sortQuery}`);
+  if (queryString)
+    searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
 };
 
 const createPayload = (id, fields) => ({
@@ -45,8 +48,10 @@ const getErrorMessage = (action, error) => {
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [workingTodoTitle, setWorkingTodoTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
 
@@ -56,7 +61,9 @@ function App() {
       try {
         setResponseStatus(true);
         const url =
-          method === 'GET' ? encodeUrl({ sortField, sortDirection }) : BASE_URL;
+          method === 'GET'
+            ? encodeUrl({ sortField, sortDirection, queryString })
+            : BASE_URL;
 
         const options = {
           method,
@@ -81,7 +88,7 @@ function App() {
         setResponseStatus(false);
       }
     },
-    [sortField, sortDirection]
+    [sortField, sortDirection, queryString]
   );
 
   const fetchTodos = async () => {
@@ -195,9 +202,9 @@ function App() {
       setTodoList(previousTodos);
     }
   };
-  const incompleteTodos = todoList.filter(todo => !todo.isCompleted)
-  const renderTodosForm = n => incompleteTodos.length > n
 
+  const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
+  
   useEffect(() => {
     fetchTodos();
   }, [createRequest]);
@@ -205,31 +212,30 @@ function App() {
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
-      <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
-      {renderTodosForm(10) &&(
-        <TodosViewForm
-          sortField={sortField}
-          setSortField={setSortField}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-        />
-      )}
+      <TodoForm
+        onAddTodo={addTodo}
+        isSaving={isSaving}
+        workingTodoTitle={workingTodoTitle}
+        setWorkingTodoTitle={setWorkingTodoTitle}
+      />
       <TodoList
         onCompleteTodo={completeTodo}
         todoList={todoList}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
-        sortField={sortField}
-        sortDirection={sortDirection}
+        workingTodoTitle={workingTodoTitle}
       />
-      {renderTodosForm(1) && (
-        <TodosViewForm
-          sortField={sortField}
-          setSortField={setSortField}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-        />
-      )}
+
+      <TodosViewForm
+        sortField={sortField}
+        setSortField={setSortField}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+        queryString={queryString}
+        setQueryString={setQueryString}
+        clearWorkingTodoTitle={clearWorkingTodoTitle}
+      />
+
       {errorMessage && (
         <div className="error-message">
           <hr />
