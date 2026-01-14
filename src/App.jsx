@@ -210,7 +210,7 @@ function App() {
   };
 
   const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
-  
+
   useEffect(() => {
     fetchTodos();
   }, [createRequest]);

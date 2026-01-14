@@ -20,6 +20,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - ***
 
+---
+
+## [0.7.4] - 2026-01-16
+
+### Adds
+- Implements a debounce for searching todos to throttle api calls
+- Wraps `encodeUrl` in `useCallback()` hook to improve performance
+
+### Changed
+- Instead of rebuilding the entire todoList after adding a new todo, the optimistic todo's id field is updated with what the server responds with.
+
+### Fixed
+
+- Fixes optimistic sorting by moving logic into the addTodo function within App but leaving the filtering up to TodoList component.
+
+---
+
+## [0.7.3] - 2026-01-14
+
+### Fixed
+
+- Uses useMemo instead of useState + useEffect to avoid unnecessary state updates and re-renders.
+- Fixes typo `new Date().getISOString()` to `new Date().toISOString()`
+- Utilizes `BASE_URL` instead of redeclaring it 
+- Adds id of `search-control` to input for searching todos
+- Resets the queryString as well as the workingTodoTitle when clear button is pressed within TodosViewForm
+
+---
+
 ## [0.7.2] - 2026-01-14
 
 ### Added
@@ -41,6 +70,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Applies better styling to match the rest of the UI within TodosViewForm
+
+---
 
 ## [0.7.1] - 2026-01-14
 
