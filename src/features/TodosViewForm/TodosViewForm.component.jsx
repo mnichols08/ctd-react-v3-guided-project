@@ -7,8 +7,13 @@ function TodosViewForm({
   setSortDirection,
   queryString,
   setQueryString,
+  clearWorkingTodoTitle,
 }) {
   const preventRefresh = e => e.preventDefault();
+  const handleChangeQueryString = val => {
+    clearWorkingTodoTitle();
+    setQueryString(val);
+  };
   return (
     <form className="todos-view-form" onSubmit={preventRefresh}>
       <hr />
@@ -19,9 +24,13 @@ function TodosViewForm({
           <input
             type="text"
             value={queryString}
-            onChange={e => setQueryString(e.target.value)}
+            onChange={e => handleChangeQueryString(e.target.value)}
           />
-          <input type="button" onClick={() => setQueryString('')} value="Clear" />
+          <input
+            type="button"
+            onClick={() => setQueryString('')}
+            value="Clear"
+          />
         </div>
         <div className="sort-controls">
           <label htmlFor="sort-by">Sort By</label>
