@@ -41,22 +41,33 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const createRequest = useCallback(async (method, payload = null) => {
+const createRequest = useCallback(
+  async (method, payload = null) => {
     try {
       setIsSaving(true);
+
+      const url =
+        method === 'GET'
+          ? encodeUrl({ sortField, sortDirection })
+          : BASE_URL;
+
       const options = {
         method,
         headers:
-          method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
+          method === 'GET'
+            ? { Authorization: AUTH_TOKEN }
+            : DEFAULT_HEADERS,
         ...(payload && { body: JSON.stringify(payload) }),
       };
 
-      const resp = await fetch(BASE_URL, options);
+      const resp = await fetch(url, options);
+
       if (!resp.ok) {
         const error = new Error('HTTP_ERROR');
         error.status = resp.status;
         throw error;
       }
+
       return resp.json();
     } catch (err) {
       if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
@@ -64,7 +75,10 @@ function App() {
     } finally {
       setIsSaving(false);
     }
-  }, []);
+  },
+  [sortField, sortDirection]
+);
+
 
   const addTodo = async newTodoTitle => {
     const previousTodos = todoList;
