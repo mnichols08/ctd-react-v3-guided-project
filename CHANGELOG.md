@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Uses useMemo instead of useState + useEffect to avoid unnecessary state updates and re-renders.
+- Fixes typo `new Date().getISOString()` to `new Date().toISOString()`
 
 ## [0.7.2] - 2026-01-14
 
