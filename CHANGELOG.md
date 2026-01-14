@@ -37,7 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- ***
+- Applies better styling to match the rest of the UI within TodosViewForm
 
 ## [0.7.1] - 2026-01-14
 
