@@ -12,7 +12,8 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   };
   const handleEdit = event => setWorkingTitle(event.target.value);
 
-  const toggleIsEditing = () => setIsEditing(!isEditing);
+  const toggleIsEditing = () => !todo.isStillSaving && setIsEditing(!isEditing);
+
   const handleUpdate = event => {
     event.preventDefault();
     if (!isEditing) return;
@@ -26,11 +27,11 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   useEffect(() => {
     setWorkingTitle(todo.title);
   }, [todo]);
-    useEffect(() => {
-      if (isEditing && inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, [isEditing]);
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
   return (
     <form onSubmit={handleUpdate}>
       {isEditing ? (
@@ -52,6 +53,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
               type="checkbox"
               checked={todo.isCompleted}
               onChange={() => onCompleteTodo(todo.id)}
+              disabled={todo.isStillSaving}
             />
             <span onClick={toggleIsEditing}>{todo.title}</span>
           </div>
