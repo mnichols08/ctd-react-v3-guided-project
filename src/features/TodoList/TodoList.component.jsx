@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 import './TodoList.styles.css';
 import TodoListItem from '../../features/TodoListItem/TodoListItem.component';
@@ -25,22 +25,16 @@ function TodoList({
   sortDirection,
   workingTodoTitle,
 }) {
-  const [sortedAndFilteredTodoList, setSortedAndFilteredTodoList] = useState(
-    []
-  );
-
-  const sortAndFilterTodoList = () =>
-    sortTodos(
+  const sortedAndFilteredTodoList = useMemo(() => {
+    return sortTodos(
       todoList
         .filter(todo => !todo.isCompleted)
         .filter(todo => todo.title.includes(workingTodoTitle)),
       sortField,
       sortDirection
     );
+  }, [todoList, sortField, sortDirection, workingTodoTitle]);
 
-  useEffect(() => {
-    setSortedAndFilteredTodoList(sortAndFilterTodoList());
-  }, [sortField, sortDirection, workingTodoTitle, todoList]);
   return (
     <ul className="todo-list">
       {sortedAndFilteredTodoList.length < 1 ? (
