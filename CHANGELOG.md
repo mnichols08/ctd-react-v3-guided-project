@@ -12,6 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 -  -->
+## [0.6.0] - 2026-01-13
+- Bumps week 07 airtable integration to minor version v0.6.0
+
+## [0.5.0] - 2025-01-13
+- Bumps week 06 reusable components to minor version v0.5.0
+
+## [0.4.0] - 2025-01-13
+- Bumps week 05 conditional rendering to minor version v0.4.0
+
+## [0.3.0] - 2025-01-13
+## Changed
+- Bumps week 04 basic hooks minor version to v0.3.0
 
 ## [0.0.11] - 2026-01-12
 
@@ -49,6 +61,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improves styling for edit/cancel interface
 - Refactors code for each request helper to change state with failsafes
 - Restyles TodoListItem so that user cannot accidently complete task by clicking on the label (which used to wrap entire list item)
+- Imports useCallback to optimize createPayload in order to reduce unnecessary rerenders.
+- Stabilizes headers variable by importing and utilizing useMemo
+- Adds a guard clause to prevent the app from crashing if somehow an originalTodo is not found (which is theoretically impossible but a good practice)
 
 ### Fixed
 
@@ -56,25 +71,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrects CSS to reflect submit button after changing jsx for semantics within TodoListItem component
 - Setting errorMessage to undefined is inconsistent with its initial state of empty string. Using empty string '' for consistency.
 - Empty template literal is unnecessary. Changes ternary to an AND evaluation
-
-## [0.0.9] - 2026-01-10
-
-### Added
-
-- Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
-- Creates a new submodule for the second assignment
-- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
-- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
-
-### Removed
-
-- Removes redundant id when setting the updated todos inside of TodoListItem component
-- Removes wrapper functions from onClick handlers within TodoListItem component
+- Corrects the application to be have a truly "optimistic" UI by prematurely updating the state before communicating with the server.
+- Remove unnecessary spread operator in fetchTodos
+- Corrects how errors are being logged
+- Improves performance by declaring url, headers, and token at the top level
+- Prevents potential null reference error by declaring a firstRecord variable and throwing an error if not found
+- Removes stray '75' string from TodoListItem component
+- Corrects a typo for updateTodo error message
+- Prevent potential stale closure issues by adding createRequest to the dependency array of the useEffect that calls fetchTodos.
 
 ### Changed
 
-- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
+- In App.jsx, moves utility functions createPayload and getErrorMessage outside of App component in order to improve performance
+- Improves error handling by handling catch blocks within createRequest
+- Removes logic to set state pessimisticly and refrains from doing so in each request fuction
+
+## [0.0.9] - 2026-01-10
+### Added
+
+- Migrates lesson and assignment into submodule
+- Applies styles akin to rest of app for the error message button
+- Creates an encodeUrl utility function and uses within createRequest to maintain consistent sorting direction and sorted by fields
+- Builds a new TodosViewForm for changing the sort parameters that:
+  - Has two labels, one for sort-by and another for direction.
+    - Each one has associated select inputs
+      - The first one with options for sorting by Title, or Time Created
+      - The second for picking whether to sort ascending or descending
+- Imports TodosViewForm into app and places it underneath the TodoList component
+- Passes properties of sortField, setSortField, sortDirection, setSortDirection into TodosViewForm from app
+- Destructures `sortDirection`, `setSortDirection`, `sortField`, and `setSortField` out of the component's props.
+
+### Changed
+
+- Restructures JSX for TodosViewForm to wrap form in a class of todos-view-form to prevent styles from leaking and adds a divider
 
 ## [0.0.8] - 2025-12-23
 

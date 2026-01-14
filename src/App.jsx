@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
@@ -10,6 +10,38 @@ const encodeUrl = ({ sortField, sortDirection }) => {
   return encodeURI(`${url}?${sortQuery}`);
 };
 
+const BASE_URL = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
+
+const DEFAULT_HEADERS = {
+  Authorization: AUTH_TOKEN,
+  'Content-Type': 'application/json',
+};
+
+const createPayload = (id, fields) => ({
+  records: [
+    {
+      ...(id && { id }),
+      fields,
+    },
+  ],
+});
+
+const getErrorMessage = (action, error) => {
+  if (error.code === 'NETWORK_ERROR')
+    return 'Unable to connect to database. Please check your internet connection.';
+  if (error.status >= 500) return 'Server error. Please try again later.';
+
+  const messages = {
+    add: "We couldn't save your todo. Please try again.",
+    update: "We couldn't update that todo. We've restored it to how it was.",
+    complete: "Couldn't mark that as complete. Please try again.",
+    fetch: "We're having trouble loading your todos. Please refresh the page.",
+  };
+
+  return messages[action] || 'Something went wrong. Please try again.';
+};
+
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -17,101 +49,91 @@ function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
-  const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  const headers = {
-    Authorization: token,
-    'Content-Type': 'application/json',
-  };
-
-  const createPayload = (id, fields) => ({
-    records: [
-      {
-        ...(id && { id }),
-        fields,
-      },
-    ],
-  });
-
-  const createRequest = async (method, payload = null) => {
+  const createRequest = useCallback(async (method, payload = null) => {
     try {
       setIsSaving(true);
       const options = {
         method,
-        headers: method === 'GET' ? { Authorization: token } : headers,
+        headers:
+          method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
         ...(payload && { body: JSON.stringify(payload) }),
       };
 
-      const resp = await fetch(
-        encodeUrl({ sortField, sortDirection }),
-        options
-      );
-      if (!resp.ok)
-        throw new Error(`Request failed with status ${resp.status}`);
+      const resp = await fetch(BASE_URL, options);
+      if (!resp.ok) {
+        const error = new Error('HTTP_ERROR');
+        error.status = resp.status;
+        throw error;
+      }
       return resp.json();
+    } catch (err) {
+      if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
+      throw err;
     } finally {
       setIsSaving(false);
     }
-  };
+  }, []);
 
-  const getErrorMessage = (action, error) => {
-    if (error.message.includes('fetch') || error.message.includes('network')) {
-      return 'Unable to connect to database. Please check your internet connection.';
-    }
-
-    const messages = {
-      add: "We couldn't save your todo. Please try again.",
-      update: "We couldn't update that todo. We've restored it to how it was.",
-      complete: "Couldn't mark that as complete. Please try again.",
-      fetch:
-        "We're having trouble loading your todos. Please refresh the page.",
-    };
-
-    return messages[action] || 'Something went wrong. Please try again.';
-  };
   const addTodo = async newTodoTitle => {
+    const previousTodos = todoList;
     const payload = createPayload(null, { title: newTodoTitle });
 
+    const optimisticTodos = [
+      ...previousTodos,
+      {
+        id:
+          typeof crypto !== 'undefined' &&
+          typeof crypto.randomUUID === 'function'
+            ? crypto.randomUUID()
+            : `${Date.now()}-${Math.random()}`,
+        title: newTodoTitle,
+        isCompleted: false,
+      },
+    ];
+    setTodoList(optimisticTodos);
     try {
-      const { records } = await createRequest('POST', payload);
-      const fields = records?.[0]?.fields ?? {};
-
-      const savedTodo = {
-        id: records[0].id,
-        title: fields.title ?? newTodoTitle ?? '',
-        isCompleted: fields.isCompleted ?? false,
-      };
-
-      setTodoList(prev => [...prev, savedTodo]);
+      await createRequest('POST', payload);
     } catch (err) {
       setErrorMessage(getErrorMessage('add', err));
-      console.error(errorMessage);
+      console.error(getErrorMessage('add', err));
+      setTodoList(previousTodos);
     }
   };
 
   const completeTodo = async completedId => {
+    const previousTodos = todoList;
     const originalTodo = todoList.find(todo => todo.id === completedId);
+    if (!originalTodo) {
+      console.warn(`Todo with id ${completedId} not found`);
+      return;
+    }
+    const optimisticTodos = previousTodos.map(todo =>
+      todo.id === completedId
+        ? { ...todo, isCompleted: !todo.isCompleted }
+        : todo
+    );
+
+    setTodoList(optimisticTodos);
     const payload = createPayload(completedId, {
       title: originalTodo.title,
       isCompleted: !originalTodo.isCompleted,
     });
     try {
       await createRequest('PATCH', payload);
-      const updatedTodoList = todoList.map(todo => {
-        if (todo.id === completedId) return { ...todo, isCompleted: true };
-        return todo;
-      });
-      setTodoList(updatedTodoList);
     } catch (err) {
       setErrorMessage(getErrorMessage('complete', err));
-      console.error(errorMessage);
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === completedId ? originalTodo : todo))
-      );
+      console.error(getErrorMessage('complete', err));
+      setTodoList(previousTodos);
     }
   };
   const updateTodo = async editedTodo => {
-    const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
+    const previousTodos = todoList;
+    const optimisticTodos = previousTodos.map(todo =>
+      todo.id === editedTodo.id ? editedTodo : todo
+    );
+
+    setTodoList(optimisticTodos);
 
     const payload = createPayload(editedTodo.id, {
       title: editedTodo.title,
@@ -119,27 +141,12 @@ function App() {
     });
 
     try {
-      const { records } = await createRequest('PATCH', payload);
-
-      const airtableFields = records?.[0]?.fields ?? {};
-
-      const updatedTodo = {
-        id: records[0].id,
-        title: airtableFields.title ?? originalTodo.title ?? '',
-        isCompleted:
-          airtableFields.isCompleted ?? originalTodo.isCompleted ?? false,
-      };
-
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === updatedTodo.id ? updatedTodo : todo))
-      );
+      await createRequest('PATCH', payload);
     } catch (err) {
-      setErrorMessage(getErrorMessage('edit', err));
-      console.error(errorMessage);
+      setErrorMessage(getErrorMessage('update', err));
+      console.error(getErrorMessage('update', err));
 
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === originalTodo.id ? originalTodo : todo))
-      );
+      setTodoList(previousTodos);
     }
   };
 
@@ -158,16 +165,16 @@ function App() {
           }
           return todo;
         });
-        setTodoList([...todos]);
+        setTodoList(todos);
       } catch (err) {
         setErrorMessage(getErrorMessage('fetch', err));
-        console.error(errorMessage);
+        console.error(getErrorMessage('fetch', err));
       } finally {
         setIsLoading(false);
       }
     };
     fetchTodos();
-  }, [sortDirection, sortField]);
+  }, [createRequest]);
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
