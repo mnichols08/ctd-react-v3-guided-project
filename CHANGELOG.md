@@ -23,11 +23,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumps week 06 reusable components to minor version v0.5.0
 
 ## [0.4.0] - 2025-01-13
+
 - Bumps week 05 conditional rendering to minor version v0.4.0
 
 ## [0.3.0] - 2025-01-13
+
 ## Changed
-- Bumps week 04 basic hooks minor version to v0.3.0
+
+- Bumps week 04 basic hooks minor version to 0.3.0
+
+## [0.2.0] - 2025-01-13
+
+### Changed
+
+- Updates week 03 props and state to a minor patch 0.2.0
+
+## [0.1.0] - 2025-01-13
+
+### Changed
+
+- Updates week 02 code to a minor patch 0.1.0
 
 ## [0.0.11] - 2026-01-12
 
