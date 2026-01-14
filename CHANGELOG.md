@@ -47,6 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Fixes bug where sorting was not working by adding a new variable, `url` that checks whether the method is 'GET' before employing `encodeURL` so that PATCH/POST requests do not pass in these parameters.
+- Further addresses above bug by passing in `e.target.value` instead of `e.target.name`, which resulted in the sorting feature not working.
 
 
 ---
