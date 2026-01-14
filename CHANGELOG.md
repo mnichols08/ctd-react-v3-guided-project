@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Adds onChange event handlers to each `<select>` and passes in anonymous functions to use `setSortField` and `setSortDirection`, passing in the events target name
   - Defines a function `preventRefresh` which prevents the page from refreshing if the user accidentally hits enter while working with this form, passes into the `onSubmit` property
 - Creates a new setResponseStatus that flips between loading and saving states
+- Adds a sortTodos helper function to optimistically sort UI before server returns the response 
 
 ### Changed
 
