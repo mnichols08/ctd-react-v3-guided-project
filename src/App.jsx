@@ -16,7 +16,8 @@ const encodeUrl = ({ sortField, sortDirection, queryString }) => {
   let searchQuery = '';
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  if (queryString) searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`
+  if (queryString)
+    searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
   return encodeURI(`${url}?${sortQuery}${searchQuery}`);
 };
 
@@ -59,7 +60,9 @@ function App() {
       try {
         setResponseStatus(true);
         const url =
-          method === 'GET' ? encodeUrl({ sortField, sortDirection, queryString }) : BASE_URL;
+          method === 'GET'
+            ? encodeUrl({ sortField, sortDirection, queryString })
+            : BASE_URL;
 
         const options = {
           method,
@@ -198,8 +201,8 @@ function App() {
       setTodoList(previousTodos);
     }
   };
-  const incompleteTodos = todoList.filter(todo => !todo.isCompleted)
-  const renderTodosForm = n => incompleteTodos.length > n
+  const incompleteTodos = todoList.filter(todo => !todo.isCompleted);
+  const renderTodosForm = n => incompleteTodos.length > n;
 
   useEffect(() => {
     fetchTodos();
@@ -209,12 +212,14 @@ function App() {
     <div>
       <h1 className="todos-title">My Todos</h1>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
-      {renderTodosForm(10) &&(
+      {renderTodosForm(10) && (
         <TodosViewForm
           sortField={sortField}
           setSortField={setSortField}
           sortDirection={sortDirection}
           setSortDirection={setSortDirection}
+          queryString={queryString}
+          setQueryString={setQueryString}
         />
       )}
       <TodoList
@@ -224,6 +229,8 @@ function App() {
         isLoading={isLoading}
         sortField={sortField}
         sortDirection={sortDirection}
+        queryString={queryString}
+        setQueryString={setQueryString}
       />
       {renderTodosForm(1) && (
         <TodosViewForm
@@ -231,6 +238,8 @@ function App() {
           setSortField={setSortField}
           sortDirection={sortDirection}
           setSortDirection={setSortDirection}
+          queryString={queryString}
+          setQueryString={setQueryString}
         />
       )}
       {errorMessage && (
