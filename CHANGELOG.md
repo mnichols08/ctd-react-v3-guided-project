@@ -18,9 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Sorting and filtering functionality for todos (Week 08).
 
-
-## [0.1.0] - 2025-01-13
-
 ### Changed
 
 - Promoted sorting and filtering features to a minor release.
@@ -45,20 +42,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.6.0] - 2026-01-13
 - Bumps week 07 airtable integration to minor version v0.6.0
 
+---
+
 ## [0.5.0] - 2025-01-13
 - Bumps week 06 reusable components to minor version v0.5.0
 
+---
+
 ## [0.4.0] - 2025-01-13
 - Bumps week 05 conditional rendering to minor version v0.4.0
+
+---
 
 ## [0.3.0] - 2025-01-13
 ## Changed
 - Bumps week 04 basic hooks minor version to v0.3.0
 
+---
+
 ## [0.2.0] - 2025-01-13
 
 ### Changed
 - Updates week 03 props and state to a minor patch 0.2.0
+
+---
+
+## [0.1.0] - 2025-01-13
+
+### Changed
+
+- Updated foundational application code from Week 02 coursework.
+
+---
 
 ## [0.0.11] - 2026-01-12
 
@@ -79,6 +94,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Restructures JSX for TodosViewForm to wrap form in a class of todos-view-form to prevent styles from leaking and adds a divider
+
+---
 
 ## [0.0.10] - 2026-01-11
 
@@ -102,9 +119,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stabilizes headers variable by importing and utilizing useMemo
 - Adds a guard clause to prevent the app from crashing if somehow an originalTodo is not found (which is theoretically impossible but a good practice)
 
+
+---
+
+## [0.0.9] - 2026-01-10
+
+### Added
+
+- Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
+- Creates a new submodule for the second assignment
+- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
+- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
+
+### Removed 
+- Removes redundant id when setting the updated todos inside of TodoListItem component
+- Removes wrapper functions from onClick handlers within TodoListItem component
+
+### Changed
+- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
+- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
+
+---
+
+## [0.0.8] - 2025-12-23
+
+### Added
+
+- Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
+- Todos can be marked as completed
+- Prevents empty todos from being added by conditionally disabling the add todo button based on length of workingTodoTitle
+
+### Changed
+
+- Form is converted from a basic form to a controlled component
+
+---
+
 ## [0.0.7] - 2025-12-23
+
 ### Fixed
 
+- Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
+- Fixes casing typo while linking Stylesheets within TodoList and TodoForm components
+- Passes in a value of null into useRef instead of an empty string
 - In App.jsx, corrects `errMessage` typo as `errorMessage`, displaying the correct message within fetchTodos, addTodos and completeTodo functions
 - Corrects CSS to reflect submit button after changing jsx for semantics within TodoListItem component
 - Setting errorMessage to undefined is inconsistent with its initial state of empty string. Using empty string '' for consistency.
@@ -124,48 +181,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improves error handling by handling catch blocks within createRequest
 - Removes logic to set state pessimisticly and refrains from doing so in each request fuction
 
-## [0.0.9] - 2026-01-10
-
-### Added
-
-- Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
-- Creates a new submodule for the second assignment
-- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
-- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
-
-### Removed 
-- Removes redundant id when setting the updated todos inside of TodoListItem component
-- Removes wrapper functions from onClick handlers within TodoListItem component
-
-### Changed
-- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
-
-## [0.0.8] - 2025-12-23
-
-### Added
-
-- Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
-- Todos can be marked as completed
-- Prevents empty todos from being added by conditionally disabling the add todo button based on length of workingTodoTitle
-
-### Changed
-
-- Form is converted from a basic form to a controlled component
-
-## [0.0.7] - 2025-12-23
-
-### Fixed
-
-- Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
-- Fixes casing typo while linking Stylesheets within TodoList and TodoForm components
-- Passes in a value of null into useRef instead of an empty string
+---
 
 ## [0.0.6] - 2025-12-18
 
 ### Added
 
 - Utilizes new hooks useRef, useState to manage state and allow users to create new Todos
+
+---
 
 ## [0.0.5] - 2025-12-09
 
@@ -178,12 +202,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrates stylesheet for li into new stylesheet for TodoListItem
 - Updates TodoList component to import new TodoListItem component and renders it, passing in the properties of the todos
 
+---
+
 ## [0.0.4] - 2025-11-22
 
 ### Fixed
 
 - Fixes a typo in TodoList.jsx file to update inconsistent casing in import.
 - Corrects merge conflict within submodule within `main` branch.
+
+---
 
 ## [0.0.3] - 2025-11-15
 
@@ -207,6 +235,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixes a typo in TodoList component that was using class instead of className
 - Removes older styles associated with a rebase which brought them back
 
+---
+
 ## [0.0.2] - 2025-11-15
 
 ### Added
@@ -219,6 +249,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrates the todos array and render logic into the new TodoList component
+
+---
 
 ## [0.0.1] - 2025-11-07
 
@@ -242,6 +274,8 @@ Project cleanup and further initialization
 ### Fixed
 
 - Fixes a typo that was introduced while writing the initial README
+
+---
 
 ## [0.0.0] - 2025-11-07
 
