@@ -55,7 +55,6 @@ const sortTodos = (todos, field, direction) => {
   return sorted;
 };
 
-
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -209,8 +208,10 @@ function App() {
   };
 
   useEffect(() => {
+    setTodoList(prev => sortTodos(prev, sortField, sortDirection));
     fetchTodos();
   }, [createRequest]);
+
   return (
     <div>
       <h1 className="todos-title">My Todos</h1>
