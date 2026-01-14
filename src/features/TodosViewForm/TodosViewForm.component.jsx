@@ -29,7 +29,10 @@ function TodosViewForm({
           />
           <input
             type="button"
-            onClick={() => setQueryString('')}
+            onClick={() => {
+              clearWorkingTodoTitle();
+              setQueryString('');
+            }}
             value="Clear"
           />
         </div>
