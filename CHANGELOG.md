@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Within App.jsx moves fetchTodos outside of useEffect
 - Reverts console errors to displaying the actual error for better debugging
 - Migrates sortTodos from App.jsx into TodoList component
+- Refactors sortAndFilterTodoList to handle both sorting and filtering in the same line
 
 ### Fixed
 

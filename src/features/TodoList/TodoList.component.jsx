@@ -27,9 +27,14 @@ function TodoList({
   const [sortedAndFilteredTodoList, setSortedAndFilteredTodoList] = useState(
     []
   );
-  const filteredTodoList = todoList.filter(todo => !todo.isCompleted);
+
   const sortAndFilterTodoList = () =>
-    sortTodos(filteredTodoList, sortField, sortDirection);
+    sortTodos(
+      todoList.filter(todo => !todo.isCompleted),
+      sortField,
+      sortDirection
+    );
+
   useEffect(() => {
     setSortedAndFilteredTodoList(sortAndFilterTodoList());
   }, [sortField, sortDirection, todoList]);
