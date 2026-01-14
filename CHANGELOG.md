@@ -20,6 +20,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - ***
 
+---
+
+## [0.7.3] - 2026-01-14
+
+### Added
+
+- ***
+
+### Changed
+
+- ***
+
+### Fixed
+
+- Uses useMemo instead of useState + useEffect to avoid unnecessary state updates and re-renders.
+
 ## [0.7.2] - 2026-01-14
 
 ### Added
@@ -41,6 +57,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Applies better styling to match the rest of the UI within TodosViewForm
+
+---
 
 ## [0.7.1] - 2026-01-14
 
