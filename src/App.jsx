@@ -42,6 +42,20 @@ const getErrorMessage = (action, error) => {
   return messages[action] || 'Something went wrong. Please try again.';
 };
 
+const sortTodos = (todos, field, direction) => {
+  const sorted = [...todos].sort((a, b) => {
+    const aVal = a[field];
+    const bVal = b[field];
+
+    if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+    if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  return sorted;
+};
+
+
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
