@@ -2,9 +2,8 @@ import { useRef, useState } from 'react';
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 import './TodoForm.styles.css';
 
-function TodoForm({ onAddTodo, isSaving }) {
+function TodoForm({ onAddTodo, isSaving, workingTodoTitle, setWorkingTodoTitle }) {
   const todoTitleInput = useRef(null);
-  const [workingTodoTitle, setWorkingTodoTitle] = useState('');
   const handleAddTodo = event => {
     event.preventDefault();
     onAddTodo(workingTodoTitle);
