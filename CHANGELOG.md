@@ -41,6 +41,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Reverts console errors to displaying the actual error for better debugging
 - Migrates sortTodos from App.jsx into TodoList component
 - Refactors sortAndFilterTodoList to handle both sorting and filtering in the same line
+- Migrates horizontal rule from App.jsx into TodosViewForm
 
 ### Fixed
 

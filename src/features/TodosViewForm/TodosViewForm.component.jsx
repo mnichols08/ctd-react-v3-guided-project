@@ -9,6 +9,7 @@ function TodosViewForm({
   const preventRefresh = e => e.preventDefault();
   return (
     <form className="todos-view-form" onSubmit={preventRefresh}>
+      <hr />
       <div className="form-controls">
         <label htmlFor="sort-by">Sort By</label>
         <select
