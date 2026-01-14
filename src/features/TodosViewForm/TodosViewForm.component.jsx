@@ -5,6 +5,8 @@ function TodosViewForm({
   setSortField,
   sortDirection,
   setSortDirection,
+  queryString,
+  setQueryString
 }) {
   const preventRefresh = e => e.preventDefault();
   return (
