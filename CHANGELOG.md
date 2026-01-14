@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - In `App` passes `queryString` and `setQueryString` into both TodosViewForm and the TodoList component
 - In TodosViewForm:
   - Destructures queryString and setQueryString
+  - Creates a new div for search controls and adds jsx to render a functional search input that can be cleared
 
 ### Changed
 
