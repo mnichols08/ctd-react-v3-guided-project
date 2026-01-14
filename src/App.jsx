@@ -121,7 +121,7 @@ function App() {
         title: newTodoTitle,
         isCompleted: false,
         createdTime: new Date().toISOString(),
-        isStillSaving: true
+        isStillSaving: true,
       },
     ];
     setTodoList(optimisticTodos);
@@ -195,6 +195,8 @@ function App() {
       setTodoList(previousTodos);
     }
   };
+  const incompleteTodos = todoList.filter(todo => !todo.isCompleted)
+  const renderTodosForm = n => incompleteTodos.length > n
 
   useEffect(() => {
     fetchTodos();
@@ -204,6 +206,14 @@ function App() {
     <div>
       <h1 className="todos-title">My Todos</h1>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
+      {renderTodosForm(10) &&(
+        <TodosViewForm
+          sortField={sortField}
+          setSortField={setSortField}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
+        />
+      )}
       <TodoList
         onCompleteTodo={completeTodo}
         todoList={todoList}
@@ -212,13 +222,14 @@ function App() {
         sortField={sortField}
         sortDirection={sortDirection}
       />
-      <hr />
-      <TodosViewForm
-        sortField={sortField}
-        setSortField={setSortField}
-        sortDirection={sortDirection}
-        setSortDirection={setSortDirection}
-      />
+      {renderTodosForm(1) && (
+        <TodosViewForm
+          sortField={sortField}
+          setSortField={setSortField}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
+        />
+      )}
       {errorMessage && (
         <div className="error-message">
           <hr />
