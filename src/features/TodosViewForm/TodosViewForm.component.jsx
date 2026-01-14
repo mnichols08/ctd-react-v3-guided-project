@@ -22,6 +22,7 @@ function TodosViewForm({
         <div className="search-controls">
           <label htmlFor="search-control">Search Todos:</label>
           <input
+            id="search-control"
             type="text"
             value={queryString}
             onChange={e => handleChangeQueryString(e.target.value)}

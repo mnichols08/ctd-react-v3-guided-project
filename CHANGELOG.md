@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Uses useMemo instead of useState + useEffect to avoid unnecessary state updates and re-renders.
 - Fixes typo `new Date().getISOString()` to `new Date().toISOString()`
 - Utilizes `BASE_URL` instead of redeclaring it 
+- Adds id of `search-control` to input for searching todos
 
 ---
 
