@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.2.0] - 2025-01-13
+
+### Changed
+- Updates week 03 props and state to a minor patch 0.2.0
+
 ## [0.1.0] - 2025-01-13
 
 ### Changed
