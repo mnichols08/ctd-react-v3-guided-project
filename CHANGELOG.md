@@ -22,6 +22,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.7.5 - 2026-01-17]
+### Adds
+Adds `encodeUrl` to dependency array of `createRequest`
+---
+
 ## [0.7.4] - 2026-01-16
 
 ### Adds

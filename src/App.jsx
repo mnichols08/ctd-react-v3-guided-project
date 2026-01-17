@@ -95,7 +95,7 @@ function App() {
         setResponseStatus(false);
       }
     },
-    [sortField, sortDirection, queryString]
+    [sortField, sortDirection, queryString, encodeUrl]
   );
 
   const fetchTodos = async () => {
