@@ -24,6 +24,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.7.4] - 2026-01-16
 
+### Adds
+- Implements a debounce for searching todos to throttle api calls
+
 ### Changed
 - Instead of rebuilding the entire todoList after adding a new todo, the optimistic todo's id field is updated with what the server responds with.
 
