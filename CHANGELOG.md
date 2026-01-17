@@ -22,6 +22,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.7.4] - 2026-01-16
+
+### Changed
+- Instead of rebuilding the entire todoList after adding a new todo, the optimistic todo's id field is updated with what the server responds with.
+
+### Fixed
+
+- Fixes optimistic sorting by moving logic into the addTodo function within App but leaving the filtering up to TodoList component.
+
+---
+
 ## [0.7.3] - 2026-01-14
 
 ### Fixed
