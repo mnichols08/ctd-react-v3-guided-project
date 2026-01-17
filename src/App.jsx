@@ -12,6 +12,18 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
 
+const sortTodos = (todos, field, direction) => {
+  const sorted = [...todos].sort((a, b) => {
+    const aVal = a[field];
+    const bVal = b[field];
+
+    if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+    if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return sorted
+};
+
 const encodeUrl = ({ sortField, sortDirection, queryString }) => {
   let searchQuery = '';
   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
@@ -115,38 +127,36 @@ function App() {
   const addTodo = async newTodoTitle => {
     const previousTodos = todoList;
     const payload = createPayload(null, { title: newTodoTitle });
+    const tempId = crypto.randomUUID();
 
-    const optimisticTodos = [
-      ...previousTodos,
-      {
-        id:
-          typeof crypto !== 'undefined' &&
-          typeof crypto.randomUUID === 'function'
-            ? crypto.randomUUID()
-            : `${Date.now()}-${Math.random()}`,
-        title: newTodoTitle,
-        isCompleted: false,
-        createdTime: new Date().toISOString(),
-        isStillSaving: true,
-      },
-    ];
-    setTodoList(optimisticTodos);
+    const optimisticTodo = {
+      id: tempId,
+      title: newTodoTitle,
+      isCompleted: false,
+      createdTime: new Date().toISOString(),
+      isStillSaving: true,
+    };
+    setTodoList(prev => 
+      sortTodos([...prev, optimisticTodo], sortField, sortDirection)
+    );
     try {
       const { records } = await createRequest('POST', payload);
       const firstRecord = records?.[0];
       const fields = firstRecord?.fields ?? {};
 
       if (!firstRecord?.id) throw new Error('No record returned from API');
-
-      const savedTodo = {
-        id: firstRecord.id,
-        title: fields.title ?? newTodoTitle ?? '',
-        isCompleted: fields.isCompleted ?? false,
-        createdTime: fields.createdTime ?? new Date().toISOString(),
-      };
-
-      const updatedTodos = [...previousTodos, savedTodo];
-      setTodoList(updatedTodos);
+      setTodoList(prev =>
+        prev.map(todo =>
+          todo.id === tempId
+            ? {
+                id: firstRecord.id,
+                title: fields.title ?? newTodoTitle,
+                isCompleted: fields.isCompleted ?? false,
+                createdTime: fields.createdTime,
+              }
+            : todo
+        )
+      );
     } catch (err) {
       setErrorMessage(getErrorMessage('add', err));
       console.error(err);
