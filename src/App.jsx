@@ -126,7 +126,6 @@ function App() {
             : `${Date.now()}-${Math.random()}`,
         title: newTodoTitle,
         isCompleted: false,
-        createdTime: new Date().toISOString(),
         isStillSaving: true,
       },
     ];
