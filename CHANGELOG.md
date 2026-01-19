@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 -  -->
+
+## [0.6.1] - 2026-01-19
+
+### Fixed
+- Fixes bug where an added todo could not be completed. A previous recaftor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
+
+---
+
 ## [0.6.0] - 2026-01-13
 - Bumps week 07 airtable integration to minor version v0.6.0
 
@@ -24,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2025-01-13
 
-## Changed
+### Changed
 
 - Bumps week 04 basic hooks minor version to 0.3.0
 

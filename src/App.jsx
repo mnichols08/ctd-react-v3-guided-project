@@ -80,14 +80,30 @@ function App() {
             : `${Date.now()}-${Math.random()}`,
         title: newTodoTitle,
         isCompleted: false,
+        createdTime: new Date().toISOString(),
+        isStillSaving: true,
       },
     ];
     setTodoList(optimisticTodos);
     try {
-      await createRequest('POST', payload);
+      const { records } = await createRequest('POST', payload);
+      const firstRecord = records?.[0];
+      const fields = firstRecord?.fields ?? {};
+
+      if (!firstRecord?.id) throw new Error('No record returned from API');
+
+      const savedTodo = {
+        id: firstRecord.id,
+        title: fields.title ?? newTodoTitle ?? '',
+        isCompleted: fields.isCompleted ?? false,
+        createdTime: fields.createdTime ?? new Date().toISOString(),
+      };
+
+      const updatedTodos = [...previousTodos, savedTodo];
+      setTodoList(updatedTodos);
     } catch (err) {
       setErrorMessage(getErrorMessage('add', err));
-      console.error(getErrorMessage('add', err));
+      console.error(err);
       setTodoList(previousTodos);
     }
   };
