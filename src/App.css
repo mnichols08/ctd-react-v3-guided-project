@@ -37,5 +37,21 @@ h1 {
 }
 
 .todos-title {
-    text-align: center;
+  text-align: center;
+}
+
+.error-message input[type='button'] {
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.error-message input[type='button']:hover,
+.todo-list input[type='button'] {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
 }

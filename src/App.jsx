@@ -193,7 +193,7 @@ function App() {
         isLoading={isLoading}
       />
       {errorMessage && (
-        <div>
+        <div className="error-message">
           <hr />
           <p>{errorMessage}</p>
           <input
