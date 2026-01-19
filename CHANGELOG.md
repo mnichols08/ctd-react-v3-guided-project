@@ -13,10 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 -  -->
 
+## [0.6.2] - 2026-01-19
+
+### Changed
+- Removes the createdTime from optimistic todo created from addTodo
+- Removes unnecessary check on whether or not the first record returns in id or not. In theory it will always be provided so the message is redundant.
+---
+
 ## [0.6.1] - 2026-01-19
 
 ### Fixed
 - Fixes bug where an added todo could not be completed. A previous recaftor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
+- Applies styles akin to rest of app for the error message button
 
 ---
 
@@ -131,6 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updates week 02 code to a minor patch 0.1.0
+- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
+- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
 
 ## [0.0.8] - 2025-12-23
 
@@ -280,7 +290,27 @@ Brief version description
 ```
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
+[0.6.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.5.0...v0.6.0
 
+[0.5.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.4.0...v0.5.0
+
+[0.4.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.3.0...v0.4.0
+
+[0.3.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.2.0...v0.3.0
+
+[0.2.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.1.0...v0.2.0
+
+[0.1.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.11...v0.1.0
+
+[0.0.11]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.10...v0.0.11
+[0.0.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.9...v0.0.10
+[0.0.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.8...v0.0.9
+[0.0.8]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.7...v0.0.8
+[0.0.7]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.6...v0.0.7
+[0.0.6]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.5...v0.0.6
+[0.0.5]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.5...v0.0.5
 [0.0.4]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...v0.0.2

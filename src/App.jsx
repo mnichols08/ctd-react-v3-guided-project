@@ -80,7 +80,6 @@ function App() {
             : `${Date.now()}-${Math.random()}`,
         title: newTodoTitle,
         isCompleted: false,
-        createdTime: new Date().toISOString(),
         isStillSaving: true,
       },
     ];
@@ -89,8 +88,6 @@ function App() {
       const { records } = await createRequest('POST', payload);
       const firstRecord = records?.[0];
       const fields = firstRecord?.fields ?? {};
-
-      if (!firstRecord?.id) throw new Error('No record returned from API');
 
       const savedTodo = {
         id: firstRecord.id,
@@ -193,7 +190,7 @@ function App() {
         isLoading={isLoading}
       />
       {errorMessage && (
-        <div>
+        <div className="error-message">
           <hr />
           <p>{errorMessage}</p>
           <input
