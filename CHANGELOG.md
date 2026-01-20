@@ -109,6 +109,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Removes unnecessary check on whether or not the first record returns in id or not. In theory it will always be provided so the message is redundant.
 ---
 
+## [0.6.2] - 2026-01-19
+
+### Changed
+- Removes the createdTime from optimistic todo created from addTodo
+- Removes unnecessary check on whether or not the first record returns in id or not. In theory it will always be provided so the message is redundant.
+---
+
 ## [0.6.1] - 2026-01-19
 
 ### Fixed
@@ -321,13 +328,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
 - Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
 
-### Removed
-
+### Removed 
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
 
 ### Changed
-
 - Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
 - Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
 - Removes redundant id when setting the updated todos inside of TodoListItem component
