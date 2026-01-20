@@ -17,4 +17,6 @@ const TextInputWithLabel = forwardRef(
   }
 );
 
+TextInputWithLabel.displayName = `TextInputWithLabel`;
+
 export default TextInputWithLabel;
