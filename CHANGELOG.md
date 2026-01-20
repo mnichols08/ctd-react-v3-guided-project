@@ -114,31 +114,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
 - Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
 
-### Removed
-
+### Removed 
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
 
 ### Changed
-
-- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
-- Removes redundant id when setting the updated todos inside of TodoListItem component
-- Removes wrapper functions from onClick handlers within TodoListItem component
-
-### Changed
-- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
-
-## [0.2.0] - 2025-01-13
-
-### Changed
-- Updates week 03 props and state to a minor patch 0.2.0
-
-## [0.1.0] - 2025-01-13
-
-### Changed
-- Updates week 02 code to a minor patch 0.1.0
 - Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
 - Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
 
