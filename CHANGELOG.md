@@ -22,6 +22,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.7.5] - 2026-01-17
+### Adds
+Adds `encodeUrl` to dependency array of `createRequest`
+---
+
+## [0.7.4] - 2026-01-16
+
+### Adds
+- Implements a debounce for searching todos to throttle api calls
+- Wraps `encodeUrl` in `useCallback()` hook to improve performance
+
+### Changed
+- Instead of rebuilding the entire todoList after adding a new todo, the optimistic todo's id field is updated with what the server responds with.
+
+### Fixed
+
+- Fixes optimistic sorting by moving logic into the addTodo function within App but leaving the filtering up to TodoList component.
+
+---
+
 ## [0.7.3] - 2026-01-14
 
 ### Fixed
@@ -141,8 +161,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
----
-
 ## [0.4.0] - 2025-01-13
 
 ### Added
@@ -166,7 +184,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.2.0] - 2025-01-13
 
 ### Changed
-- Updates week 03 props and state to a minor patch 0.2.0
 - Updated props and state usage patterns from Week 03 coursework.
 
 ---
@@ -174,8 +191,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.1.0] - 2025-01-13
 
 ### Changed
-
-- Updated foundational application code from Week 02 coursework.
 
 - Updated foundational application code from Week 02 coursework.
 
@@ -322,8 +337,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
----
-
 ## [0.0.5] - 2025-12-09
 
 ### Added
@@ -337,16 +350,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
----
-
 ## [0.0.4] - 2025-11-22
 
 ### Fixed
 
 - Corrected import casing typo in TodoList.jsx.
 - Resolved a merge conflict involving the Git submodule on the main branch.
-
----
 
 ---
 
@@ -389,8 +398,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
----
-
 ## [0.0.1] - 2025-11-07
 
 ### Added
@@ -410,8 +417,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Typo in the initial README.
-
----
 
 ---
 
@@ -444,8 +449,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.7.5]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.4...v0.7.5
+[0.7.4]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.7.4
+[0.7.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.2...v0.7.3
+[0.7.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.0...v0.7.1
-[0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.7.0
+[0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.2...v0.7.0
 
 [0.6.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.6.1

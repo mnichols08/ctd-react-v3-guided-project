@@ -57,7 +57,7 @@
   font-size: 0.9rem;
 }
 
-.todo-list input[type='submit']:hover {
+.todo-list input[type='submit']:hover, .todo-list input[type="button"]:hover {
   background: var(--accent);
   color: white;
   border-color: var(--accent);

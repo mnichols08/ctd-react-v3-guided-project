@@ -27,7 +27,6 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   useEffect(() => {
     setWorkingTitle(todo.title);
   }, [todo]);
-
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
@@ -38,7 +37,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
       {isEditing ? (
         <>
           <TextInputWithLabel
-            elementId={`todo-${todo.id}-title`}
+            elementId={`todo-${todo.id}-workingtitle`}
             labelText="Todo title"
             value={workingTitle}
             onChange={handleEdit}
