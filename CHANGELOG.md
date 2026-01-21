@@ -22,6 +22,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.8.0] - 2026-01-21
+
+### Added 
+
+- Add useState to TodosViewForm for localQueryString to have a state, then refactors search input and clear button
+- Implements a debouncer inside of TodosViewForm that throttles the amount of API calls while using the search filter
+- Adds filtering out completed todo logic directly into encodeUrl
+
+### Changed
+
+- Wraps encodeUrl in a useCallback hook and places inside the App component
+
+### Fixed
+
+- Fixes User Experience by clearing the queryString when creating a new Todo
+
+---
+
 ## [0.7.3] - 2026-01-14
 
 ### Fixed
@@ -319,70 +337,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Improves error handling by handling catch blocks within createRequest
 - Removes logic to set state pessimisticly and refrains from doing so in each request fuction
 
-## [0.0.9] - 2026-01-10
-
-### Added
-
-- Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
-- Creates a new submodule for the second assignment
-- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
-- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
-
-### Removed
-
-- Removes redundant id when setting the updated todos inside of TodoListItem component
-- Removes wrapper functions from onClick handlers within TodoListItem component
-
-### Changed
-
-- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
-- Removes redundant id when setting the updated todos inside of TodoListItem component
-- Removes wrapper functions from onClick handlers within TodoListItem component
-
-### Changed
-- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
-
-## [0.2.0] - 2025-01-13
-
-### Changed
-- Updates week 03 props and state to a minor patch 0.2.0
-
-## [0.1.0] - 2025-01-13
-
-### Changed
-- Updates week 02 code to a minor patch 0.1.0
-- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
-- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
-
-## [0.0.8] - 2025-12-23
-
-### Added
-
-- Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
-- Todos can be marked as completed
-- Prevents empty todos from being added by conditionally disabling the add todo button based on length of workingTodoTitle
-
-### Changed
-
-- Form is converted from a basic form to a controlled component
-
-## [0.0.7] - 2025-12-23
-
-### Fixed
-
-- Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
-- Fixes casing typo while linking Stylesheets within TodoList and TodoForm components
-- Passes in a value of null into useRef instead of an empty string
-
 ## [0.0.6] - 2025-12-18
 
 ### Added
 
 - Introduced useState and useRef hooks to support creating new todos.
-
----
 
 ---
 
@@ -399,16 +358,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
----
-
 ## [0.0.4] - 2025-11-22
 
 ### Fixed
 
 - Corrected import casing typo in TodoList.jsx.
 - Resolved a merge conflict involving the Git submodule on the main branch.
-
----
 
 ---
 
@@ -434,8 +389,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
----
-
 ## [0.0.2] - 2025-11-15
 
 ### Added
@@ -448,8 +401,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - Migrated todo rendering logic into the TodoList component.
-
----
 
 ---
 
@@ -472,8 +423,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Typo in the initial README.
-
----
 
 ---
 
@@ -505,6 +454,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Security**: Security-related updates
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
+
+[0.8.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.8.0
 
 [0.7.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.1...v0.7.2

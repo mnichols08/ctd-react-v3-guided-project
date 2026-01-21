@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import './TodosViewForm.styles.css';
 
 function TodosViewForm({
@@ -9,11 +11,19 @@ function TodosViewForm({
   setQueryString,
   clearWorkingTodoTitle,
 }) {
+  const [localQueryString, setLocalQueryString] = useState(queryString);
+
   const preventRefresh = e => e.preventDefault();
   const handleChangeQueryString = val => {
     clearWorkingTodoTitle();
-    setQueryString(val);
+    setLocalQueryString(val);
   };
+
+  // debounce queries by 500ms
+  useEffect(
+    () => clearTimeout(setTimeout(setQueryString(localQueryString), 500)),
+    [localQueryString, setQueryString]
+  );
   return (
     <form className="todos-view-form" onSubmit={preventRefresh}>
       <hr />
@@ -24,14 +34,14 @@ function TodosViewForm({
           <input
             id="search-control"
             type="text"
-            value={queryString}
+            value={localQueryString}
             onChange={e => handleChangeQueryString(e.target.value)}
           />
           <input
             type="button"
             onClick={() => {
               clearWorkingTodoTitle();
-              setQueryString('');
+              setLocalQueryString('');
             }}
             value="Clear"
           />
