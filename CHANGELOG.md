@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [0.7.5 - 2026-01-17]
+## [0.7.5] - 2026-01-17
 ### Adds
 Adds `encodeUrl` to dependency array of `createRequest`
 ---
@@ -122,6 +122,21 @@ Adds `encodeUrl` to dependency array of `createRequest`
 
 ---
 
+## [0.6.2] - 2026-01-19
+
+### Changed
+- Removes the createdTime from optimistic todo created from addTodo
+- Removes unnecessary check on whether or not the first record returns in id or not. In theory it will always be provided so the message is redundant.
+---
+
+## [0.6.1] - 2026-01-19
+
+### Fixed
+- Fixes bug where an added todo could not be completed. A previous recaftor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
+- Applies styles akin to rest of app for the error message button
+
+---
+
 ## [0.6.0] - 2026-01-13
 
 ### Added
@@ -169,7 +184,10 @@ Adds `encodeUrl` to dependency array of `createRequest`
 ## [0.2.0] - 2025-01-13
 
 ### Changed
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 - Updated props and state usage patterns from Week 03 coursework.
 
 ---
@@ -247,19 +265,34 @@ Adds `encodeUrl` to dependency array of `createRequest`
 
 ### Added
 
+- Implements handleUpdate and handleCancel helper functions to allow users to manipulate state and add, update, cancel updating, or completing todos.
+- Creates a new submodule for the second assignment
+- In TodoListItem component, properly forward ref to input element, using additional helper function toggleIsEditing, and introducing useEffect to change the focus based on the inputRef
+- Within TodoListItem component, passes in an elementId and label into TextInputWithLabel to improve semantics
+- Initial implementation of TodosViewForm for sorting and direction control.
+- Integration of sortField and sortDirection state into the App component.
+
+### Removed 
+- Removes redundant id when setting the updated todos inside of TodoListItem component
+- Removes wrapper functions from onClick handlers within TodoListItem component
 - Initial implementation of TodosViewForm for sorting and direction control.
 - Integration of sortField and sortDirection state into the App component.
 
 ### Changed
 
 - Refined TodosViewForm layout and styling to align with the rest of the application.
-
+- Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
+- Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
+- Refined TodosViewForm layout and styling to align with the rest of the application.
 ---
 
 ## [0.0.8] - 2025-12-23
 
 ### Added
 
+- Adds ternary statement that will render a paragraph calling the user to add a todo in order to get started using the app
+- Todos can be marked as completed
+- Prevents empty todos from being added by conditionally disabling the add todo button based on length of workingTodoTitle
 - Empty-state messaging prompting users to add their first todo.
 - Ability to mark todos as completed.
 - Prevention of empty todos by disabling submission when input is blank.
@@ -273,10 +306,30 @@ Adds `encodeUrl` to dependency array of `createRequest`
 ## [0.0.7] - 2025-12-23
 
 ### Fixed
-
 - Replaced timestamp-based IDs with crypto-generated IDs to avoid collisions.
 - Corrected stylesheet import casing issues.
 - Initialized useRef with null instead of an empty string.
+- Uses crypto API to generate unique ID rather than creating a timestamp, which could cause duplicate IDs if used in rapid succession.
+- Fixes casing typo while linking Stylesheets within TodoList and TodoForm components
+- Passes in a value of null into useRef instead of an empty string
+- In App.jsx, corrects `errMessage` typo as `errorMessage`, displaying the correct message within fetchTodos, addTodos and completeTodo functions
+- Corrects CSS to reflect submit button after changing jsx for semantics within TodoListItem component
+- Setting errorMessage to undefined is inconsistent with its initial state of empty string. Using empty string '' for consistency.
+- Empty template literal is unnecessary. Changes ternary to an AND evaluation
+- Corrects the application to be have a truly "optimistic" UI by prematurely updating the state before communicating with the server.
+- Remove unnecessary spread operator in fetchTodos
+- Corrects how errors are being logged
+- Improves performance by declaring url, headers, and token at the top level
+- Prevents potential null reference error by declaring a firstRecord variable and throwing an error if not found
+- Removes stray '75' string from TodoListItem component
+- Corrects a typo for updateTodo error message
+- Prevent potential stale closure issues by adding createRequest to the dependency array of the useEffect that calls fetchTodos.
+
+### Changed
+
+- In App.jsx, moves utility functions createPayload and getErrorMessage outside of App component in order to improve performance
+- Improves error handling by handling catch blocks within createRequest
+- Removes logic to set state pessimisticly and refrains from doing so in each request fuction
 
 ---
 
@@ -332,11 +385,16 @@ Adds `encodeUrl` to dependency array of `createRequest`
 
 ---
 
+---
+
 ## [0.0.2] - 2025-11-15
 
 ### Added
-
-- TodoList component within a dedicated `/components/TodoList` directory.
+- Applies some basic styling to App
+- Migrate logic from app to a separate TodoList component
+- Provide a simple stylesheet for TodoList component
+- TodoList component created within a directory structure of `/components/TodoList`
+- Import statement into app and applies an instance within the main app.jsx
 
 ### Changed
 
@@ -395,13 +453,25 @@ Adds `encodeUrl` to dependency array of `createRequest`
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.7.5]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.4...v0.7.5
+[0.7.4]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.7.4
+[0.7.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.2...v0.7.3
+[0.7.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.0...v0.7.1
-[0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.7.0
+[0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.2...v0.7.0
+
+[0.6.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.5.0...v0.6.0
+
 [0.5.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.4.0...v0.5.0
+
 [0.4.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.3.0...v0.4.0
+
 [0.3.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.2.0...v0.3.0
+
 [0.2.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.1.0...v0.2.0
+
 [0.1.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.11...v0.1.0
 [0.0.11]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.9...v0.0.10

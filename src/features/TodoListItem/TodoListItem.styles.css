@@ -1,0 +1,69 @@
+.todo-list form {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.todo-list form:hover,
+.todo-list form:focus-within {
+  border-color: var(--accent);
+}
+
+.todo-list li {
+  list-style: none;
+  flex: 1;
+}
+
+.todo-list .label-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.todo-list span {
+  transition: transform .1s;
+  cursor: text;
+}
+
+.todo-list span:hover {
+  transform: scale(1.1);
+}
+
+.todo-list form:has(input[type='text']) {
+  background: var(--bg-subtle);
+}
+
+.todo-list input[type='text'] {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+.todo-list input[type='submit'], .todo-list input[type='button'] {
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.todo-list input[type='submit']:hover, .todo-list input[type="button"]:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.todo-list input[value='Cancel']:hover {
+  background: var(--danger, #d33);
+  border-color: var(--danger, #d33);
+}

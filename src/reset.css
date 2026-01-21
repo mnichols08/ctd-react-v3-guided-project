@@ -1,0 +1,77 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 3px solid Highlight !important;
+  outline-offset: 2px;
+}
+
+[role='button'],
+button,
+a[href],
+input[type='checkbox'],
+input[type='radio'],
+input[type='submit'],
+input[type='button'] {
+  cursor: pointer;
+}
+
+@media (forced-colors: active) {
+  * {
+    forced-color-adjust: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background-color: color-mix(in srgb, var(--bg) 90%, var(--text) 10%);
+}
+[hidden],
+[aria-hidden='true'] {
+  display: none !important;
+}
+
+[role="alert"] {
+  background-color: rgba(255, 0, 0, 0.1); /* light red background */
+  color: #b00000;                          /* dark red text */
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+[role="status"] {
+  background-color: rgba(0, 0, 0, 0.05);  /* subtle background */
+  color: inherit;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  [role="alert"] {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #ff8080;
+  }
+
+  [role="status"] {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #eaeaea;
+  }
+}

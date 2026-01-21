@@ -1,0 +1,6 @@
+[submodule "lessons-and-assignments"]
+	path = lessons-and-assignments
+	url = https://github.com/mnichols08/ctd-react-v3-lessons.git
+[submodule "multicalc-tests"]
+	path = multicalc-tests
+	url = https://github.com/mnichols08/multicalc-tests.git
