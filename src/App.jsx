@@ -12,14 +12,6 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
 
-const encodeUrl = ({ sortField, sortDirection, queryString }) => {
-  let searchQuery = '';
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  if (queryString)
-    searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
-  return encodeURI(`${BASE_URL}?${sortQuery}${searchQuery}`);
-};
-
 const createPayload = (id, fields) => ({
   records: [
     {
@@ -30,9 +22,12 @@ const createPayload = (id, fields) => ({
 });
 
 const getErrorMessage = (action, error) => {
-  if (error.code === 'NETWORK_ERROR')
+  if (error.code === 'NETWORK_ERROR') {
     return 'Unable to connect to database. Please check your internet connection.';
-  if (error.status >= 500) return 'Server error. Please try again later.';
+  }
+  if (error.status >= 500) {
+    return 'Server error. Please try again later.';
+  }
 
   const messages = {
     add: "We couldn't save your todo. Please try again.",
@@ -53,16 +48,21 @@ function App() {
   const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
+  const encodeUrl = useCallback(() => {
+    let searchQuery = '&filterByFormula={isCompleted}=FALSE()';
+    const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+    if (queryString) {
+      searchQuery = `&filterByFormula=AND({isCompleted}=FALSE(), SEARCH("${queryString}",{title}))`;
+    }
+    return encodeURI(`${BASE_URL}?${sortQuery}${searchQuery}`);
+  }, [sortField, sortDirection, queryString]);
 
   const createRequest = useCallback(
     async (method, payload = null) => {
       const setResponseStatus = method === 'GET' ? setIsLoading : setIsSaving;
       try {
         setResponseStatus(true);
-        const url =
-          method === 'GET'
-            ? encodeUrl({ sortField, sortDirection, queryString })
-            : BASE_URL;
+        const url = method === 'GET' ? encodeUrl() : BASE_URL;
 
         const options = {
           method,
@@ -87,7 +87,7 @@ function App() {
         setResponseStatus(false);
       }
     },
-    [sortField, sortDirection, queryString]
+    [encodeUrl]
   );
 
   const fetchTodos = async () => {
@@ -202,6 +202,7 @@ function App() {
   };
 
   const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
+  const clearQueryString = () => setQueryString('');
 
   useEffect(() => {
     fetchTodos();
@@ -215,6 +216,7 @@ function App() {
         isSaving={isSaving}
         workingTodoTitle={workingTodoTitle}
         setWorkingTodoTitle={setWorkingTodoTitle}
+        clearQueryString={clearQueryString}
       />
       <TodoList
         onCompleteTodo={completeTodo}
@@ -242,7 +244,7 @@ function App() {
             type="button"
             onClick={() => setErrorMessage('')}
             value="Dismiss"
-          ></input>
+          />
         </div>
       )}
     </div>
