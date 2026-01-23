@@ -19,11 +19,12 @@ function TodosViewForm({
     setLocalQueryString(val);
   };
 
-  // debounce queries by 500ms
-  useEffect(
-    () => clearTimeout(setTimeout(setQueryString(localQueryString), 500)),
-    [localQueryString, setQueryString]
-  );
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      setQueryString(localQueryString);
+    }, 500);
+    return () => clearTimeout(debounce);
+  }, [localQueryString, setQueryString]);
   return (
     <form className="todos-view-form" onSubmit={preventRefresh}>
       <hr />

@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
@@ -48,6 +48,10 @@ function App() {
   const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
+  const queryKey = useMemo(() => {
+    return `${sortField}:${sortDirection}:${queryString}`;
+  }, [sortField, sortDirection, queryString]);
+  const todoCacheRef = useRef({});
   const encodeUrl = useCallback(() => {
     let searchQuery = '&filterByFormula={isCompleted}=FALSE()';
     const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
@@ -91,6 +95,10 @@ function App() {
   );
 
   const fetchTodos = async () => {
+    if (todoCacheRef.current[queryKey]) {
+      setTodoList(todoCacheRef.current[queryKey]);
+      return;
+    }
     const previousTodos = todoList;
     try {
       const { records } = await createRequest('GET');
@@ -98,6 +106,7 @@ function App() {
         const todo = {
           id: record.id,
           ...record.fields,
+          isStillSaving: false
         };
         if (!todo.isCompleted) {
           todo.isCompleted = false;
@@ -105,6 +114,7 @@ function App() {
         return todo;
       });
       setTodoList(todos);
+      todoCacheRef.current[queryKey] = todos;
     } catch (err) {
       setErrorMessage(getErrorMessage('fetch', err));
       console.error(err);
@@ -139,7 +149,7 @@ function App() {
         id: firstRecord.id,
         title: fields.title ?? newTodoTitle ?? '',
         isCompleted: fields.isCompleted ?? false,
-        isStillSaving: true,
+        isStillSaving: false,
         createdTime: fields.createdTime ?? new Date().toISOString(),
       };
 
@@ -206,7 +216,7 @@ function App() {
 
   useEffect(() => {
     fetchTodos();
-  }, [createRequest]);
+  }, [createRequest, queryKey]);
 
   return (
     <div>
