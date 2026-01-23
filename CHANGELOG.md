@@ -22,6 +22,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.8.1] - 2026-01-23
+
+### Added
+
+- Adds a cached todoList to limit API even more
+
+### Fixed
+
+- Fixes debounce feature within TodosViewForm
+
+---
+
 ## [0.8.0] - 2026-01-21
 
 ### Added 
