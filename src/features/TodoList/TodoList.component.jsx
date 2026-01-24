@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
-import './TodoList.styles.css';
 import TodoListItem from '../../features/TodoListItem/TodoListItem.component';
+import styles from './TodoList.module.css';
 
 const sortTodos = (todos, field, direction) => {
   const sorted = [...todos].sort((a, b) => {
@@ -34,7 +34,7 @@ function TodoList({
   }, [todoList, sortField, sortDirection, workingTodoTitle]);
 
   return (
-    <ul className="todo-list">
+    <ul className={styles["todo-list"]}>
       {sortedAndFilteredTodoList.length < 1 ? (
         !isLoading ? (
           <p>Add todo above to get started</p>

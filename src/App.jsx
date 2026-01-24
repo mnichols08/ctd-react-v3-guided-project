@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
 import TodosViewForm from './features/TodosViewForm/TodosViewForm.component';
+import Header from './features/Header/Header.component';
+import ErrorMessage from './features/ErrorMessage/ErrorMessage.component';
 
 const BASE_URL = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -38,6 +41,11 @@ const getErrorMessage = (action, error) => {
 
   return messages[action] || 'Something went wrong. Please try again.';
 };
+
+const StyledAppWrapper = styled.div`
+  display: grid;
+  justify-content: center;
+`;
 
 function App() {
   const [todoList, setTodoList] = useState([]);
@@ -214,8 +222,8 @@ function App() {
   }, [createRequest, queryKey]);
 
   return (
-    <div>
-      <h1 className="todos-title">My Todos</h1>
+    <StyledAppWrapper>
+      <Header displayedText="Todos" />
       <TodoForm
         onAddTodo={addTodo}
         isSaving={isSaving}
@@ -240,17 +248,12 @@ function App() {
       />
 
       {errorMessage && (
-        <div className="error-message">
-          <hr />
-          <p>{errorMessage}</p>
-          <input
-            type="button"
-            onClick={() => setErrorMessage('')}
-            value="Dismiss"
-          />
-        </div>
+        <ErrorMessage
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
       )}
-    </div>
+    </StyledAppWrapper>
   );
 }
 
