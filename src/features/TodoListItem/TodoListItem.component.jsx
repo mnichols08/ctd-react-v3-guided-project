@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
+
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
-import './TodoListItem.styles.css';
+import styles from './TodoListItem.module.css'
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -49,7 +50,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
         </>
       ) : (
         <li>
-          <div className="label-container">
+          <div className={styles.labelContainer}>
             <input
               type="checkbox"
               checked={todo.isCompleted}

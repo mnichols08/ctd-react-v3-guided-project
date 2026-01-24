@@ -22,6 +22,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.9.0] - 2026-01-24
+
+### Added
+- Assigns font-families for headings
+- Declares `styled-components` and `babel-plugin-styled-components` as a dependency
+- Within TextInputWithLabel, converts label and input into styled components
+- Within TodoForm and TodosViewForm, converts form into a styled component
+- Adds background-attachement: fixed to root of App
+- Wraps App in `StyledAppWrapper`, centering with CSS grid
+- Adds favicons for different screens and webmanifest
+- Adds a StyledLogo inside of h1 at top of App component
+- Adds a Header component that accepts properties for setting the logo and displayed text
+- Creates an ErrorMessage component with both CSS module and styled components
+- Adds a very subtle background image to application
+
+### Changed
+
+- Changes body backgound to a linear gradient
+- For App, TodoList, and TodoListItem, utilizes CSS modules to import styles
+- Moves CSS into TodoListItem CSS module from TodoList stylesheet.
+- Refactors Header component to move image outside of h1 tag
+- Inside of TodoList module, refactor individual todos to be tighter together
+- Restores App.module.css to App.css and imports into index.css
+
+### Removed
+- Removes imported stylesheet files from TodoForm and TodosViewForm
+- Cleans up CSS within TodoList.module.css
+
+---
+
 ## [0.8.1] - 2026-01-23
 
 ### Added
@@ -176,8 +206,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - Promoted reusable component work to a minor release.
-
----
 
 ---
 
@@ -467,6 +495,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Security**: Security-related updates
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
+
+[0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
 
 [0.8.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.8.0

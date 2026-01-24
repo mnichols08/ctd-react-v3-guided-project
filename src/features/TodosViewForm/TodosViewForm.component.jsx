@@ -1,7 +1,81 @@
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
-import './TodosViewForm.styles.css';
+const StyledTodosViewForm = styled.form`
+  margin-bottom: 1.5rem;
 
+  .form-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+
+    transition: border-color 0.15s ease;
+
+    &:focus-within {
+      border-color: var(--accent);
+    }
+  }
+
+  .search-controls,
+  .sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  input[type='text'],
+  select {
+    background-color: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0.6rem 0.75rem;
+    border-radius: 6px;
+    font-size: 1rem;
+
+    &:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+  }
+
+  input[type='button'],
+  button {
+    background-color: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.65rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+  }
+
+  .divider {
+    width: 1px;
+    height: 2rem;
+    background: var(--border);
+    margin: 0 0.25rem;
+  }
+`;
 function TodosViewForm({
   sortField,
   setSortField,
@@ -26,7 +100,7 @@ function TodosViewForm({
     return () => clearTimeout(debounce);
   }, [localQueryString, setQueryString]);
   return (
-    <form className="todos-view-form" onSubmit={preventRefresh}>
+    <StyledTodosViewForm onSubmit={preventRefresh}>
       <hr />
 
       <div className="form-controls">
@@ -73,7 +147,7 @@ function TodosViewForm({
           </select>
         </div>
       </div>
-    </form>
+    </StyledTodosViewForm>
   );
 }
 
