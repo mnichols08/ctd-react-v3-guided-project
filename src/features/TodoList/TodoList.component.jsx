@@ -27,9 +27,7 @@ function TodoList({
 }) {
   const sortedAndFilteredTodoList = useMemo(() => {
     return sortTodos(
-      todoList
-        .filter(todo => !todo.isCompleted)
-        .filter(todo => todo.title.includes(workingTodoTitle)),
+      todoList.filter(todo => !todo.isCompleted),
       sortField,
       sortDirection
     );

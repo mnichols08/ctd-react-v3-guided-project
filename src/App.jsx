@@ -106,7 +106,6 @@ function App() {
         const todo = {
           id: record.id,
           ...record.fields,
-          isStillSaving: false
         };
         if (!todo.isCompleted) {
           todo.isCompleted = false;
@@ -149,7 +148,6 @@ function App() {
         id: firstRecord.id,
         title: fields.title ?? newTodoTitle ?? '',
         isCompleted: fields.isCompleted ?? false,
-        isStillSaving: false,
         createdTime: fields.createdTime ?? new Date().toISOString(),
       };
 
@@ -211,9 +209,6 @@ function App() {
     }
   };
 
-  const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
-  const clearQueryString = () => setQueryString('');
-
   useEffect(() => {
     fetchTodos();
   }, [createRequest, queryKey]);
@@ -226,7 +221,6 @@ function App() {
         isSaving={isSaving}
         workingTodoTitle={workingTodoTitle}
         setWorkingTodoTitle={setWorkingTodoTitle}
-        clearQueryString={clearQueryString}
       />
       <TodoList
         onCompleteTodo={completeTodo}
@@ -243,7 +237,6 @@ function App() {
         setSortDirection={setSortDirection}
         queryString={queryString}
         setQueryString={setQueryString}
-        clearWorkingTodoTitle={clearWorkingTodoTitle}
       />
 
       {errorMessage && (

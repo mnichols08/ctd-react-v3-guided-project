@@ -9,15 +9,10 @@ function TodosViewForm({
   setSortDirection,
   queryString,
   setQueryString,
-  clearWorkingTodoTitle,
 }) {
   const [localQueryString, setLocalQueryString] = useState(queryString);
 
   const preventRefresh = e => e.preventDefault();
-  const handleChangeQueryString = val => {
-    clearWorkingTodoTitle();
-    setLocalQueryString(val);
-  };
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -36,14 +31,11 @@ function TodosViewForm({
             id="search-control"
             type="text"
             value={localQueryString}
-            onChange={e => handleChangeQueryString(e.target.value)}
+            onChange={e => setLocalQueryString(e.target.value)}
           />
           <input
             type="button"
-            onClick={() => {
-              clearWorkingTodoTitle();
-              setLocalQueryString('');
-            }}
+            onClick={() => setLocalQueryString('')}
             value="Clear"
           />
         </div>
