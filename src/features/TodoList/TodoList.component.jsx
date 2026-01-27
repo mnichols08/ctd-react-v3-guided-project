@@ -27,7 +27,7 @@ function TodoList({
 }) {
   const sortedAndFilteredTodoList = useMemo(() => {
     return sortTodos(
-      todoList.filter(todo => !todo.isCompleted),
+      todoList,
       sortField,
       sortDirection
     );

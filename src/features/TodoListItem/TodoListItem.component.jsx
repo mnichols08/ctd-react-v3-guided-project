@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
-import styles from './TodoListItem.module.css'
+import styles from './TodoListItem.module.css';
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -56,7 +56,15 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
               checked={todo.isCompleted}
               onChange={() => onCompleteTodo(todo.id)}
               disabled={todo.isStillSaving}
+              className={styles.checkbox}
+              id={`todo-${todo.id}-checkbox`}
             />
+            <label
+              htmlFor={`todo-${todo.id}-checkbox`}
+              className={styles.checkboxButton}
+            >
+              <span className={styles.checkboxIcon}>&nbsp;</span>
+            </label>
             <span onClick={toggleIsEditing}>{todo.title}</span>
           </div>
         </li>

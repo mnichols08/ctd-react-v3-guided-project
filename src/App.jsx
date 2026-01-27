@@ -188,6 +188,15 @@ function App() {
     });
     try {
       await createRequest('PATCH', payload);
+      await new Promise(resolve => setTimeout(resolve, 3500));
+
+      setTodoList(previousTodos => {
+        const todo = previousTodos.find(t => t.id === completedId);
+        if (!todo || !todo.isCompleted) {
+          return previousTodos;
+        }
+        return previousTodos.filter(t => t.id !== completedId);
+      });
     } catch (err) {
       setErrorMessage(getErrorMessage('complete', err));
       console.error(err);
@@ -199,12 +208,11 @@ function App() {
     const optimisticTodos = previousTodos.map(todo =>
       todo.id === editedTodo.id ? editedTodo : todo
     );
-
     setTodoList(optimisticTodos);
 
     const payload = createPayload(editedTodo.id, {
       title: editedTodo.title,
-      isCompleted: editedTodo.isCompleted,
+      isCompleted: !editedTodo.isCompleted,
     });
 
     try {

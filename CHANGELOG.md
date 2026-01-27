@@ -31,6 +31,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.9.1] - 2026-01-26
+
+### Added
+
+- Adds `--host` to `dev` script, allowing network access while in development mode
+- Adds CSS to module TodoListItem that styles the checkbox with custom imagry
+- Within global app.css, utilizes the `#root` selector to set `user-select` to none
+- Allows user to uncheck by adding a 3500ms delay before removing the task from state
+
+---
+
 ## [0.9.0] - 2026-01-24
 
 ### Added
@@ -505,6 +516,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
 
 [0.8.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.0...v0.8.1

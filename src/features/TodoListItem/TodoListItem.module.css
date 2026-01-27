@@ -4,3 +4,28 @@
   gap: 0.5rem;
   cursor: pointer;
 }
+
+.checkbox {
+  position: absolute;
+  height: 0px;
+  width: 0px;
+}
+
+.checkboxButton {
+  background: url(../../assets/checkbox.png);
+  height: 20px;
+  width: 20px;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.checkbox:checked ~ .checkboxButton {
+  background: url(../../assets/checkedbox.png);
+  height: 20px;
+  width: 20px;
+  background-size: contain;
+  cursor: pointer;
+}
+.checkbox:checked ~ span {
+  text-decoration: line-through;
+}
