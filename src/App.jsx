@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
@@ -12,14 +12,6 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };
 
-const encodeUrl = ({ sortField, sortDirection, queryString }) => {
-  let searchQuery = '';
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  if (queryString)
-    searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
-  return encodeURI(`${BASE_URL}?${sortQuery}${searchQuery}`);
-};
-
 const createPayload = (id, fields) => ({
   records: [
     {
@@ -30,9 +22,12 @@ const createPayload = (id, fields) => ({
 });
 
 const getErrorMessage = (action, error) => {
-  if (error.code === 'NETWORK_ERROR')
+  if (error.code === 'NETWORK_ERROR') {
     return 'Unable to connect to database. Please check your internet connection.';
-  if (error.status >= 500) return 'Server error. Please try again later.';
+  }
+  if (error.status >= 500) {
+    return 'Server error. Please try again later.';
+  }
 
   const messages = {
     add: "We couldn't save your todo. Please try again.",
@@ -53,16 +48,25 @@ function App() {
   const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
+  const queryKey = useMemo(() => {
+    return `${sortField}:${sortDirection}:${queryString}`;
+  }, [sortField, sortDirection, queryString]);
+  const todoCacheRef = useRef({});
+  const encodeUrl = useCallback(() => {
+    let searchQuery = '&filterByFormula={isCompleted}=FALSE()';
+    const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+    if (queryString) {
+      searchQuery = `&filterByFormula=AND({isCompleted}=FALSE(), SEARCH("${queryString}",{title}))`;
+    }
+    return encodeURI(`${BASE_URL}?${sortQuery}${searchQuery}`);
+  }, [sortField, sortDirection, queryString]);
 
   const createRequest = useCallback(
     async (method, payload = null) => {
       const setResponseStatus = method === 'GET' ? setIsLoading : setIsSaving;
       try {
         setResponseStatus(true);
-        const url =
-          method === 'GET'
-            ? encodeUrl({ sortField, sortDirection, queryString })
-            : BASE_URL;
+        const url = method === 'GET' ? encodeUrl() : BASE_URL;
 
         const options = {
           method,
@@ -87,10 +91,14 @@ function App() {
         setResponseStatus(false);
       }
     },
-    [sortField, sortDirection, queryString]
+    [encodeUrl]
   );
 
   const fetchTodos = async () => {
+    if (todoCacheRef.current[queryKey]) {
+      setTodoList(todoCacheRef.current[queryKey]);
+      return;
+    }
     const previousTodos = todoList;
     try {
       const { records } = await createRequest('GET');
@@ -105,6 +113,7 @@ function App() {
         return todo;
       });
       setTodoList(todos);
+      todoCacheRef.current[queryKey] = todos;
     } catch (err) {
       setErrorMessage(getErrorMessage('fetch', err));
       console.error(err);
@@ -139,7 +148,6 @@ function App() {
         id: firstRecord.id,
         title: fields.title ?? newTodoTitle ?? '',
         isCompleted: fields.isCompleted ?? false,
-        isStillSaving: true,
         createdTime: fields.createdTime ?? new Date().toISOString(),
       };
 
@@ -201,11 +209,9 @@ function App() {
     }
   };
 
-  const clearWorkingTodoTitle = () => setWorkingTodoTitle('');
-
   useEffect(() => {
     fetchTodos();
-  }, [createRequest]);
+  }, [createRequest, queryKey]);
 
   return (
     <div>
@@ -231,7 +237,6 @@ function App() {
         setSortDirection={setSortDirection}
         queryString={queryString}
         setQueryString={setQueryString}
-        clearWorkingTodoTitle={clearWorkingTodoTitle}
       />
 
       {errorMessage && (
@@ -242,7 +247,7 @@ function App() {
             type="button"
             onClick={() => setErrorMessage('')}
             value="Dismiss"
-          ></input>
+          />
         </div>
       )}
     </div>
