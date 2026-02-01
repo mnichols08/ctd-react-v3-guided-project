@@ -56,6 +56,9 @@ function App() {
   const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
+
+  const clearQueryString = () => setQueryString('');
+
   const queryKey = useMemo(() => {
     return `${sortField}:${sortDirection}:${queryString}`;
   }, [sortField, sortDirection, queryString]);
@@ -237,6 +240,7 @@ function App() {
         isSaving={isSaving}
         workingTodoTitle={workingTodoTitle}
         setWorkingTodoTitle={setWorkingTodoTitle}
+        clearQueryString={clearQueryString}
       />
       <TodoList
         onCompleteTodo={completeTodo}

@@ -23,7 +23,6 @@ function TodoList({
   isLoading,
   sortField,
   sortDirection,
-  workingTodoTitle,
 }) {
   const sortedAndFilteredTodoList = useMemo(() => {
     return sortTodos(
@@ -31,7 +30,7 @@ function TodoList({
       sortField,
       sortDirection
     );
-  }, [todoList, sortField, sortDirection, workingTodoTitle]);
+  }, [todoList, sortField, sortDirection]);
 
   return (
     <ul className={styles["todo-list"]}>

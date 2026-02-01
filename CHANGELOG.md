@@ -19,17 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - ***
----
-
-## [0.8.2] - 2026-01-27
-
-### Removed
-
-- Removes redundant isStillSaving fields on newly created todos
-- Removes functions clearWorkingTodoTitle and clearQueryString
-- Removes sorting functionality at the create todo input
 
 ---
+
 
 ## [0.9.1] - 2026-01-26
 
@@ -72,6 +64,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.8.3] - 2026-1-31
+
+### Fixed
+
+- Restores input functionality by providing a function called clearQueryString
+
+## [0.8.2] - 2026-01-27
+
+### Removed
+
+- Removes redundant isStillSaving fields on newly created todos
+- Removes functions clearWorkingTodoTitle and clearQueryString
+- Removes sorting functionality at the create todo input
+
+---
+
 ## [0.8.1] - 2026-01-23
 
 ### Added
@@ -87,7 +95,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.8.0] - 2026-01-21
 
-### Added 
+### Added
 
 - Add useState to TodosViewForm for localQueryString to have a state, then refactors search input and clear button
 - Implements a debouncer inside of TodosViewForm that throttles the amount of API calls while using the search filter
@@ -109,7 +117,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Uses useMemo instead of useState + useEffect to avoid unnecessary state updates and re-renders.
 - Fixes typo `new Date().getISOString()` to `new Date().toISOString()`
-- Utilizes `BASE_URL` instead of redeclaring it 
+- Utilizes `BASE_URL` instead of redeclaring it
 - Adds id of `search-control` to input for searching todos
 - Resets the queryString as well as the workingTodoTitle when clear button is pressed within TodosViewForm
 
@@ -186,15 +194,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.6.2] - 2026-01-19
 
 ### Changed
+
 - Removes the createdTime from optimistic todo created from addTodo
 - Removes unnecessary check on whether or not the first record returns in id or not. In theory it will always be provided so the message is redundant.
----
 
-## [0.6.2] - 2026-01-19
-
-### Changed
-- Removes the createdTime from optimistic todo created from addTodo
-- Removes unnecessary check on whether or not the first record returns in id or not. In theory it will always be provided so the message is redundant.
 ---
 
 ## [0.6.1] - 2026-01-19
@@ -351,6 +354,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Converts update button from a normal button to a submit button while removing the onClick handler within TodoListItem
 - Improves semantics of TextInputWithLabel by changing the argument name of label to labelText
 - Refined TodosViewForm layout and styling to align with the rest of the application.
+
 ---
 
 ## [0.0.8] - 2025-12-23
@@ -453,6 +457,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.0.2] - 2025-11-15
 
 ### Added
+
 - Applies some basic styling to App
 - Migrate logic from app to a separate TodoList component
 - Provide a simple stylesheet for TodoList component
@@ -519,6 +524,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
 
+[0.8.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.2...v0.8.3
+[0.8.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.8.0
 
