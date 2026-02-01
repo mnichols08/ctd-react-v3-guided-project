@@ -7,7 +7,7 @@ const StyledErrorImage = styled.img`
   width: 4rem;
 `;
 
-const FlexContainer = styled.div`
+const ErrorContent = styled.div`
   display: flex;
 `;
 
@@ -15,10 +15,10 @@ function ErrorMessage({ errorMessage, setErrorMessage }) {
   return (
     <div className={styles['error-message']}>
       <hr />
-      <FlexContainer>
-        <StyledErrorImage src={errorImg}  />
+      <ErrorContent>
+        <StyledErrorImage src={errorImg} />
         <p>{errorMessage}</p>
-      </FlexContainer>
+      </ErrorContent>
       <input
         type="button"
         onClick={() => setErrorMessage('')}

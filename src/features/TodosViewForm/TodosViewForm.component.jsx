@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+// Styled form container with themed controls for search and sort functionality
+// Includes focus states, dividers, and responsive layout
 const StyledTodosViewForm = styled.form`
   margin-bottom: 1.5rem;
 
@@ -76,6 +78,14 @@ const StyledTodosViewForm = styled.form`
     margin: 0 0.25rem;
   }
 `;
+
+//  - TodosViewForm component for searching and sorting todos
+//  - sortField = Current field to sort by ('title' or 'createdTime')
+//  - setSortField = Function to update the sort field
+//  - sortDirection = Current sort direction ('asc' or 'desc')
+//  - setSortDirection = Function to update the sort direction
+//  - queryString = Current search query string
+//  - setQueryString = Function to update the search query
 function TodosViewForm({
   sortField,
   setSortField,
@@ -84,21 +94,28 @@ function TodosViewForm({
   queryString,
   setQueryString,
 }) {
+  // Local state for search input to enable debouncing
   const [localQueryString, setLocalQueryString] = useState(queryString);
 
+  // Prevent form submission from refreshing the page
   const preventRefresh = e => e.preventDefault();
 
+  // Debounce the search query updates to avoid excessive filtering
+  // Only updates the parent queryString after 500ms of no typing
   useEffect(() => {
     const debounce = setTimeout(() => {
       setQueryString(localQueryString);
     }, 500);
+    // Cleanup timeout if user types again before 500ms
     return () => clearTimeout(debounce);
   }, [localQueryString, setQueryString]);
+  
   return (
     <StyledTodosViewForm onSubmit={preventRefresh}>
       <hr />
 
       <div className="form-controls">
+        {/* Search input with debounced query updates */}
         <div className="search-controls">
           <label htmlFor="search-control">Search Todos:</label>
           <input
@@ -113,6 +130,7 @@ function TodosViewForm({
             value="Clear"
           />
         </div>
+        {/* Sort controls for field and direction */}
         <div className="sort-controls">
           <label htmlFor="sort-by">Sort By</label>
           <select

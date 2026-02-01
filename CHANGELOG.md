@@ -22,6 +22,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.9.2] - 2026-02-01
+
+### Added
+
+- Applies inline comments to components and obscure CSS
+- Adds useTodos hook for consolidating functions within App
+
+### Changed
+
+- Adds more width to line on "checked box" image
+- Renames `FlexContainer` to a more semantic `ErrorContent`
+- Refactors `App.jsx` to leverage new useTodos hook
 
 ## [0.9.1] - 2026-01-26
 
@@ -521,6 +533,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.9.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.2
 [0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
 

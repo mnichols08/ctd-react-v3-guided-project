@@ -5,12 +5,14 @@
   cursor: pointer;
 }
 
+/* Hide the native checkbox input visually while keeping it accessible */
 .checkbox {
   position: absolute;
   height: 0px;
   width: 0px;
 }
 
+/* Custom checkbox button with unchecked state image */
 .checkboxButton {
   background: url(../../assets/checkbox.png);
   height: 20px;
@@ -19,6 +21,7 @@
   cursor: pointer;
 }
 
+/* Custom checkbox button with checked state image when input is checked */
 .checkbox:checked ~ .checkboxButton {
   background: url(../../assets/checkedbox.png);
   height: 20px;
@@ -26,6 +29,8 @@
   background-size: contain;
   cursor: pointer;
 }
+
+/* Strike through the todo title text when checkbox is checked */
 .checkbox:checked ~ span {
   text-decoration: line-through;
 }

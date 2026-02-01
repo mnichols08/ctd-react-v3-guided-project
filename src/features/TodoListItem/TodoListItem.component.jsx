@@ -3,18 +3,31 @@ import { useState, useRef, useEffect } from 'react';
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 import styles from './TodoListItem.module.css';
 
+// TodoListItem component that displays a single todo with inline editing capability
+// - todo = The todo object containing id, title, isCompleted, and isStillSaving
+// - onCompleteTodo = Callback that handles marking a todo as complete/incomplete
+// - onUpdateTodo = Callback that handles updating the todo's title
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
+  // Track whether the item is in edit mode
   const [isEditing, setIsEditing] = useState(false);
+  // Local state for the title being edited
   const [workingTitle, setWorkingTitle] = useState(todo.title);
+  // Ref to focus the input when entering edit mode
   const inputRef = useRef(null);
+  
+  // Cancel editing and revert to original title
   const handleCancel = () => {
     setWorkingTitle(todo.title);
     setIsEditing(false);
   };
+  
+  // Update the working title as user types
   const handleEdit = event => setWorkingTitle(event.target.value);
 
+  // Toggle edit mode (disabled if todo is still saving)
   const toggleIsEditing = () => !todo.isStillSaving && setIsEditing(!isEditing);
 
+  // Submit the updated title
   const handleUpdate = event => {
     event.preventDefault();
     if (!isEditing) return;
@@ -25,18 +38,22 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     setIsEditing(false);
   };
 
+  // Sync local working title with the todo prop when it changes (e.g., after save)
   useEffect(() => {
     setWorkingTitle(todo.title);
   }, [todo]);
 
+  // Auto-focus the input field when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isEditing]);
+  
   return (
     <form onSubmit={handleUpdate}>
       {isEditing ? (
+        // Edit mode: show input field with Cancel and Update functionality
         <>
           <TextInputWithLabel
             elementId={`todo-${todo.id}-title`}
@@ -49,6 +66,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
           <input type="submit" value="Update" />
         </>
       ) : (
+        // Display mode: show checkbox and title (click title to edit)
         <li>
           <div className={styles.labelContainer}>
             <input

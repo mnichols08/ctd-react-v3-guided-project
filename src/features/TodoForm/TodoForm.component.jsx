@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 
+// Styled form container with consistent spacing and theming for form elements
+// Includes styles for labels, inputs, textareas, selects, and buttons with focus states
 const StyledTodoForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -61,6 +63,13 @@ const StyledTodoForm = styled.form`
   }
 `;
 
+// TodoForm component for adding new todo items
+//  - onAddTodo = Callback function to handle adding a new todo
+// - isSaving = Flag indicating if a save operation is in progress
+// - workingTodoTitle = Current value of the todo title input
+// - setWorkingTodoTitle Function to update the todo title
+// - cleaQueryString Function to clear query parameters
+
 function TodoForm({
   onAddTodo,
   isSaving,
@@ -68,17 +77,23 @@ function TodoForm({
   setWorkingTodoTitle,
   clearQueryString,
 }) {
+  // Ref to maintain focus on the input after adding a todo
   const todoTitleInput = useRef(null);
+
+  // Handle form submission - adds the todo and resets the form
   const handleAddTodo = event => {
     event.preventDefault();
     onAddTodo(workingTodoTitle);
     setWorkingTodoTitle('');
     todoTitleInput.current.focus();
   };
+
+  // Update the todo title and clear any query parameters
   const handleChangeQueryString = val => {
     clearQueryString();
     setWorkingTodoTitle(val);
   };
+
   return (
     <StyledTodoForm onSubmit={handleAddTodo}>
       <TextInputWithLabel

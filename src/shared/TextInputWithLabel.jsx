@@ -9,6 +9,7 @@ const StyledInput = styled.input`
   padding: 0.5rem;
 `;
 
+// Simple labeled text input with forwarded ref for parent focus control
 const TextInputWithLabel = forwardRef(
   ({ elementId, labelText, onChange, value }, ref) => {
     return (
