@@ -41,7 +41,6 @@ const StyledTodoForm = styled.form`
     padding: 0.65rem 1rem;
     font-size: 1rem;
     font-weight: 600;
-    padding: 0.65rem 1rem;
 
     &:disabled {
       font-style: italic;
@@ -68,7 +67,7 @@ const StyledTodoForm = styled.form`
 // - isSaving = Flag indicating if a save operation is in progress
 // - workingTodoTitle = Current value of the todo title input
 // - setWorkingTodoTitle Function to update the todo title
-// - cleaQueryString Function to clear query parameters
+// - clearQueryString Function to clear query parameters
 
 function TodoForm({
   onAddTodo,

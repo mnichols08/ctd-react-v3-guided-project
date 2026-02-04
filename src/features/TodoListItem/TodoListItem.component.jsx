@@ -14,13 +14,13 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [workingTitle, setWorkingTitle] = useState(todo.title);
   // Ref to focus the input when entering edit mode
   const inputRef = useRef(null);
-  
+
   // Cancel editing and revert to original title
   const handleCancel = () => {
     setWorkingTitle(todo.title);
     setIsEditing(false);
   };
-  
+
   // Update the working title as user types
   const handleEdit = event => setWorkingTitle(event.target.value);
 
@@ -49,12 +49,12 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
       inputRef.current.focus();
     }
   }, [isEditing]);
-  
+
   return (
-    <form onSubmit={handleUpdate}>
+    <li>
       {isEditing ? (
         // Edit mode: show input field with Cancel and Update functionality
-        <>
+        <form onSubmit={handleUpdate}>
           <TextInputWithLabel
             elementId={`todo-${todo.id}-title`}
             labelText="Todo title"
@@ -64,30 +64,26 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
           />
           <input onClick={handleCancel} type="button" value="Cancel" />
           <input type="submit" value="Update" />
-        </>
+        </form>
       ) : (
         // Display mode: show checkbox and title (click title to edit)
-        <li>
-          <div className={styles.labelContainer}>
-            <input
-              type="checkbox"
-              checked={todo.isCompleted}
-              onChange={() => onCompleteTodo(todo.id)}
-              disabled={todo.isStillSaving}
-              className={styles.checkbox}
-              id={`todo-${todo.id}-checkbox`}
-            />
-            <label
-              htmlFor={`todo-${todo.id}-checkbox`}
-              className={styles.checkboxButton}
-            >
-              <span className={styles.checkboxIcon}>&nbsp;</span>
-            </label>
-            <span onClick={toggleIsEditing}>{todo.title}</span>
-          </div>
-        </li>
+        <div className={styles.labelContainer}>
+          <input
+            type="checkbox"
+            checked={todo.isCompleted}
+            onChange={() => onCompleteTodo(todo.id)}
+            disabled={todo.isStillSaving}
+            className={styles.checkbox}
+            id={`todo-${todo.id}-checkbox`}
+          />
+          <label
+            htmlFor={`todo-${todo.id}-checkbox`}
+            className={styles.checkboxButton}
+          />
+          <span onClick={toggleIsEditing}>{todo.title}</span>
+        </div>
       )}
-    </form>
+    </li>
   );
 }
 

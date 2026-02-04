@@ -22,6 +22,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.9.3] - 2026-02-05
+
+## Added
+
+- Adds empty `alt` tag and `aria-hidden` set to true within ErrorMessage component
+
+### Changed
+
+- Cleans up CSS modules, removing unnecessary globals
+- Restructures TodoListItem component to render a `li` at the root instead of a `form`
+
+### Removed
+
+- Removes TodosViewForm.styles.css
+- In TodoListItem component, removes `span.checkboxIcon` from within `label.checkboxButton`
+- Removes unused imports from App.jsx
+
+---
+
 ## [0.9.2] - 2026-02-01
 
 ### Added
@@ -34,6 +53,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Adds more width to line on "checked box" image
 - Renames `FlexContainer` to a more semantic `ErrorContent`
 - Refactors `App.jsx` to leverage new useTodos hook
+
+---
 
 ## [0.9.1] - 2026-01-26
 

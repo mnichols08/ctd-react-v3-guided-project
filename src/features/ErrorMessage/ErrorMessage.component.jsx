@@ -16,7 +16,7 @@ function ErrorMessage({ errorMessage, setErrorMessage }) {
     <div className={styles['error-message']}>
       <hr />
       <ErrorContent>
-        <StyledErrorImage src={errorImg} />
+        <StyledErrorImage src={errorImg} alt="" aria-hiden="true" />
         <p>{errorMessage}</p>
       </ErrorContent>
       <input
