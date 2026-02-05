@@ -1,10 +1,12 @@
 :root {
-  --font-family: system-ui, sans-serif;
-  --bg: #ffffff;
+  --font-family: 'Inter', system-ui, sans-serif;
+  --secondary-font-family: 'Poppins', system-ui, sans-serif;
+  --bg: #fff;
   --text: #111111;
   --border: #cccccc;
   --focus: #005fcc;
   --accent: #0066ff;
+  --danger: #e65806;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,47 +21,33 @@
 
 body {
   font-family: var(--font-family);
-  background: var(--bg);
+  background:
+    
+    linear-gradient(
+      45deg,
+      var(--bg),
+      color-mix(in srgb, var(--bg) 85%, rgba(33, 34, 117, 0.247) 15%)
+    ),url(./assets/noise.png);
+  background-attachment: fixed;
+  height: 100vh;
   color: var(--text);
   margin: 0;
   padding: 2rem;
   line-height: 1.5;
 }
 
+h1,
+h3,
+h5 {
+  font-family: var(--secondary-font-family);
+}
 h1 {
   font-size: 1.8rem;
   margin-bottom: 1.25rem;
 }
 
 #root {
+  user-select: none;
   display: flex;
   justify-content: center;
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.todos-title {
-  text-align: center;
-}
-
-.error-message input[type='button'] {
-  padding: 0.4rem 0.75rem;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.error-message input[type='button']:hover,
-.todo-list input[type='button'] {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
 }

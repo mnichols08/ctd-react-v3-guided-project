@@ -11,5 +11,5 @@
 /* Import the reset first */
 @import './reset.css';
 
-/* Import app-wide styles */
+/* Import the App Global Stylesheet */
 @import './App.css';

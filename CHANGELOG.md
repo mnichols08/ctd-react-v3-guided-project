@@ -22,6 +22,81 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.9.3] - 2026-02-05
+
+## Added
+
+- Adds empty `alt` tag and `aria-hidden` set to true within ErrorMessage component
+
+### Changed
+
+- Cleans up CSS modules, removing unnecessary globals
+- Restructures TodoListItem component to render a `li` at the root instead of a `form`
+
+### Removed
+
+- Removes TodosViewForm.styles.css
+- In TodoListItem component, removes `span.checkboxIcon` from within `label.checkboxButton`
+- Removes unused imports from App.jsx
+
+---
+
+## [0.9.2] - 2026-02-01
+
+### Added
+
+- Applies inline comments to components and obscure CSS
+- Adds useTodos hook for consolidating functions within App
+
+### Changed
+
+- Adds more width to line on "checked box" image
+- Renames `FlexContainer` to a more semantic `ErrorContent`
+- Refactors `App.jsx` to leverage new useTodos hook
+
+---
+
+## [0.9.1] - 2026-01-26
+
+### Added
+
+- Adds `--host` to `dev` script, allowing network access while in development mode
+- Adds CSS to module TodoListItem that styles the checkbox with custom imagry
+- Within global app.css, utilizes the `#root` selector to set `user-select` to none
+- Allows user to uncheck by adding a 3500ms delay before removing the task from state
+
+---
+
+## [0.9.0] - 2026-01-24
+
+### Added
+- Assigns font-families for headings
+- Declares `styled-components` and `babel-plugin-styled-components` as a dependency
+- Within TextInputWithLabel, converts label and input into styled components
+- Within TodoForm and TodosViewForm, converts form into a styled component
+- Adds background-attachement: fixed to root of App
+- Wraps App in `StyledAppWrapper`, centering with CSS grid
+- Adds favicons for different screens and webmanifest
+- Adds a StyledLogo inside of h1 at top of App component
+- Adds a Header component that accepts properties for setting the logo and displayed text
+- Creates an ErrorMessage component with both CSS module and styled components
+- Adds a very subtle background image to application
+
+### Changed
+
+- Changes body backgound to a linear gradient
+- For App, TodoList, and TodoListItem, utilizes CSS modules to import styles
+- Moves CSS into TodoListItem CSS module from TodoList stylesheet.
+- Refactors Header component to move image outside of h1 tag
+- Inside of TodoList module, refactor individual todos to be tighter together
+- Restores App.module.css to App.css and imports into index.css
+
+### Removed
+- Removes imported stylesheet files from TodoForm and TodosViewForm
+- Cleans up CSS within TodoList.module.css
+
+---
+
 ## [0.8.3] - 2026-1-31
 
 ### Fixed
@@ -158,19 +233,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [0.6.2] - 2026-01-19
-
-### Changed
-
-- Removes the createdTime from optimistic todo created from addTodo
-- Removes unnecessary check on whether or not the first record returns in id or not. In theory it will always be provided so the message is redundant.
-
----
-
 ## [0.6.1] - 2026-01-19
 
 ### Fixed
-
 - Fixes bug where an added todo could not be completed. A previous recaftor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
 - Applies styles akin to rest of app for the error message button
 
@@ -200,8 +265,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
----
-
 ## [0.4.0] - 2025-01-13
 
 ### Added
@@ -225,7 +288,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.2.0] - 2025-01-13
 
 ### Changed
-
 - Updates week 03 props and state to a minor patch 0.2.0
 - Updated props and state usage patterns from Week 03 coursework.
 
@@ -313,8 +375,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Initial implementation of TodosViewForm for sorting and direction control.
 - Integration of sortField and sortDirection state into the App component.
 
-### Removed
-
+### Removed 
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
 - Initial implementation of TodosViewForm for sorting and direction control.
@@ -349,7 +410,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.0.7] - 2025-12-23
 
 ### Fixed
-
 - Replaced timestamp-based IDs with crypto-generated IDs to avoid collisions.
 - Corrected stylesheet import casing issues.
 - Initialized useRef with null instead of an empty string.
@@ -494,21 +554,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.9.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.2
+[0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
+
 [0.8.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.8.0
+
 [0.7.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.7.0
+
 [0.6.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.5.0...v0.6.0
+
 [0.5.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.4.0...v0.5.0
+
 [0.4.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.3.0...v0.4.0
+
 [0.3.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.2.0...v0.3.0
+
 [0.2.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.1.0...v0.2.0
+
 [0.1.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.11...v0.1.0
 [0.0.11]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.9...v0.0.10
