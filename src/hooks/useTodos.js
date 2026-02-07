@@ -1,4 +1,17 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+  startTransition,
+} from 'react';
+
+import {
+  actions as todoActions,
+  initialState as initialTodosState,
+  reducer as todosReducer,
+} from '../reducers/todos.reducer';
 
 const BASE_URL = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
@@ -40,20 +53,18 @@ const getErrorMessage = (action, error) => {
   return messages[action] || 'Something went wrong. Please try again.';
 };
 const useTodos = function () {
-  const [todoList, setTodoList] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [todosState, dispatch] = useReducer(todosReducer, initialTodosState);
   const [workingTodoTitle, setWorkingTodoTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
+  const completionTimersRef = useRef({});
 
   // Unique cache key that represents the current query state.
   // Any change to sorting or search will invalidate the result.
-  const queryKey = useMemo(() => {
-    return `${sortField}:${sortDirection}:${queryString}`;
-  }, [sortField, sortDirection, queryString]);
+  const queryKey = `${sortField}:${sortDirection}:${queryString}`;
 
   // In-memory cache for fetched todos, keyed by queryKey.
   // useRef prevents re-renders when the cache is updated.
@@ -81,6 +92,7 @@ const useTodos = function () {
   const createRequest = useCallback(
     async (method, payload = null) => {
       const setResponseStatus = method === 'GET' ? setIsLoading : setIsSaving;
+      dispatch({ type: todoActions.startRequest });
       try {
         setResponseStatus(true);
         const url = method === 'GET' ? encodeUrl() : BASE_URL;
@@ -107,6 +119,7 @@ const useTodos = function () {
         throw err;
       } finally {
         setResponseStatus(false);
+        dispatch({ type: todoActions.endRequest });
       }
     },
     [encodeUrl]
@@ -114,129 +127,93 @@ const useTodos = function () {
 
   const fetchTodos = async () => {
     if (todoCacheRef.current[queryKey]) {
-      // Serve cached results immediately when available
-      // to avoid unnecessary network requests
-      setTodoList(todoCacheRef.current[queryKey]);
+      dispatch({
+        type: todoActions.serveCachedTodos,
+        cachedRecords: todoCacheRef.current[queryKey],
+      });
       return;
     }
-    // Preserve current state so we can roll back on failure
-    const previousTodos = todoList;
+    dispatch({ type: todoActions.fetchTodos });
     try {
       const { records } = await createRequest('GET');
-      // Normalize Airtable records into app-friendly todo objects
-      // and ensure `isCompleted` always exists
-      const todos = records.map(record => {
-        const todo = {
-          id: record.id,
-          ...record.fields,
-        };
-        if (!todo.isCompleted) {
-          // Normalize missing or falsy isCompleted values from Airtable
-          todo.isCompleted = false;
-        }
-        return todo;
-      });
-      setTodoList(todos);
-      todoCacheRef.current[queryKey] = todos;
+      // Updates todo list cache refererence
+      const normalizedTodos = records.map(record => ({
+        id: record.id,
+        ...record.fields,
+        isCompleted: record.fields.isCompleted ?? false,
+      }));
+
+      dispatch({ type: todoActions.loadTodos, records });
+      todoCacheRef.current[queryKey] = normalizedTodos;
     } catch (err) {
-      setErrorMessage(getErrorMessage('fetch', err));
-      console.error(err);
-      setTodoList(previousTodos);
+      err.message = getErrorMessage('fetch', err);
+      dispatch({ type: todoActions.setLoadError, error: err });
     }
   };
 
   const addTodo = async newTodoTitle => {
-    // Preserve current state so we can roll back on failure
-    const previousTodos = todoList;
+    todoCacheRef.current = {};
     const payload = createPayload(null, { title: newTodoTitle });
-
-    // Optimistically add the todo immediately for responsiveness.
-    // A temporary client-generated ID is replaced after persistence.
-    const optimisticTodos = [
-      ...previousTodos,
-      {
-        id:
-          typeof crypto !== 'undefined' &&
-          typeof crypto.randomUUID === 'function'
-            ? crypto.randomUUID()
-            : `${Date.now()}-${Math.random()}`,
-        title: newTodoTitle,
-        isCompleted: false,
-        isStillSaving: true,
-      },
-    ];
-    setTodoList(optimisticTodos);
+    dispatch({ type: todoActions.addOptimisticTodo, newTodoTitle });
     try {
       const { records } = await createRequest('POST', payload);
-      const firstRecord = records?.[0];
-      const fields = firstRecord?.fields ?? {};
-
-      const savedTodo = {
-        id: firstRecord.id,
-        title: fields.title ?? newTodoTitle ?? '',
-        isCompleted: fields.isCompleted ?? false,
-        createdTime: fields.createdTime ?? new Date().toISOString(),
-      };
-
-      const updatedTodos = [...previousTodos, savedTodo];
-      setTodoList(updatedTodos);
+      dispatch({ type: todoActions.addTodo, records, newTodoTitle });
     } catch (err) {
-      setErrorMessage(getErrorMessage('add', err));
-      console.error(err);
-      setTodoList(previousTodos);
+      err.message = getErrorMessage('add', err);
+      dispatch({ type: todoActions.setLoadError, error: err });
     }
   };
 
   const completeTodo = async completedId => {
-    // Preserve current state so we can roll back on failure
-    const previousTodos = todoList;
-    const originalTodo = todoList.find(todo => todo.id === completedId);
-    if (!originalTodo) {
-      console.warn(`Todo with id ${completedId} not found`);
-      return;
-    }
-    // Optimistically toggle completion state before persisting
-    const optimisticTodos = previousTodos.map(todo =>
-      todo.id === completedId
-        ? { ...todo, isCompleted: !todo.isCompleted }
-        : todo
-    );
+    todoCacheRef.current = {};
+    const originalTodo = todosState.todoList.find(t => t.id === completedId);
+    if (!originalTodo) return;
 
-    setTodoList(optimisticTodos);
-    const payload = createPayload(completedId, {
-      title: originalTodo.title,
+    const optimisticTodo = {
+      ...originalTodo,
       isCompleted: !originalTodo.isCompleted,
-    });
-    try {
-      await createRequest('PATCH', payload);
-      // Delay removal to allow the completed state to be visible briefly.
-      // If the todo is uncompleted during this window, it will not be removed.
-      await new Promise(resolve => setTimeout(resolve, 3500));
+    };
 
-      setTodoList(previousTodos => {
-        const todo = previousTodos.find(t => t.id === completedId);
-        if (!todo || !todo.isCompleted) {
-          // Re-check completion state to avoid removing a todo
-          // that was reverted before the delay elapsed
-          return previousTodos;
-        }
-        return previousTodos.filter(t => t.id !== completedId);
-      });
+    dispatch({ type: todoActions.completeTodo, optimisticTodo });
+
+    // Cancel any existing completion timer
+    if (completionTimersRef.current[completedId]) {
+      clearTimeout(completionTimersRef.current[completedId]);
+      delete completionTimersRef.current[completedId];
+    }
+
+    // Only schedule removal if checking ON
+    if (!originalTodo.isCompleted) {
+      completionTimersRef.current[completedId] = setTimeout(() => {
+        startTransition(() => {
+          dispatch({ type: todoActions.finalizeComplete, completedId });
+        });
+      }, 3500);
+    }
+
+    try {
+      await createRequest(
+        'PATCH',
+        createPayload(completedId, {
+          title: originalTodo.title,
+          isCompleted: !originalTodo.isCompleted,
+        })
+      );
     } catch (err) {
-      setErrorMessage(getErrorMessage('complete', err));
-      console.error(err);
-      setTodoList(previousTodos);
+      clearTimeout(completionTimersRef.current[completedId]);
+      err.message = getErrorMessage('complete', err);
+      dispatch({
+        type: todoActions.revertTodo,
+        editedTodo: originalTodo,
+        error: err,
+      });
     }
   };
-  const updateTodo = async editedTodo => {
-    // Preserve current state so we can roll back on failure
-    const previousTodos = todoList;
-    // Optimistically update todo before saving
-    const optimisticTodos = previousTodos.map(todo =>
-      todo.id === editedTodo.id ? editedTodo : todo
-    );
-    setTodoList(optimisticTodos);
 
+  const updateTodo = async editedTodo => {
+    todoCacheRef.current = {};
+    const originalTodo = todosState.todoList.find(t => t.id === editedTodo.id);
+    dispatch({ type: todoActions.updateTodo, editedTodo });
     const payload = createPayload(editedTodo.id, {
       title: editedTodo.title,
       isCompleted: !editedTodo.isCompleted,
@@ -245,24 +222,37 @@ const useTodos = function () {
     try {
       await createRequest('PATCH', payload);
     } catch (err) {
-      setErrorMessage(getErrorMessage('update', err));
-      console.error(err);
-
-      setTodoList(previousTodos);
+      err.message = getErrorMessage('update', err);
+      dispatch({
+        type: todoActions.revertTodo,
+        editedTodo: originalTodo,
+        error: err,
+      });
     }
   };
+
+  const clearError = useCallback(() => {
+    dispatch({ type: todoActions.clearError });
+  }, []);
 
   useEffect(() => {
     fetchTodos();
     // disabling this warning here because following the linters
-    // advice results in an endless loop 
+    // advice results in an endless loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createRequest, queryKey]);
 
+  // Returns all state and actions from this hook for use in the App component.
+  // This includes:
+  // - The current list of todos and loading/saving states
+  // - Action functions for adding, updating, and completing todos
+  // - State and setters for search query and sorting options
+  // - State and setters for the working todo title (for input control)
+  // - A setter for error messages to display in the UI
   return {
     // data
-    todoList,
-    errorMessage,
+    todosState,
+    errorMessage: todosState.errorMessage,
     isLoading,
     isSaving,
 
@@ -270,7 +260,7 @@ const useTodos = function () {
     addTodo,
     updateTodo,
     completeTodo,
-    setErrorMessage,
+    clearError,
 
     // view state
     queryString,
@@ -280,7 +270,7 @@ const useTodos = function () {
     sortDirection,
     setSortDirection,
     setWorkingTodoTitle,
-    workingTodoTitle
+    workingTodoTitle,
   };
 };
 

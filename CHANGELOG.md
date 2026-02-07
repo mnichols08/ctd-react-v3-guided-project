@@ -22,6 +22,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.10.0] - 2026-02-07
+
+### Added
+
+- Introduces a todos reducer with actions and initial state to centralize todo state management
+
+### Changed
+
+- Refactors `useTodos` to rely on `useReducer` for state updates and improved error handling
+- Destructures `todoList` from `todosState` to align with the reducer-driven shape
+
+### Fixed
+
+- Restores sorting by passing `sortField` and `sortDirection` props through to `TodoList`
+
+---
+
 ## [0.9.3] - 2026-02-05
 
 ## Added
@@ -70,6 +87,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.9.0] - 2026-01-24
 
 ### Added
+
 - Assigns font-families for headings
 - Declares `styled-components` and `babel-plugin-styled-components` as a dependency
 - Within TextInputWithLabel, converts label and input into styled components
@@ -92,6 +110,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Restores App.module.css to App.css and imports into index.css
 
 ### Removed
+
 - Removes imported stylesheet files from TodoForm and TodosViewForm
 - Cleans up CSS within TodoList.module.css
 
@@ -236,6 +255,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.6.1] - 2026-01-19
 
 ### Fixed
+
 - Fixes bug where an added todo could not be completed. A previous recaftor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
 - Applies styles akin to rest of app for the error message button
 
@@ -288,6 +308,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.2.0] - 2025-01-13
 
 ### Changed
+
 - Updates week 03 props and state to a minor patch 0.2.0
 - Updated props and state usage patterns from Week 03 coursework.
 
@@ -375,7 +396,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Initial implementation of TodosViewForm for sorting and direction control.
 - Integration of sortField and sortDirection state into the App component.
 
-### Removed 
+### Removed
+
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
 - Initial implementation of TodosViewForm for sorting and direction control.
@@ -410,6 +432,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.0.7] - 2025-12-23
 
 ### Fixed
+
 - Replaced timestamp-based IDs with crypto-generated IDs to avoid collisions.
 - Corrected stylesheet import casing issues.
 - Initialized useRef with null instead of an empty string.
@@ -557,29 +580,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [0.9.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.2
 [0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
-
 [0.8.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.8.0
-
 [0.7.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.7.0
-
 [0.6.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.5.0...v0.6.0
-
 [0.5.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.4.0...v0.5.0
-
 [0.4.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.3.0...v0.4.0
-
 [0.3.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.2.0...v0.3.0
-
 [0.2.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.1.0...v0.2.0
-
 [0.1.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.11...v0.1.0
 [0.0.11]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.9...v0.0.10

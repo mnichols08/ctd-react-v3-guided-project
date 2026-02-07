@@ -21,11 +21,7 @@ const StyledAppWrapper = styled.div`
 
 function App() {
   const {
-    todoList,
-    isLoading,
-    isSaving,
-    errorMessage,
-    setErrorMessage,
+    todosState: { todoList, errorMessage, isLoading, isSaving },
     addTodo,
     updateTodo,
     completeTodo,
@@ -36,7 +32,8 @@ function App() {
     sortDirection,
     setSortDirection,
     setWorkingTodoTitle,
-    workingTodoTitle
+    workingTodoTitle,
+    clearError
   } = useTodos();
   return (
     <StyledAppWrapper>
@@ -54,6 +51,8 @@ function App() {
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
         workingTodoTitle={workingTodoTitle}
+        sortField={sortField}
+        sortDirection={sortDirection}
       />
 
       <TodosViewForm
@@ -68,7 +67,7 @@ function App() {
       {errorMessage && (
         <ErrorMessage
           errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
+          clearError={clearError}
         />
       )}
     </StyledAppWrapper>

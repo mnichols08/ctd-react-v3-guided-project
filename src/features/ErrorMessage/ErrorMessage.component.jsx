@@ -11,19 +11,15 @@ const ErrorContent = styled.div`
   display: flex;
 `;
 
-function ErrorMessage({ errorMessage, setErrorMessage }) {
+function ErrorMessage({ errorMessage, clearError }) {
   return (
     <div className={styles['error-message']}>
       <hr />
       <ErrorContent>
-        <StyledErrorImage src={errorImg} alt="" aria-hiden="true" />
+        <StyledErrorImage src={errorImg} alt="" aria-hidden="true" />
         <p>{errorMessage}</p>
       </ErrorContent>
-      <input
-        type="button"
-        onClick={() => setErrorMessage('')}
-        value="Dismiss"
-      />
+      <input type="button" onClick={clearError} value="Dismiss" />
     </div>
   );
 }
