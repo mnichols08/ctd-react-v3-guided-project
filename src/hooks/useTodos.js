@@ -3,7 +3,6 @@ import {
   useEffect,
   useReducer,
   useRef,
-  useState,
   startTransition,
 } from 'react';
 
@@ -13,16 +12,25 @@ import {
   reducer as todosReducer,
 } from '../reducers/todos.reducer';
 
+// Static assets are surfaced from this hook so the UI layer
+// doesn’t need to know where they live.
+import logo from '../assets/logo.png';
+import errorImg from '../assets/error.png';
+
+// Airtable configuration derived from env vars.
+// Kept outside the hook so they remain stable across renders.
 const BASE_URL = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
 
+// Default headers for write requests.
+// GET requests intentionally omit Content-Type.
 const DEFAULT_HEADERS = {
   Authorization: AUTH_TOKEN,
   'Content-Type': 'application/json',
 };
 
-// Helper function that normalizes Airtable write payloads.
-// `id` is optional and only included for update requests.
+// Normalizes Airtable write payloads into the expected shape.
+// `id` is optional and only included for PATCH requests.
 const createPayload = (id, fields) => ({
   records: [
     {
@@ -32,13 +40,13 @@ const createPayload = (id, fields) => ({
   ],
 });
 
-// Helper function that translates network errors into
-// user friendly messages based on the attempted action.
-
+// Maps low-level network / HTTP errors to user-facing messages
+// that reflect the action being attempted.
 const getErrorMessage = (action, error) => {
   if (error.code === 'NETWORK_ERROR') {
     return 'Unable to connect to database. Please check your internet connection.';
   }
+
   if (error.status >= 500) {
     return 'Server error. Please try again later.';
   }
@@ -52,55 +60,106 @@ const getErrorMessage = (action, error) => {
 
   return messages[action] || 'Something went wrong. Please try again.';
 };
+
 const useTodos = function () {
-  const [todosState, dispatch] = useReducer(todosReducer, initialTodosState);
-  const [workingTodoTitle, setWorkingTodoTitle] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [queryString, setQueryString] = useState('');
-  const [sortField, setSortField] = useState('createdTime');
-  const [sortDirection, setSortDirection] = useState('desc');
+  // Centralized state management via reducer to keep async
+  // flows predictable and easy to reason about.
+  const [todosState, dispatch] = useReducer(
+    todosReducer,
+    initialTodosState
+  );
+
+  const {
+    errorMessage,
+    sortField,
+    sortDirection,
+    queryString,
+    workingTodoTitle,
+    isLoading,
+    isSaving,
+  } = todosState;
+
+  // Thin action wrappers to avoid leaking dispatch logic
+  // into consuming components.
+  const setSortField = useCallback(field => {
+    dispatch({ type: todoActions.setSortField, sortField: field });
+  }, []);
+
+  const setSortDirection = useCallback(direction => {
+    dispatch({ type: todoActions.setSortDirection, sortDirection: direction });
+  }, []);
+
+  const setQueryString = useCallback(queryString => {
+    dispatch({ type: todoActions.setQueryString, queryString });
+  }, []);
+
+  const setWorkingTodoTitle = useCallback(title => {
+    dispatch({
+      type: todoActions.setWorkingTodoTitle,
+      workingTodoTitle: title,
+    });
+  }, []);
+
+  const setIsSaving = useCallback(isSaving => {
+    dispatch({ type: todoActions.setIsSaving, isSaving });
+  }, []);
+
+  const setIsLoading = useCallback(isLoading => {
+    dispatch({ type: todoActions.setIsLoading, isLoading });
+  }, []);
+
+  // Stores timeout IDs for delayed completion removal.
+  // useRef ensures timers persist across renders without
+  // triggering re-renders.
   const completionTimersRef = useRef({});
 
-  // Unique cache key that represents the current query state.
-  // Any change to sorting or search will invalidate the result.
+  // Represents the current query configuration.
+  // Any change invalidates cached results.
   const queryKey = `${sortField}:${sortDirection}:${queryString}`;
 
-  // In-memory cache for fetched todos, keyed by queryKey.
-  // useRef prevents re-renders when the cache is updated.
+  // In-memory cache for fetched todos keyed by queryKey.
+  // Avoids redundant network requests when toggling views.
   const todoCacheRef = useRef({});
 
-  // Builds the Airtable GET URL with sorting and filtering.
-  // Defaults to incomplete todos only, and adds a SEARCH()
-  // formula when a query string is present.
-  // This differs from the assignment but allows us to remove
-  // the filter from TodoList, enabling us to check off todos
-  // without disappearing immediately.
+  // Constructs the Airtable GET URL with sorting and filtering.
+  // - Defaults to incomplete todos
+  // - Adds SEARCH() when a query string is present
+
+  // This logic intentionally lives here (not in the UI)
+  // so view components remain declarative.
   const encodeUrl = useCallback(() => {
     let searchQuery = '&filterByFormula={isCompleted}=FALSE()';
     const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+
     if (queryString) {
       searchQuery = `&filterByFormula=AND({isCompleted}=FALSE(), SEARCH("${queryString}",{title}))`;
     }
+
     return encodeURI(`${BASE_URL}?${sortQuery}${searchQuery}`);
   }, [sortField, sortDirection, queryString]);
 
-  // Centralized request helper function that:
-  // - Handles GET vs mutation loading states
-  // - Applies correct headers per request type
-  // - Normalizes network and HTTP errors
+  // Centralized request helper that:
+  // - Differentiates loading vs saving states
+  // - Applies appropriate headers per request type
+  // - Normalizes fetch and HTTP errors
   const createRequest = useCallback(
     async (method, payload = null) => {
-      const setResponseStatus = method === 'GET' ? setIsLoading : setIsSaving;
+      const setResponseStatus =
+        method === 'GET' ? setIsLoading : setIsSaving;
+
       dispatch({ type: todoActions.startRequest });
+
       try {
         setResponseStatus(true);
+
         const url = method === 'GET' ? encodeUrl() : BASE_URL;
 
         const options = {
           method,
           headers:
-            method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
+            method === 'GET'
+              ? { Authorization: AUTH_TOKEN }
+              : DEFAULT_HEADERS,
           ...(payload && { body: JSON.stringify(payload) }),
         };
 
@@ -114,7 +173,7 @@ const useTodos = function () {
 
         return resp.json();
       } catch (err) {
-        // fetch throws TypeError on network failures (offline, DNS, etc.)
+        // fetch throws TypeError for network failures (offline, DNS, etc.)
         if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
         throw err;
       } finally {
@@ -122,9 +181,11 @@ const useTodos = function () {
         dispatch({ type: todoActions.endRequest });
       }
     },
-    [encodeUrl]
+    [encodeUrl, setIsLoading, setIsSaving]
   );
 
+  // Fetches todos for the current query state.
+  // Serves from cache when available to avoid refetching.
   const fetchTodos = async () => {
     if (todoCacheRef.current[queryKey]) {
       dispatch({
@@ -133,10 +194,13 @@ const useTodos = function () {
       });
       return;
     }
+
     dispatch({ type: todoActions.fetchTodos });
+
     try {
       const { records } = await createRequest('GET');
-      // Updates todo list cache refererence
+
+      // Normalize Airtable records into app-friendly shape
       const normalizedTodos = records.map(record => ({
         id: record.id,
         ...record.fields,
@@ -151,10 +215,14 @@ const useTodos = function () {
     }
   };
 
+  // Optimistically adds a new todo before persisting to the API.
   const addTodo = async newTodoTitle => {
     todoCacheRef.current = {};
+
     const payload = createPayload(null, { title: newTodoTitle });
+
     dispatch({ type: todoActions.addOptimisticTodo, newTodoTitle });
+
     try {
       const { records } = await createRequest('POST', payload);
       dispatch({ type: todoActions.addTodo, records, newTodoTitle });
@@ -164,9 +232,14 @@ const useTodos = function () {
     }
   };
 
+  // Toggles completion state with delayed removal.
+  // Allows users to undo accidental clicks.
   const completeTodo = async completedId => {
     todoCacheRef.current = {};
-    const originalTodo = todosState.todoList.find(t => t.id === completedId);
+
+    const originalTodo = todosState.todoList.find(
+      t => t.id === completedId
+    );
     if (!originalTodo) return;
 
     const optimisticTodo = {
@@ -176,17 +249,21 @@ const useTodos = function () {
 
     dispatch({ type: todoActions.completeTodo, optimisticTodo });
 
-    // Cancel any existing completion timer
+    // Cancel any pending completion timers
     if (completionTimersRef.current[completedId]) {
       clearTimeout(completionTimersRef.current[completedId]);
       delete completionTimersRef.current[completedId];
     }
 
-    // Only schedule removal if checking ON
+    // Only schedule delayed removal when marking complete
     if (!originalTodo.isCompleted) {
       completionTimersRef.current[completedId] = setTimeout(() => {
         startTransition(() => {
-          dispatch({ type: todoActions.finalizeComplete, completedId });
+          // Marked non-urgent so UI interactions remain responsive
+          dispatch({
+            type: todoActions.finalizeComplete,
+            completedId,
+          });
         });
       }, 3500);
     }
@@ -210,13 +287,18 @@ const useTodos = function () {
     }
   };
 
+  // Optimistically updates a todo title with rollback on failure.
   const updateTodo = async editedTodo => {
     todoCacheRef.current = {};
-    const originalTodo = todosState.todoList.find(t => t.id === editedTodo.id);
+
+    const originalTodo = todosState.todoList.find(
+      t => t.id === editedTodo.id
+    );
+
     dispatch({ type: todoActions.updateTodo, editedTodo });
+
     const payload = createPayload(editedTodo.id, {
       title: editedTodo.title,
-      isCompleted: !editedTodo.isCompleted,
     });
 
     try {
@@ -231,28 +313,30 @@ const useTodos = function () {
     }
   };
 
+  // Clears the current error message from state.
   const clearError = useCallback(() => {
     dispatch({ type: todoActions.clearError });
   }, []);
 
   useEffect(() => {
     fetchTodos();
-    // disabling this warning here because following the linters
-    // advice results in an endless loop
+
+    // Following the exhaustive-deps rule here causes
+    // an infinite request loop due to reducer-driven updates.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createRequest, queryKey]);
 
-  // Returns all state and actions from this hook for use in the App component.
-  // This includes:
-  // - The current list of todos and loading/saving states
-  // - Action functions for adding, updating, and completing todos
-  // - State and setters for search query and sorting options
-  // - State and setters for the working todo title (for input control)
-  // - A setter for error messages to display in the UI
+  // Exposes all state and actions required by the UI layer.
+  // The App and feature components consume this hook
+  // without needing to know about Airtable or async logic.
   return {
-    // data
+    // assets
+    logo,
+    errorImg,
+
+    // state
     todosState,
-    errorMessage: todosState.errorMessage,
+    errorMessage,
     isLoading,
     isSaving,
 

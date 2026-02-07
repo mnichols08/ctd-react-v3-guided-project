@@ -22,12 +22,12 @@
 body {
   font-family: var(--font-family);
   background:
-    
     linear-gradient(
       45deg,
       var(--bg),
       color-mix(in srgb, var(--bg) 85%, rgba(33, 34, 117, 0.247) 15%)
-    ),url(./assets/noise.png);
+    ),
+    url(./assets/noise.png);
   background-attachment: fixed;
   height: 100vh;
   color: var(--text);
