@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import useTodos from './hooks/useTodos';
+import { useTodosContext } from './context/TodosContext';
 
 import TodoList from './features/TodoList/TodoList.component';
 import TodoForm from './features/TodoForm/TodoForm.component';
@@ -13,13 +13,13 @@ const StyledAppWrapper = styled.div`
   justify-content: center;
 `;
 
-// App is the primary logic layer for all todos
-// - It handles fetching and caching todos from Airtable
-// - It manages an optimistic UI for mutations
-// - It coordinates sorting, searching, and filtering state
-// - It centralizes loading/saving and error handling
-
+// App orchestrates global todo state and UI composition.
+// Responsibilities:
+// - Read/write todos via TodosContext (optimistic updates)
+// - Pass down sorting/searching/filtering state
+// - Surface loading/saving/error status to children
 function App() {
+  // Destructure context values for clarity and to document usage
   const {
     todosState: { todoList, errorMessage, isLoading, isSaving },
     addTodo,
@@ -33,43 +33,42 @@ function App() {
     setSortDirection,
     setWorkingTodoTitle,
     workingTodoTitle,
-    clearError
-  } = useTodos();
+    clearError,
+  } = useTodosContext();
   return (
     <StyledAppWrapper>
       <Header displayedText="Todos" />
-      <TodoForm
-        onAddTodo={addTodo}
-        isSaving={isSaving}
-        workingTodoTitle={workingTodoTitle}
-        setWorkingTodoTitle={setWorkingTodoTitle}
-        clearQueryString={() => setQueryString('')}
-      />
-      <TodoList
-        onCompleteTodo={completeTodo}
-        todoList={todoList}
-        onUpdateTodo={updateTodo}
-        isLoading={isLoading}
-        workingTodoTitle={workingTodoTitle}
-        sortField={sortField}
-        sortDirection={sortDirection}
-      />
-
-      <TodosViewForm
-        sortField={sortField}
-        setSortField={setSortField}
-        sortDirection={sortDirection}
-        setSortDirection={setSortDirection}
-        queryString={queryString}
-        setQueryString={setQueryString}
-      />
-
-      {errorMessage && (
-        <ErrorMessage
-          errorMessage={errorMessage}
-          clearError={clearError}
+      <main>
+        <TodoForm
+          onAddTodo={addTodo}
+          isSaving={isSaving}
+          workingTodoTitle={workingTodoTitle}
+          setWorkingTodoTitle={setWorkingTodoTitle}
+          clearQueryString={() => setQueryString('')}
         />
-      )}
+        <TodoList
+          onCompleteTodo={completeTodo}
+          todoList={todoList}
+          onUpdateTodo={updateTodo}
+          isLoading={isLoading}
+          workingTodoTitle={workingTodoTitle}
+          sortField={sortField}
+          sortDirection={sortDirection}
+        />
+
+        <TodosViewForm
+          sortField={sortField}
+          setSortField={setSortField}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
+          queryString={queryString}
+          setQueryString={setQueryString}
+        />
+
+        {errorMessage && (
+          <ErrorMessage errorMessage={errorMessage} clearError={clearError} />
+        )}
+      </main>
     </StyledAppWrapper>
   );
 }

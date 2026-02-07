@@ -16,7 +16,7 @@ function ErrorMessage({ errorMessage, clearError }) {
     <div className={styles['error-message']}>
       <hr />
       <ErrorContent>
-        <StyledErrorImage src={errorImg} alt="" aria-hidden="true" />
+        <StyledErrorImage src={errorImg} alt="" />
         <p>{errorMessage}</p>
       </ErrorContent>
       <input type="button" onClick={clearError} value="Dismiss" />

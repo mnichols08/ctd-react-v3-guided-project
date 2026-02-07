@@ -22,7 +22,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [0.10.0] - 2026-02-07
+## [0.10.1] - 2026-02-08
+
+### Added
+
+- Implements TodosContext to wrap the App with useTodos Hook logic.
+
+### Changed
+
+- Compresses images for better performance
+- Refactor App component to use TodosContext for state management
+- Refactor useTodos and todos.reducer to manage all state properties and actions
+- Improves comments within hook and context files
+
+### Fixed
+
+- Fixes updateTodo so that an edited todo remains incomplete
+- Remove aria-hidden attribute from error image in ErrorMessage component
+- Enhance checkbox styling for consistent appearance and alignment
+
+---
+
+## [0.10.0] - 2026-02-05
 
 ### Added
 
@@ -576,6 +597,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Security**: Security-related updates
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
+
+[0.10.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.0...v0.10.1
+[0.10.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.2...v0.10.0
 
 [0.9.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.2
 [0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
