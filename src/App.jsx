@@ -8,66 +8,40 @@ import TodosViewForm from './features/TodosViewForm/TodosViewForm.component';
 import Header from './features/Header/Header.component';
 import ErrorMessage from './features/ErrorMessage/ErrorMessage.component';
 
+// Layout wrapper responsible only for centering the app.
+// Visual styling is intentionally minimal.
 const StyledAppWrapper = styled.div`
   display: grid;
   justify-content: center;
 `;
 
-// App orchestrates global todo state and UI composition.
-// Responsibilities:
-// - Read/write todos via TodosContext (optimistic updates)
-// - Pass down sorting/searching/filtering state
-// - Surface loading/saving/error status to children
+// App composes the main features of the todos experience.
+// It owns no business logic and delegates state management
+// to TodosContext and feature-level components.
 function App() {
-  // Destructure context values for clarity and to document usage
+  // Read only the global error state needed at this level.
+  // Other state is consumed closer to where it’s used.
   const {
-    todosState: { todoList, errorMessage, isLoading, isSaving },
-    addTodo,
-    updateTodo,
-    completeTodo,
-    queryString,
-    setQueryString,
-    sortField,
-    setSortField,
-    sortDirection,
-    setSortDirection,
-    setWorkingTodoTitle,
-    workingTodoTitle,
-    clearError,
+    todosState: { errorMessage },
   } = useTodosContext();
+
   return (
     <StyledAppWrapper>
-      <Header displayedText="Todos" />
+      {/* Static application header */}
+      <Header displayedText="Todo App" />
+
       <main>
-        <TodoForm
-          onAddTodo={addTodo}
-          isSaving={isSaving}
-          workingTodoTitle={workingTodoTitle}
-          setWorkingTodoTitle={setWorkingTodoTitle}
-          clearQueryString={() => setQueryString('')}
-        />
-        <TodoList
-          onCompleteTodo={completeTodo}
-          todoList={todoList}
-          onUpdateTodo={updateTodo}
-          isLoading={isLoading}
-          workingTodoTitle={workingTodoTitle}
-          sortField={sortField}
-          sortDirection={sortDirection}
-        />
+        {/* Create new todos */}
+        <TodoForm />
 
-        <TodosViewForm
-          sortField={sortField}
-          setSortField={setSortField}
-          sortDirection={sortDirection}
-          setSortDirection={setSortDirection}
-          queryString={queryString}
-          setQueryString={setQueryString}
-        />
+        {/* Render current list based on view state */}
+        <TodoList />
 
-        {errorMessage && (
-          <ErrorMessage errorMessage={errorMessage} clearError={clearError} />
-        )}
+        {/* Controls for sorting and filtering */}
+        <TodosViewForm />
+
+        {/* Global error surfaced consistently across the app */}
+        {errorMessage && <ErrorMessage />}
       </main>
     </StyledAppWrapper>
   );

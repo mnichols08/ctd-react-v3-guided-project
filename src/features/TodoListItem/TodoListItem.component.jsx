@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 
+import { useTodosContext } from '../../context/TodosContext';
+
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 import styles from './TodoListItem.module.css';
 
@@ -7,7 +9,8 @@ import styles from './TodoListItem.module.css';
 // - todo = The todo object containing id, title, isCompleted, and isStillSaving
 // - onCompleteTodo = Callback that handles marking a todo as complete/incomplete
 // - onUpdateTodo = Callback that handles updating the todo's title
-function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
+function TodoListItem({ todo }) {
+  const { completeTodo, updateTodo } = useTodosContext();
   // Track whether the item is in edit mode
   const [isEditing, setIsEditing] = useState(false);
   // Local state for the title being edited
@@ -31,7 +34,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const handleUpdate = event => {
     event.preventDefault();
     if (!isEditing) return;
-    onUpdateTodo({
+    updateTodo({
       ...todo,
       title: workingTitle,
     });
@@ -52,37 +55,39 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
 
   return (
     <li>
-      {isEditing ? (
-        // Edit mode: show input field with Cancel and Update functionality
-        <form onSubmit={handleUpdate}>
-          <TextInputWithLabel
-            elementId={`todo-${todo.id}-title`}
-            labelText="Todo title"
-            value={workingTitle}
-            onChange={handleEdit}
-            ref={inputRef}
-          />
-          <input onClick={handleCancel} type="button" value="Cancel" />
-          <input type="submit" value="Update" />
-        </form>
-      ) : (
-        // Display mode: show checkbox and title (click title to edit)
-        <div className={styles.labelContainer}>
-          <input
-            type="checkbox"
-            checked={todo.isCompleted}
-            onChange={() => onCompleteTodo(todo.id)}
-            disabled={todo.isStillSaving}
-            className={styles.checkbox}
-            id={`todo-${todo.id}-checkbox`}
-          />
-          <label
-            htmlFor={`todo-${todo.id}-checkbox`}
-            className={styles.checkboxButton}
-          />
-          <span onClick={toggleIsEditing}>{todo.title}</span>
-        </div>
-      )}
+      <form onSubmit={handleUpdate}>
+        {isEditing ? (
+          // Edit mode: show input field with Cancel and Update functionality
+          <>
+            <TextInputWithLabel
+              elementId={`todo-${todo.id}-title`}
+              labelText="Todo title"
+              value={workingTitle}
+              onChange={handleEdit}
+              ref={inputRef}
+            />
+            <input onClick={handleCancel} type="button" value="Cancel" />
+            <input type="submit" value="Update" />
+          </>
+        ) : (
+          // Display mode: show checkbox and title (click title to edit)
+          <div className={styles.labelContainer}>
+            <input
+              type="checkbox"
+              checked={todo.isCompleted}
+              onChange={() => completeTodo(todo.id)}
+              disabled={todo.isStillSaving}
+              className={styles.checkbox}
+              id={`todo-${todo.id}-checkbox`}
+            />
+            <label
+              htmlFor={`todo-${todo.id}-checkbox`}
+              className={styles.checkboxButton}
+            />
+            <span onClick={toggleIsEditing}>{todo.title}</span>
+          </div>
+        )}
+      </form>
     </li>
   );
 }

@@ -27,6 +27,7 @@ const actions = {
   setSortDirection: 'setSortDirection',
   setSortField: 'setSortField',
   setQueryString: 'setQueryString',
+  clearQueryString: 'clearQueryString',
   setIsSaving: 'setIsSaving',
   setIsLoading: 'setIsLoading',
 };
@@ -101,7 +102,7 @@ function reducer(state = initialState, action) {
       // Immediately insert a new todo into state for responsiveness.
       // This placeholder is later replaced by the persisted record.
       const newTodo = {
-        id: crypto.randomUUID(),
+        id: `${Date.now()}_${action.newTodoTitle}_${Math.floor(Math.random() * 15000)}`, // Generates a temporary fake id
         title: action.newTodoTitle,
         isCompleted: false,
         isStillSaving: true, // Identifies optimistic placeholder
@@ -126,8 +127,7 @@ function reducer(state = initialState, action) {
             ? {
                 id: firstRecord.id,
                 ...firstRecord.fields,
-                isCompleted:
-                  firstRecord.fields.isCompleted ?? false,
+                isCompleted: firstRecord.fields.isCompleted ?? false,
               }
             : todo
         ),
@@ -148,9 +148,7 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         todoList: state.todoList.map(todo =>
-          todo.id === action.optimisticTodo.id
-            ? action.optimisticTodo
-            : todo
+          todo.id === action.optimisticTodo.id ? action.optimisticTodo : todo
         ),
       };
 
@@ -160,9 +158,7 @@ function reducer(state = initialState, action) {
       // - Confirming an update
       // - Reverting to previous state if persistence fails
       const updatedTodos = state.todoList.map(todo =>
-        todo.id === action.editedTodo.id
-          ? { ...action.editedTodo }
-          : todo
+        todo.id === action.editedTodo.id ? { ...action.editedTodo } : todo
       );
 
       const updatedState = {
@@ -183,9 +179,7 @@ function reducer(state = initialState, action) {
       // This enables undo-like behavior in the UI.
       return {
         ...state,
-        todoList: state.todoList.filter(
-          todo => todo.id !== action.completedId
-        ),
+        todoList: state.todoList.filter(todo => todo.id !== action.completedId),
       };
 
     case actions.clearError:
@@ -218,6 +212,12 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         queryString: action.queryString,
+      };
+
+    case actions.clearQueryString:
+      return {
+        ...state,
+        queryString: '',
       };
 
     case actions.setIsSaving:
