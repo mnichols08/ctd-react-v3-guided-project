@@ -64,10 +64,7 @@ const getErrorMessage = (action, error) => {
 const useTodos = function () {
   // Centralized state management via reducer to keep async
   // flows predictable and easy to reason about.
-  const [todosState, dispatch] = useReducer(
-    todosReducer,
-    initialTodosState
-  );
+  const [todosState, dispatch] = useReducer(todosReducer, initialTodosState);
 
   const {
     errorMessage,
@@ -144,8 +141,7 @@ const useTodos = function () {
   // - Normalizes fetch and HTTP errors
   const createRequest = useCallback(
     async (method, payload = null) => {
-      const setResponseStatus =
-        method === 'GET' ? setIsLoading : setIsSaving;
+      const setResponseStatus = method === 'GET' ? setIsLoading : setIsSaving;
 
       dispatch({ type: todoActions.startRequest });
 
@@ -157,9 +153,7 @@ const useTodos = function () {
         const options = {
           method,
           headers:
-            method === 'GET'
-              ? { Authorization: AUTH_TOKEN }
-              : DEFAULT_HEADERS,
+            method === 'GET' ? { Authorization: AUTH_TOKEN } : DEFAULT_HEADERS,
           ...(payload && { body: JSON.stringify(payload) }),
         };
 
@@ -237,9 +231,7 @@ const useTodos = function () {
   const completeTodo = async completedId => {
     todoCacheRef.current = {};
 
-    const originalTodo = todosState.todoList.find(
-      t => t.id === completedId
-    );
+    const originalTodo = todosState.todoList.find(t => t.id === completedId);
     if (!originalTodo) return;
 
     const optimisticTodo = {
@@ -291,9 +283,7 @@ const useTodos = function () {
   const updateTodo = async editedTodo => {
     todoCacheRef.current = {};
 
-    const originalTodo = todosState.todoList.find(
-      t => t.id === editedTodo.id
-    );
+    const originalTodo = todosState.todoList.find(t => t.id === editedTodo.id);
 
     dispatch({ type: todoActions.updateTodo, editedTodo });
 
@@ -312,6 +302,11 @@ const useTodos = function () {
       });
     }
   };
+
+  // Clears the current query string fom state.
+  const clearQueryString = useCallback(() => {
+    dispatch({ type: todoActions.clearQueryString });
+  }, []);
 
   // Clears the current error message from state.
   const clearError = useCallback(() => {
@@ -345,6 +340,7 @@ const useTodos = function () {
     updateTodo,
     completeTodo,
     clearError,
+    clearQueryString,
 
     // view state
     queryString,
