@@ -97,14 +97,6 @@ const useTodos = function () {
     });
   }, []);
 
-  const setIsSaving = useCallback(isSaving => {
-    dispatch({ type: todoActions.setIsSaving, isSaving });
-  }, []);
-
-  const setIsLoading = useCallback(isLoading => {
-    dispatch({ type: todoActions.setIsLoading, isLoading });
-  }, []);
-
   // Stores timeout IDs for delayed completion removal.
   // useRef ensures timers persist across renders without
   // triggering re-renders.
@@ -125,14 +117,18 @@ const useTodos = function () {
   // This logic intentionally lives here (not in the UI)
   // so view components remain declarative.
   const encodeUrl = useCallback(() => {
-    let searchQuery = '&filterByFormula={isCompleted}=FALSE()';
-    const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-
+    const sortQuery = `sort[0][field]=${encodeURIComponent(
+      sortField
+    )}&sort[0][direction]=${encodeURIComponent(sortDirection)}`;
+    let formula = '{isCompleted}=FALSE()';
     if (queryString) {
-      searchQuery = `&filterByFormula=AND({isCompleted}=FALSE(), SEARCH("${queryString}",{title}))`;
+      // Use JSON.stringify to safely quote and escape the search term
+      // inside the Airtable formula string.
+      const safeQuery = JSON.stringify(queryString);
+      formula = `AND({isCompleted}=FALSE(), SEARCH(${safeQuery},{title}))`;
     }
-
-    return encodeURI(`${BASE_URL}?${sortQuery}${searchQuery}`);
+    const searchQuery = `filterByFormula=${encodeURIComponent(formula)}`;
+    return `${BASE_URL}?${sortQuery}&${searchQuery}`;
   }, [sortField, sortDirection, queryString]);
 
   // Centralized request helper that:
@@ -141,13 +137,11 @@ const useTodos = function () {
   // - Normalizes fetch and HTTP errors
   const createRequest = useCallback(
     async (method, payload = null) => {
-      const setResponseStatus = method === 'GET' ? setIsLoading : setIsSaving;
+      const requestKind = method === 'GET' ? 'loading' : 'saving';
 
-      dispatch({ type: todoActions.startRequest });
+      dispatch({ type: todoActions.startRequest, requestKind });
 
       try {
-        setResponseStatus(true);
-
         const url = method === 'GET' ? encodeUrl() : BASE_URL;
 
         const options = {
@@ -171,11 +165,10 @@ const useTodos = function () {
         if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
         throw err;
       } finally {
-        setResponseStatus(false);
-        dispatch({ type: todoActions.endRequest });
+        dispatch({ type: todoActions.endRequest, requestKind });
       }
     },
-    [encodeUrl, setIsLoading, setIsSaving]
+    [encodeUrl]
   );
 
   // Fetches todos for the current query state.
@@ -197,6 +190,7 @@ const useTodos = function () {
       // Normalize Airtable records into app-friendly shape
       const normalizedTodos = records.map(record => ({
         id: record.id,
+        createdTime: record.createdTime,
         ...record.fields,
         isCompleted: record.fields.isCompleted ?? false,
       }));
@@ -213,13 +207,15 @@ const useTodos = function () {
   const addTodo = async newTodoTitle => {
     todoCacheRef.current = {};
 
+    const clientId = `${Date.now()}_${newTodoTitle}_${Math.floor(Math.random() * 15000)}`;
+
     const payload = createPayload(null, { title: newTodoTitle });
 
-    dispatch({ type: todoActions.addOptimisticTodo, newTodoTitle });
+    dispatch({ type: todoActions.addOptimisticTodo, newTodoTitle, clientId });
 
     try {
       const { records } = await createRequest('POST', payload);
-      dispatch({ type: todoActions.addTodo, records, newTodoTitle });
+      dispatch({ type: todoActions.addTodo, records, clientId });
     } catch (err) {
       err.message = getErrorMessage('add', err);
       dispatch({ type: todoActions.setLoadError, error: err });
@@ -285,6 +281,14 @@ const useTodos = function () {
 
     const originalTodo = todosState.todoList.find(t => t.id === editedTodo.id);
 
+    if (!originalTodo) {
+      dispatch({
+        type: todoActions.setLoadError,
+        error: new Error('That todo is no longer available. Please refresh.'),
+      });
+      return;
+    }
+
     dispatch({ type: todoActions.updateTodo, editedTodo });
 
     const payload = createPayload(editedTodo.id, {
@@ -295,6 +299,12 @@ const useTodos = function () {
       await createRequest('PATCH', payload);
     } catch (err) {
       err.message = getErrorMessage('update', err);
+      // If the original todo is not found, skip the revert to avoid reducer errors.
+      if (!originalTodo) {
+        dispatch({ type: todoActions.setLoadError, error: err });
+        return;
+      }
+
       dispatch({
         type: todoActions.revertTodo,
         editedTodo: originalTodo,
@@ -303,7 +313,7 @@ const useTodos = function () {
     }
   };
 
-  // Clears the current query string fom state.
+  // Clears the current query string from state.
   const clearQueryString = useCallback(() => {
     dispatch({ type: todoActions.clearQueryString });
   }, []);
