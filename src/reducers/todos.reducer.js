@@ -28,8 +28,6 @@ const actions = {
   setSortField: 'setSortField',
   setQueryString: 'setQueryString',
   clearQueryString: 'clearQueryString',
-  setIsSaving: 'setIsSaving',
-  setIsLoading: 'setIsLoading',
 };
 
 // Initial reducer state.
@@ -92,7 +90,15 @@ function reducer(state = initialState, action) {
       };
 
     case actions.startRequest:
-      // Indicates a mutation (add/update/complete) is in progress.
+      // Differentiates read vs write requests to avoid flipping
+      // the saving indicator during data fetches.
+      if (action.requestKind === 'loading') {
+        return {
+          ...state,
+          isLoading: true,
+        };
+      }
+
       return {
         ...state,
         isSaving: true,
@@ -101,8 +107,10 @@ function reducer(state = initialState, action) {
     case actions.addOptimisticTodo: {
       // Immediately insert a new todo into state for responsiveness.
       // This placeholder is later replaced by the persisted record.
+      const clientId = action.clientId;
       const newTodo = {
-        id: `${Date.now()}_${action.newTodoTitle}_${Math.floor(Math.random() * 15000)}`, // Generates a temporary fake id
+        id: clientId, // temporary fake id
+        clientId, // stable client-side identifier for replacement
         title: action.newTodoTitle,
         isCompleted: false,
         isStillSaving: true, // Identifies optimistic placeholder
@@ -117,17 +125,20 @@ function reducer(state = initialState, action) {
 
     case actions.addTodo: {
       const firstRecord = action.records?.[0];
-      if (!firstRecord) return state;
+      if (!firstRecord || !action.clientId) return state;
 
-      // Replace the optimistic placeholder with the server response.
+      // Replace only the matching optimistic placeholder with the server response.
       return {
         ...state,
         todoList: state.todoList.map(todo =>
-          todo.isStillSaving
+          todo.isStillSaving && todo.clientId === action.clientId
             ? {
                 id: firstRecord.id,
+                clientId: undefined,
                 ...firstRecord.fields,
+                createdTime: firstRecord.createdTime ?? todo.createdTime,
                 isCompleted: firstRecord.fields.isCompleted ?? false,
+                isStillSaving: false,
               }
             : todo
         ),
@@ -136,10 +147,16 @@ function reducer(state = initialState, action) {
     }
 
     case actions.endRequest:
-      // Ensures all request flags are reset after completion.
+      // Reset only the flag corresponding to the request type.
+      if (action.requestKind === 'loading') {
+        return {
+          ...state,
+          isLoading: false,
+        };
+      }
+
       return {
         ...state,
-        isLoading: false,
         isSaving: false,
       };
 
@@ -157,6 +174,17 @@ function reducer(state = initialState, action) {
       // Shared logic for:
       // - Confirming an update
       // - Reverting to previous state if persistence fails
+      if (!action.editedTodo) {
+        if (action.error) {
+          return {
+            ...state,
+            errorMessage: action.error.message,
+          };
+        }
+
+        return state;
+      }
+
       const updatedTodos = state.todoList.map(todo =>
         todo.id === action.editedTodo.id ? { ...action.editedTodo } : todo
       );
@@ -218,18 +246,6 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         queryString: '',
-      };
-
-    case actions.setIsSaving:
-      return {
-        ...state,
-        isSaving: action.isSaving,
-      };
-
-    case actions.setIsLoading:
-      return {
-        ...state,
-        isLoading: action.isLoading,
       };
 
     default:

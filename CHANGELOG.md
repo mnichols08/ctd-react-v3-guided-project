@@ -22,6 +22,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.10.3] - 2026-02-09
+
+### Changed 
+
+- Updated TodoListItem component so entering edit mode on a completed todo immediately marks it incomplete and clears the pending removal timer; canceling the edit restores the completed state and re-arms completion.
+- Tracked the todo’s completion state at edit start to safely revert only when appropriate.
+
+### Fixed
+
+- Prevents a a single response from overwriting multiple placeholders by tracking the optimistic todo via a unique clientId
+- Added createdTime to cached todos so cached results match reducer shape and sorting by createdTime works.
+- In updateTodo, implements a guard if the original todo is not found to skip the revert to avoid reducer errors.
+- Differentiates read vs write requests to avoid flipping the saving indicator during data fetches.
+- Prevents reducer errors by guarding against missing originalTodo during updateTodo reverts, avoiding invalid editedTodo dispatches when UI state is stale or items are removed.
+- Prevent invalid Airtable formulas by safely escaping quotes and special characters in queryString when interpolating into SEARCH(). Now only query parameter values are encoded instead of the entire URL.
+
 ---
 
 ## [0.10.2] - 2026-02-08
@@ -617,6 +633,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.10.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.2...v0.10.3
 [0.10.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.2...v0.10.0

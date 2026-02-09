@@ -17,18 +17,36 @@ function TodoListItem({ todo }) {
   const [workingTitle, setWorkingTitle] = useState(todo.title);
   // Ref to focus the input when entering edit mode
   const inputRef = useRef(null);
+  // Tracks whether the todo was completed when edit mode was entered
+  const wasCompletedRef = useRef(todo.isCompleted);
 
   // Cancel editing and revert to original title
   const handleCancel = () => {
     setWorkingTitle(todo.title);
     setIsEditing(false);
+
+    // If the todo started as completed, revert it to completed on cancel
+    if (wasCompletedRef.current && !todo.isCompleted) {
+      completeTodo(todo.id);
+    }
   };
 
   // Update the working title as user types
   const handleEdit = event => setWorkingTitle(event.target.value);
 
   // Toggle edit mode (disabled if todo is still saving)
-  const toggleIsEditing = () => !todo.isStillSaving && setIsEditing(!isEditing);
+  const toggleIsEditing = () => {
+    if (todo.isStillSaving) return;
+
+    wasCompletedRef.current = todo.isCompleted;
+
+    // If the todo was completed, immediately mark it incomplete while editing
+    if (todo.isCompleted) {
+      completeTodo(todo.id);
+    }
+
+    setIsEditing(true);
+  };
 
   // Submit the updated title
   const handleUpdate = event => {
