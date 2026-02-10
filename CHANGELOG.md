@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
----
+<!-- ---
 
 ## [Unreleased]
 
@@ -18,7 +18,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- ***
+- *** -->
+
+## [0.10.6] - 2026-02-10
+
+### Fixed
+
+- Fixes typo in changelog v.0.10.5
+- In useTodos hook:
+  - In updateTodo, avoid invalid updates and PATCH requests by returning early if original todo is missing
+  - In addTodo, prevent clearing an in-flight fetch loading state when a save fails
+- In todos reducer, normalize null/undefined isCompleted for consistency
+- In TodoListItem component, sync workingTitle with todo.title when idle
+- Corrects various formatting inconsistencies across changelog
 
 ---
 
@@ -26,7 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Avoids unintended coercion by using using a nullish check on isCompleted within loadTodos action
+- Avoids unintended coercion by using a nullish check on isCompleted within loadTodos action
 - In TodoListItem component, extends onKeyDown to handle Space (and preventing default to avoid page scrolling)
 - Avoid incorrectly clearing an active loading state by only using the load-specific error action when no load is in progress
 
@@ -132,7 +144,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.9.3] - 2026-02-05
 
-## Added
+### Added
 
 - Adds empty `alt` tag and `aria-hidden` set to true within ErrorMessage component
 
@@ -207,7 +219,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [0.8.3] - 2026-1-31
+## [0.8.3] - 2026-01-31
 
 ### Fixed
 
@@ -411,8 +423,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Updated foundational application code from Week 02 coursework.
 
-- Updated foundational application code from Week 02 coursework.
-
 ---
 
 ## [0.0.11] - 2026-01-12
@@ -491,8 +501,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
-- Initial implementation of TodosViewForm for sorting and direction control.
-- Integration of sortField and sortDirection state into the App component.
 
 ### Changed
 
@@ -668,6 +676,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.10.6]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.5...v0.10.6
 [0.10.5]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.4...v0.10.5
 [0.10.4]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.3...v0.10.4
 [0.10.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.2...v0.10.3

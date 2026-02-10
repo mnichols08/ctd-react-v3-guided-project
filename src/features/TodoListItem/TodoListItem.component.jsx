@@ -71,6 +71,13 @@ function TodoListItem({ todo }) {
     }
   }, [isEditing]);
 
+  // Sync workingTitle with todo.title when idle
+  useEffect(() => {
+  if (!isEditing) {
+    setWorkingTitle(todo.title);
+  }
+}, [todo.title, isEditing]);
+
   return (
     <li>
       <form onSubmit={handleUpdate}>
