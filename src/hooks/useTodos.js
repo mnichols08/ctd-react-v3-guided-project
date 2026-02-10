@@ -102,6 +102,10 @@ const useTodos = function () {
   // triggering re-renders.
   const completionTimersRef = useRef({});
 
+  // Tracks the latest todo list so async callbacks can check
+  // current state before applying delayed removals.
+  const latestTodosRef = useRef([]);
+
   // Represents the current query configuration.
   // Any change invalidates cached results.
   const queryKey = `${sortField}:${sortDirection}:${queryString}`;
@@ -243,19 +247,6 @@ const useTodos = function () {
       delete completionTimersRef.current[completedId];
     }
 
-    // Only schedule delayed removal when marking complete
-    if (!originalTodo.isCompleted) {
-      completionTimersRef.current[completedId] = setTimeout(() => {
-        startTransition(() => {
-          // Marked non-urgent so UI interactions remain responsive
-          dispatch({
-            type: todoActions.finalizeComplete,
-            completedId,
-          });
-        });
-      }, 3500);
-    }
-
     try {
       await createRequest(
         'PATCH',
@@ -264,8 +255,32 @@ const useTodos = function () {
           isCompleted: !originalTodo.isCompleted,
         })
       );
+
+      // Only schedule delayed removal when marking complete and
+      // after persistence succeeds to avoid losing todos on failure.
+      if (!originalTodo.isCompleted) {
+        completionTimersRef.current[completedId] = setTimeout(() => {
+          const todoStillCompleted = latestTodosRef.current.some(
+            todo => todo.id === completedId && todo.isCompleted
+          );
+
+          if (!todoStillCompleted) {
+            delete completionTimersRef.current[completedId];
+            return;
+          }
+
+          startTransition(() => {
+            dispatch({
+              type: todoActions.finalizeComplete,
+              completedId,
+            });
+            delete completionTimersRef.current[completedId];
+          });
+        }, 3500);
+      }
     } catch (err) {
       clearTimeout(completionTimersRef.current[completedId]);
+      delete completionTimersRef.current[completedId];
       err.message = getErrorMessage('complete', err);
       dispatch({
         type: todoActions.revertTodo,
@@ -299,11 +314,6 @@ const useTodos = function () {
       await createRequest('PATCH', payload);
     } catch (err) {
       err.message = getErrorMessage('update', err);
-      // If the original todo is not found, skip the revert to avoid reducer errors.
-      if (!originalTodo) {
-        dispatch({ type: todoActions.setLoadError, error: err });
-        return;
-      }
 
       dispatch({
         type: todoActions.revertTodo,
@@ -322,6 +332,10 @@ const useTodos = function () {
   const clearError = useCallback(() => {
     dispatch({ type: todoActions.clearError });
   }, []);
+
+  useEffect(() => {
+    latestTodosRef.current = todosState.todoList;
+  }, [todosState.todoList]);
 
   useEffect(() => {
     fetchTodos();

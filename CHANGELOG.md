@@ -22,16 +22,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.10.4] - 2026-02-10
+
+### Added
+
+- In useTodos hook:
+  - After finalizing a todo as complete, remove completed todo from completion timers
+  - Remove completed todo from completion timers on error
+
+### Changed
+
+- In TodoListItem component:
+  - Renames toggleIsEditing to startEditing to improve clarity
+  - Makes span accessible by screen readers by setting its role to button and adding an event listener or enter to start editing
+
+### Removed
+
+- Remove unnecessary error handling for missing original todo in update process
+
+### Fixed
+
+- Schedules finalizeComplete only after the PATCH succeeds so a failure can’t permanently drop the item
+- Fix background properties in body for consistent styling 
+
+---
+
 ## [0.10.3] - 2026-02-09
 
-### Changed 
+### Changed
 
 - Updated TodoListItem component so entering edit mode on a completed todo immediately marks it incomplete and clears the pending removal timer; canceling the edit restores the completed state and re-arms completion.
 - Tracked the todo’s completion state at edit start to safely revert only when appropriate.
 
 ### Fixed
 
-- Prevents a a single response from overwriting multiple placeholders by tracking the optimistic todo via a unique clientId
+- Prevents a single response from overwriting multiple placeholders by tracking the optimistic todo via a unique clientId
 - Added createdTime to cached todos so cached results match reducer shape and sorting by createdTime works.
 - In updateTodo, implements a guard if the original todo is not found to skip the revert to avoid reducer errors.
 - Differentiates read vs write requests to avoid flipping the saving indicator during data fetches.
@@ -633,38 +658,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.10.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.3...v0.10.4
 [0.10.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.2...v0.10.3
 [0.10.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.2...v0.10.0
-
 [0.9.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.2
 [0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
-
 [0.8.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.8.0
-
 [0.7.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.7.0
-
 [0.6.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.5.0...v0.6.0
-
 [0.5.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.3.0...v0.4.0
-
 [0.3.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.2.0...v0.3.0
-
 [0.2.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.1.0...v0.2.0
-
 [0.1.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.11...v0.1.0
-
 [0.0.11]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.8...v0.0.9

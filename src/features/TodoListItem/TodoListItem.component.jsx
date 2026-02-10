@@ -35,7 +35,7 @@ function TodoListItem({ todo }) {
   const handleEdit = event => setWorkingTitle(event.target.value);
 
   // Toggle edit mode (disabled if todo is still saving)
-  const toggleIsEditing = () => {
+  const startEditing = () => {
     if (todo.isStillSaving) return;
 
     wasCompletedRef.current = todo.isCompleted;
@@ -102,7 +102,16 @@ function TodoListItem({ todo }) {
               htmlFor={`todo-${todo.id}-checkbox`}
               className={styles.checkboxButton}
             />
-            <span onClick={toggleIsEditing}>{todo.title}</span>
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={startEditing}
+              onKeyDown={e => {
+                if (e.key === 'Enter') startEditing();
+              }}
+            >
+              {todo.title}
+            </span>
           </div>
         )}
       </form>
