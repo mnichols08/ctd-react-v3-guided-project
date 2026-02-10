@@ -71,10 +71,8 @@ function reducer(state = initialState, action) {
             createdTime: record.createdTime,
             ...record.fields,
           };
-
-          if (todo.isCompleted === null) {
-            todo.isCompleted = false;
-          }
+          // Normalize missing isCompleted to avoid UI issues
+          todo.isCompleted = todo.isCompleted ?? false;
 
           return todo;
         }),

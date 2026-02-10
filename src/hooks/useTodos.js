@@ -222,7 +222,10 @@ const useTodos = function () {
       dispatch({ type: todoActions.addTodo, records, clientId });
     } catch (err) {
       err.message = getErrorMessage('add', err);
-      dispatch({ type: todoActions.setLoadError, error: err });
+      // Avoid clearing an in-flight fetch loading state when a save fails.
+      if (!todosState.isLoading) {
+        dispatch({ type: todoActions.setLoadError, error: err });
+      }
     }
   };
 
@@ -308,6 +311,8 @@ const useTodos = function () {
           error,
         });
       }
+      // Returns early if original todo is missing
+      return;
     }
 
     dispatch({ type: todoActions.updateTodo, editedTodo });
