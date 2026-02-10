@@ -107,7 +107,12 @@ function TodoListItem({ todo }) {
               tabIndex={0}
               onClick={startEditing}
               onKeyDown={e => {
-                if (e.key === 'Enter') startEditing();
+                if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === ' ') {
+                    e.preventDefault();
+                  }
+                  startEditing();
+                }
               }}
             >
               {todo.title}

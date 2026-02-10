@@ -297,11 +297,17 @@ const useTodos = function () {
     const originalTodo = todosState.todoList.find(t => t.id === editedTodo.id);
 
     if (!originalTodo) {
-      dispatch({
-        type: todoActions.setLoadError,
-        error: new Error('That todo is no longer available. Please refresh.'),
-      });
-      return;
+      const error = new Error(
+        'That todo is no longer available. Please refresh.'
+      );
+      // Avoid incorrectly clearing an active loading state by only
+      // using the load-specific error action when no load is in progress.
+      if (!isLoading) {
+        dispatch({
+          type: todoActions.setLoadError,
+          error,
+        });
+      }
     }
 
     dispatch({ type: todoActions.updateTodo, editedTodo });
