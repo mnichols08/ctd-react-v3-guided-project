@@ -72,7 +72,7 @@ function reducer(state = initialState, action) {
             ...record.fields,
           };
 
-          if (!todo.isCompleted) {
+          if (todo.isCompleted === null) {
             todo.isCompleted = false;
           }
 
