@@ -1,7 +1,7 @@
 {
   "name": "ctd-react-v3-guided-project",
   "private": true,
-  "version": "0.10.3",
+  "version": "0.10.4",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
