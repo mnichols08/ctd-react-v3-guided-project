@@ -24,6 +24,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -->
 
+## [0.10.10] - 2026-02-10
+
+### Fixed
+
+- Remove optimistic todos from state when POST request fails (e.g., network offline) to prevent phantom todos that persist until page refresh
+
+---
+
 ## [0.10.9] - 2026-02-10
 
 ### Fixed
@@ -715,7 +723,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
-[0.10.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.7...v0.10.9
+[0.10.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.9...v0.10.10
+[0.10.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.8...v0.10.9
 [0.10.8]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.7...v0.10.8
 [0.10.7]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.6...v0.10.7
 [0.10.6]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.5...v0.10.6

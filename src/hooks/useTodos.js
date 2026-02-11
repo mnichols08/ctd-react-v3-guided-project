@@ -223,7 +223,10 @@ const useTodos = function () {
       dispatch({ type: todoActions.addTodo, records, clientId });
     } catch (err) {
       err.message = getErrorMessage('add', err);
-      // Avoid clearing an in-flight fetch loading state when a save fails.
+
+      // Remove the failed optimistic todo
+      dispatch({ type: todoActions.removeOptimisticTodo, clientId });
+
       if (!todosState.isLoading) {
         dispatch({ type: todoActions.setLoadError, error: err });
       }
