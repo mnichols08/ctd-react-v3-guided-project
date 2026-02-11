@@ -20,6 +20,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - *** -->
 
+## [0.10.7] - 2026-02-10
+
+### Added
+
+- Error icon now includes descriptive alt text (`errorMessage` or 'Error icon' fallback) instead of empty string, improving screen reader experience
+
+### Fixed
+
+- Fix typo in entry within 0.6.1 `recafcor` to `refactor`
+- In TodoListItem component, fix duplicate startEditing call on Space key
+
 ## [0.10.6] - 2026-02-10
 
 ### Fixed
@@ -359,7 +370,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Fixes bug where an added todo could not be completed. A previous recaftor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
+- Fixes bug where an added todo could not be completed. A previous refactor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
 - Applies styles akin to rest of app for the error message button
 
 ---
@@ -676,6 +687,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.10.7]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.6...v0.10.7
 [0.10.6]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.5...v0.10.6
 [0.10.5]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.4...v0.10.5
 [0.10.4]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.3...v0.10.4

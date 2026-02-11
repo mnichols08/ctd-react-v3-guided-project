@@ -73,10 +73,10 @@ function TodoListItem({ todo }) {
 
   // Sync workingTitle with todo.title when idle
   useEffect(() => {
-  if (!isEditing) {
-    setWorkingTitle(todo.title);
-  }
-}, [todo.title, isEditing]);
+    if (!isEditing) {
+      setWorkingTitle(todo.title);
+    }
+  }, [todo.title, isEditing]);
 
   return (
     <li>
@@ -114,10 +114,10 @@ function TodoListItem({ todo }) {
               tabIndex={0}
               onClick={startEditing}
               onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  if (e.key === ' ') {
-                    e.preventDefault();
-                  }
+                if (e.key === 'Enter') {
+                  startEditing();
+                } else if (e.key === ' ') {
+                  e.preventDefault();
                   startEditing();
                 }
               }}
