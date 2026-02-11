@@ -199,7 +199,8 @@ const useTodos = function () {
         isCompleted: record.fields.isCompleted ?? false,
       }));
 
-      dispatch({ type: todoActions.loadTodos, records });
+      // Use the normalized todos for both state and cache to avoid redoing this work elsewhere.
+      dispatch({ type: todoActions.loadTodos, records: normalizedTodos });
       todoCacheRef.current[queryKey] = normalizedTodos;
     } catch (err) {
       err.message = getErrorMessage('fetch', err);
