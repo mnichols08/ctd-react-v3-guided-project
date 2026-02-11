@@ -62,21 +62,10 @@ function reducer(state = initialState, action) {
       };
 
     case actions.loadTodos:
-      // Normalize Airtable records into app-friendly todo objects.
-      // Ensures `isCompleted` always exists for consistent rendering.
+      // Accepts already-normalized todo objects from the hook.
       return {
         ...state,
-        todoList: action.records.map(record => {
-          const todo = {
-            id: record.id,
-            createdTime: record.createdTime,
-            ...record.fields,
-          };
-          // Normalize missing isCompleted to avoid UI issues
-          todo.isCompleted = todo.isCompleted ?? false;
-
-          return todo;
-        }),
+        todoList: action.records,
         isLoading: false,
       };
 
