@@ -1,49 +1,54 @@
-import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router';
 
 import { useTodosContext } from './context/TodosContext';
 
-import TodoList from './features/TodoList/TodoList.component';
-import TodoForm from './features/TodoForm/TodoForm.component';
-import TodosViewForm from './features/TodosViewForm/TodosViewForm.component';
-import Header from './features/Header/Header.component';
+import TodosPage from './pages/TodosPage/TodosPage.component';
+import AboutPage from './pages/AboutPage/AboutPage.component';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage.component';
+import Header from './shared/Header/Header.component';
+import Footer from './shared/Footer/Footer.component';
 import ErrorMessage from './features/ErrorMessage/ErrorMessage.component';
-
-// Layout wrapper responsible only for centering the app.
-// Visual styling is intentionally minimal.
-const StyledAppWrapper = styled.div`
-  display: grid;
-  justify-content: center;
-`;
 
 // App composes the main features of the todos experience.
 // It owns no business logic and delegates state management
 // to TodosContext and feature-level components.
 function App() {
+  // Leverages useLocation from react-router
+  const location = useLocation();
   // Read only the global error state needed at this level.
   // Other state is consumed closer to where it’s used.
   const {
     todosState: { errorMessage },
   } = useTodosContext();
+  const [title, setTitle] = useState('Todo App');
 
+  // Sets the heading based upon the page route
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setTitle('Todo App');
+    } else if (location.pathname === '/about') {
+      setTitle('About');
+    } else {
+      setTitle('Not Found');
+    }
+  }, [location]);
   return (
-    <StyledAppWrapper>
+    <>
       {/* Static application header */}
-      <Header displayedText="Todo App" />
-
+      <Header title={title} />
       <main>
-        {/* Create new todos */}
-        <TodoForm />
-
-        {/* Render current list based on view state */}
-        <TodoList />
-
-        {/* Controls for sorting and filtering */}
-        <TodosViewForm />
-
-        {/* Global error surfaced consistently across the app */}
-        {errorMessage && <ErrorMessage />}
+        <Routes>
+          <Route path="/" element={<TodosPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </main>
-    </StyledAppWrapper>
+      {/* Global error surfaced consistently across the app */}
+      {errorMessage && <ErrorMessage />}
+      {/* Static application footer */}
+      <Footer />
+    </>
   );
 }
 
