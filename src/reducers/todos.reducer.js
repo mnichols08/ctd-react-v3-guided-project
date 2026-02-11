@@ -13,6 +13,7 @@ const actions = {
   revertTodo: 'revertTodo',
   completeTodo: 'completeTodo',
   finalizeComplete: 'finalizeComplete',
+  removeOptimisticTodo: 'removeOptimisticTodo',
 
   // Request state
   startRequest: 'startRequest',
@@ -110,6 +111,14 @@ function reducer(state = initialState, action) {
         todoList: [...state.todoList, newTodo],
       };
     }
+
+    case actions.removeOptimisticTodo:
+      return {
+        ...state,
+        todoList: state.todoList.filter(
+          todo => !(todo.isStillSaving && todo.clientId === action.clientId)
+        ),
+      };
 
     case actions.addTodo: {
       const firstRecord = action.records?.[0];
