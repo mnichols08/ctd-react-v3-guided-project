@@ -51,6 +51,7 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         todoList: action.cachedRecords,
+        isLoading: false,
       };
 
     case actions.fetchTodos:

@@ -42,21 +42,20 @@ select {
   color: inherit;
   background-color: color-mix(in srgb, var(--bg) 90%, var(--text) 10%);
 }
-[hidden],
-[aria-hidden='true'] {
+[hidden] {
   display: none !important;
 }
 
-[role="alert"] {
+[role='alert'] {
   background-color: rgba(255, 0, 0, 0.1); /* light red background */
-  color: #b00000;                          /* dark red text */
+  color: #b00000; /* dark red text */
   padding: 0.5rem 1rem;
   border-radius: 4px;
   margin-bottom: 1rem;
 }
 
-[role="status"] {
-  background-color: rgba(0, 0, 0, 0.05);  /* subtle background */
+[role='status'] {
+  background-color: rgba(0, 0, 0, 0.05); /* subtle background */
   color: inherit;
   padding: 0.25rem 0.5rem;
   border-radius: 3px;
@@ -65,12 +64,12 @@ select {
 }
 
 @media (prefers-color-scheme: dark) {
-  [role="alert"] {
+  [role='alert'] {
     background-color: rgba(255, 0, 0, 0.2);
     color: #ff8080;
   }
 
-  [role="status"] {
+  [role='status'] {
     background-color: rgba(255, 255, 255, 0.05);
     color: #eaeaea;
   }

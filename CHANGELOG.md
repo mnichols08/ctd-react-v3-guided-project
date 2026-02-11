@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-<!-- ---
+---
+
+<!--
 
 ## [Unreleased]
 
@@ -18,7 +20,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- *** -->
+- *** 
+
+-->
+
+## [0.10.8] - 2026-02-10
+
+### Changed
+
+- Wraps html comment in changelog after `---` line and the final bullet
+- Within useTodos hook, inside of fetchTodos: uses the normalized todos for both state and cache to avoid redoing this work elsewhere
+
+### Fixed
+
+- Removes `[aria-hidden='true']` from reset.css stylesheet that was hiding the error image on normal screens
+- Reset isLoading when cached to prevent stuck UI
+
+---
 
 ## [0.10.7] - 2026-02-10
 
@@ -30,6 +48,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Fix typo in entry within 0.6.1 `recafcor` to `refactor`
 - In TodoListItem component, fix duplicate startEditing call on Space key
+
+---
 
 ## [0.10.6] - 2026-02-10
 
@@ -687,6 +707,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.10.8]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.7...v0.10.8
 [0.10.7]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.6...v0.10.7
 [0.10.6]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.5...v0.10.6
 [0.10.5]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.4...v0.10.5
