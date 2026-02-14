@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add tests for TodoList component to validate empty and loading states
 - Add test to disable Add Todo button when input is empty
 - Add tests for TodoListItem component to validate checkbox functionality
+- Add test to ensure input value syncs with context state in TodosTestHarness
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.

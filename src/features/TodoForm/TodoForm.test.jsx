@@ -33,8 +33,13 @@ const buildTodo = (title, index) => ({
   isCompleted: false,
 });
 
-function TodosTestHarness({ children, addTodoSpyRef }) {
-  const [workingTodoTitle, setWorkingTodoTitle] = React.useState('');
+function TodosTestHarness({
+  children,
+  addTodoSpyRef,
+  initialWorkingTitle = '',
+}) {
+  const [workingTodoTitle, setWorkingTodoTitle] =
+    React.useState(initialWorkingTitle);
   const [todoList, setTodoList] = React.useState([]);
   const addTodoSpy = React.useMemo(() => vi.fn(), []);
 
@@ -92,6 +97,26 @@ describe('TodoForm', () => {
 
     await user.clear(input);
     expect(submit).toBeDisabled();
+  });
+
+  it('keeps the input value in sync with context state', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TodosTestHarness initialWorkingTitle="Seeded value">
+        <TodoForm />
+      </TodosTestHarness>
+    );
+
+    const input = screen.getByLabelText(/todo/i);
+
+    expect(input).toHaveValue('Seeded value');
+
+    await user.clear(input);
+    await user.type(input, 'Next up');
+
+    expect(clearQueryStringMock).toHaveBeenCalled();
+    expect(input).toHaveValue('Next up');
   });
 
   it('keeps focus and renders the todo when submitted via button', async () => {
