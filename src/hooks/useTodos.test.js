@@ -213,4 +213,35 @@ describe('useTodos Airtable persistence', () => {
 
     await waitFor(() => expect(result.current.todosState.isSaving).toBe(false));
   });
+
+  it('requests sorted todos by createdTime by default and by title when updated', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ records: [] }),
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+
+    const expectedBaseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+    const defaultUrl = `${expectedBaseUrl}?sort[0][field]=createdTime&sort[0][direction]=desc&filterByFormula=%7BisCompleted%7D%3DFALSE()`;
+
+    const [firstUrl] = fetchMock.mock.calls[0];
+    expect(firstUrl).toBe(defaultUrl);
+
+    await act(() => {
+      result.current.setSortField('title');
+    });
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const [secondUrl] = fetchMock.mock.calls[1];
+    const titleUrl = `${expectedBaseUrl}?sort[0][field]=title&sort[0][direction]=desc&filterByFormula=%7BisCompleted%7D%3DFALSE()`;
+    expect(secondUrl).toBe(titleUrl);
+  });
 });

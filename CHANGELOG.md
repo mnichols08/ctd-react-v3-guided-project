@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add test to load saved todos from Airtable on mount
 - Add tests for pending flags during fetch requests in useTodos hook
 - Add error handling tests for network and auth issues in useTodos hook
+- Add tests for TodosViewForm to validate optimistic UI updates on sorting changes
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
