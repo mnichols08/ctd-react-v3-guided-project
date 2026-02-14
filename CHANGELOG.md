@@ -24,6 +24,64 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -->
 
+## [0.11.2] 2026-02-15
+
+### Added
+
+- Created setupTests.js for configuring testing environment and mocks.
+- Added vitest.config.js for Vitest configuration with jsdom environment.
+- Add initial test for App component to ensure it renders without errors or warnings
+- Add TodoForm tests to validate adding new todos functionality
+- Add tests for TodoList component to validate empty and loading states
+- Add test to disable Add Todo button when input is empty
+- Add tests for TodoListItem component to validate checkbox functionality
+- Add test to ensure input value syncs with context state in TodosTestHarness
+- Add tests for useTodos hook to validate Airtable persistence
+- Add test to load saved todos from Airtable on mount
+- Add tests for pending flags during fetch requests in useTodos hook
+- Add error handling tests for network and auth issues in useTodos hook
+- Add tests for TodosViewForm to validate optimistic UI updates on sorting changes
+- Add test to validate search filter functionality in useTodos hook
+- Add test for immediate search query reflection and debounced updates in TodosViewForm
+- Add test to verify memoization of request builder in useTodos hook
+- Add test to ensure batching of rapid query changes in useTodos hook
+- Add tests for App styling and error handling with mocked components
+- Add tests for rendering custom logo and error illustration in App component
+- Add test to verify rendering of todos from context with loading state
+- Add test for sorting todos in descending order
+- Add tests for todos reducer functionality
+- Add tests for ErrorMessage component functionality
+- Add test for removing completed todo after 3500ms in TodoListItem
+- Add test to clear completion timer when editing and re-starts on cancel
+- Add test to finalize completion of todo after 3500ms when untouched
+- Add test to clear completion timer when editing a completed todo
+- Add test to revert optimistic update and display error message on failure
+- Add test for caching behavior and loading resolution in useTodos hook
+- Add keyboard navigation tests for App component
+- Add keyboard navigation tests for TodosViewForm and TodoForm components
+- Add keyboard navigation support for completion and edit flows in TodoListItem tests
+- Add test for NotFoundPage and ErrorMessage component to verify error illustration display
+- Updated App.test.jsx to render the real App within TodosProvider, stubbing fetch against an in-memory mock that reads from the fixture and simulates POST/PATCH writes so no live API calls occur.
+- Added a 200-record Airtable-style fixture for todos at todos.records.json for consistent, offline testing.
+- Add test for caching behavior of todos with sort and filter combinations
+- Implement special character escaping in useTodos tests
+- Add act import to TodoListItem tests 
+- Add screen reader guidance announcements in App test
+- Add tests for App routing including home, about, and not-found pages
+- Add comprehensive tests for App navigation and routing functionality
+- Add tests for AboutPage, TodosPage, Footer, Header, and TextInputWithLabel components
+- Add cross-env for environment variable management and implement Airtable integration tests
+
+### Changed
+- Updated package.json to include Vitest and Testing Library dependencies.
+- Update Vitest configuration to exclude multicalc-tests
+- Refactor mock fetch implementation to support pagination and improve URL search parameter handling
+- Refactor TodoForm tests to use shared context and improve todo submission validation
+- Update README.md to include instructions for running Airtable integration tests
+- Implement fixture-based data handling in useTodos hook for local testing
+
+---
+
 ## [0.11.1] - 2026-02-14
 
 ### Added
@@ -756,6 +814,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.11.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.10...v0.11.0
 
