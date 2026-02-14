@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added vitest.config.js for Vitest configuration with jsdom environment.
 - Add initial test for App component to ensure it renders without errors or warnings
 - Add TodoForm tests to validate adding new todos functionality
+- Refactor TodoForm tests to use shared context and improve todo submission validation
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.

@@ -1,47 +1,121 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 
 import TodoForm from './TodoForm.component.jsx';
+import TodoList from '../TodoList/TodoList.component.jsx';
+import { TodosProvider } from '../../context/TodosContext';
 
-const addTodoMock = vi.fn();
 const clearQueryStringMock = vi.fn();
 
-// Provide a lightweight context stand-in with local state so the form behaves
-// like it does in the app without hitting the real data layer.
+// Create a shared test context so TodoForm and TodoList see the same state.
 vi.mock('../../context/TodosContext', () => {
   const React = require('react');
+  const TestTodosContext = React.createContext(null);
+
+  const TodosProvider = ({ children, value }) => (
+    <TestTodosContext.Provider value={value}>
+      {children}
+    </TestTodosContext.Provider>
+  );
+
   return {
-    useTodosContext: () => {
-      const [workingTodoTitle, setWorkingTodoTitle] = React.useState('');
-      return {
-        addTodo: addTodoMock,
-        clearQueryString: clearQueryStringMock,
-        isSaving: false,
-        workingTodoTitle,
-        setWorkingTodoTitle,
-      };
-    },
+    useTodosContext: () => React.useContext(TestTodosContext),
+    TodosProvider,
   };
 });
 
+const buildTodo = (title, index) => ({
+  id: `todo-${index}`,
+  title,
+  isCompleted: false,
+});
+
+function TodosTestHarness({ children, addTodoSpyRef }) {
+  const [workingTodoTitle, setWorkingTodoTitle] = React.useState('');
+  const [todoList, setTodoList] = React.useState([]);
+  const addTodoSpy = React.useMemo(() => vi.fn(), []);
+
+  const addTodo = React.useCallback(
+    title => {
+      addTodoSpy(title);
+      setTodoList(prev => [...prev, buildTodo(title, prev.length)]);
+    },
+    [addTodoSpy]
+  );
+
+  if (addTodoSpyRef) {
+    addTodoSpyRef.current = addTodoSpy;
+  }
+
+  const value = {
+    addTodo,
+    clearQueryString: clearQueryStringMock,
+    isSaving: false,
+    workingTodoTitle,
+    setWorkingTodoTitle,
+    todosState: { todoList },
+    sortField: 'title',
+    sortDirection: 'asc',
+  };
+
+  return (
+    <MemoryRouter>
+      <TodosProvider value={value}>{children}</TodosProvider>
+    </MemoryRouter>
+  );
+}
+
 describe('TodoForm', () => {
   beforeEach(() => {
-    addTodoMock.mockClear();
     clearQueryStringMock.mockClear();
   });
 
-  it('allows users to add a new todo', async () => {
-    render(<TodoForm />);
+  it('keeps focus and renders the todo when submitted via button', async () => {
+    const addTodoSpyRef = { current: null };
+    const user = userEvent.setup();
+
+    render(
+      <TodosTestHarness addTodoSpyRef={addTodoSpyRef}>
+        <TodoForm />
+        <TodoList />
+      </TodosTestHarness>
+    );
 
     const input = screen.getByLabelText(/todo/i);
     const submit = screen.getByRole('button', { name: /add todo/i });
 
-    await userEvent.type(input, 'Learn testing');
-    await userEvent.click(submit);
+    await user.type(input, 'Learn testing');
+    await user.click(submit);
 
-    expect(addTodoMock).toHaveBeenCalledWith('Learn testing');
-    expect(input).toHaveValue('');
-    expect(clearQueryStringMock).toHaveBeenCalled();
+    expect(addTodoSpyRef.current).toHaveBeenCalledWith('Learn testing');
+    expect(
+      await screen.findByRole('button', { name: 'Learn testing' })
+    ).toBeInTheDocument();
+    expect(input).toHaveFocus();
+  });
+
+  it('keeps focus and renders the todo when submitted with Enter', async () => {
+    const addTodoSpyRef = { current: null };
+    const user = userEvent.setup();
+
+    render(
+      <TodosTestHarness addTodoSpyRef={addTodoSpyRef}>
+        <TodoForm />
+        <TodoList />
+      </TodosTestHarness>
+    );
+
+    const input = screen.getByLabelText(/todo/i);
+
+    await user.type(input, 'Write docs{enter}');
+
+    expect(addTodoSpyRef.current).toHaveBeenCalledWith('Write docs');
+    expect(
+      await screen.findByRole('button', { name: 'Write docs' })
+    ).toBeInTheDocument();
+    expect(input).toHaveFocus();
   });
 });
