@@ -8,6 +8,14 @@ afterEach(() => {
 });
 
 describe('useTodos Airtable persistence', () => {
+  const createDeferredResponse = () => {
+    let resolve;
+    const promise = new Promise(res => {
+      resolve = res;
+    });
+    return { promise, resolve };
+  };
+
   it('loads saved todos from Airtable on mount', async () => {
     const airtableRecords = [
       {
@@ -121,5 +129,54 @@ describe('useTodos Airtable persistence', () => {
         }),
       ]);
     });
+  });
+
+  it('sets pending flags while requests are in flight', async () => {
+    const initialFetch = createDeferredResponse();
+    const postFetch = createDeferredResponse();
+
+    const fetchMock = vi
+      .fn()
+      .mockReturnValueOnce(initialFetch.promise)
+      .mockReturnValueOnce(postFetch.promise);
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() => expect(result.current.todosState.isLoading).toBe(true));
+
+    initialFetch.resolve({
+      ok: true,
+      json: () => Promise.resolve({ records: [] }),
+    });
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+
+    await act(() => {
+      result.current.addTodo('Feed cat');
+    });
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    await waitFor(() => expect(result.current.todosState.isSaving).toBe(true));
+
+    postFetch.resolve({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          records: [
+            {
+              id: 'recPending',
+              createdTime: '2025-03-01T00:00:00.000Z',
+              fields: { title: 'Feed cat', isCompleted: false },
+            },
+          ],
+        }),
+    });
+
+    await waitFor(() => expect(result.current.todosState.isSaving).toBe(false));
   });
 });
