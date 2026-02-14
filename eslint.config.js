@@ -66,4 +66,21 @@ export default [
       'no-implicit-coercion': 'warn',
     },
   },
+  // Vitest test files: allow global test functions
+  {
+    files: ['**/*.test.{js,jsx}', '**/*.spec.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+      },
+    },
+  },
 ];

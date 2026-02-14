@@ -6,23 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-<!--
-
 ## [Unreleased]
 
 ### Added
 
-- ***
+- Created setupTests.js for configuring testing environment and mocks.
+- Added vitest.config.js for Vitest configuration with jsdom environment.
 
 ### Changed
+- Updated package.json to include Vitest and Testing Library dependencies.
 
-- ***
-
-### Fixed
-
-- ***
-
--->
+---
 
 ## [0.11.1] - 2026-02-14
 
