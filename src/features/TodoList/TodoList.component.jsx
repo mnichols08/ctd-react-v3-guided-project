@@ -178,32 +178,35 @@ function TodoList() {
           <p>Todo list loading...</p>
         )
       ) : (
-        <ul>
-          {/* Render each todo item  */}
-          {currentTodos.map(todo => (
-            <TodoListItem key={todo.id} todo={todo} />
-          ))}
-        </ul>
+        <>
+          <ul>
+            {/* Render each todo item  */}
+            {currentTodos.map(todo => (
+              <TodoListItem key={todo.id} todo={todo} />
+            ))}
+          </ul>
+          {/* Pagination Controls */}
+          <div className="pagination-controls">
+            <button
+              type="button"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </>
       )}
-      <div className="pagination-controls">
-        <button
-          type="button"
-          onClick={handlePreviousPage}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          type="button"
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
     </StyledTodos>
   );
 }

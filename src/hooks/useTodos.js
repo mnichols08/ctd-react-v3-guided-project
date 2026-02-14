@@ -140,13 +140,23 @@ const useTodos = function () {
   // - Applies appropriate headers per request type
   // - Normalizes fetch and HTTP errors
   const createRequest = useCallback(
-    async (method, payload = null) => {
+    async (
+      method,
+      payload = null,
+      { pageOffset = null, skipState = false } = {}
+    ) => {
       const requestKind = method === 'GET' ? 'loading' : 'saving';
 
-      dispatch({ type: todoActions.startRequest, requestKind });
+      if (!skipState) {
+        dispatch({ type: todoActions.startRequest, requestKind });
+      }
 
       try {
-        const url = method === 'GET' ? encodeUrl() : BASE_URL;
+        const baseUrl = method === 'GET' ? encodeUrl() : BASE_URL;
+        const url =
+          method === 'GET' && pageOffset
+            ? `${baseUrl}&offset=${encodeURIComponent(pageOffset)}`
+            : baseUrl;
 
         const options = {
           method,
@@ -169,11 +179,37 @@ const useTodos = function () {
         if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
         throw err;
       } finally {
-        dispatch({ type: todoActions.endRequest, requestKind });
+        if (!skipState) {
+          dispatch({ type: todoActions.endRequest, requestKind });
+        }
       }
     },
     [encodeUrl]
   );
+
+  // Fetches all pages from Airtable, keeping loading true for the whole loop.
+  const fetchAllPages = async () => {
+    let pageOffset = null;
+    const allRecords = [];
+
+    // Keep loading state active across the entire multi-page fetch
+    dispatch({ type: todoActions.startRequest, requestKind: 'loading' });
+    try {
+      do {
+        const { records = [], offset } = await createRequest(
+          'GET',
+          null,
+          { pageOffset, skipState: true } // avoid per-page flicker
+        );
+        allRecords.push(...records);
+        pageOffset = offset ?? null;
+      } while (pageOffset);
+    } finally {
+      dispatch({ type: todoActions.endRequest, requestKind: 'loading' });
+    }
+
+    return allRecords;
+  };
 
   // Fetches todos for the current query state.
   // Serves from cache when available to avoid refetching.
@@ -189,7 +225,7 @@ const useTodos = function () {
     dispatch({ type: todoActions.fetchTodos });
 
     try {
-      const { records } = await createRequest('GET');
+      const records = await fetchAllPages();
 
       // Normalize Airtable records into app-friendly shape
       const normalizedTodos = records.map(record => ({
