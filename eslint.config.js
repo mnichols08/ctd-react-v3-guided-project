@@ -76,6 +76,7 @@ export default [
         test: 'readonly',
         expect: 'readonly',
         vi: 'readonly',
+        require: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
         beforeAll: 'readonly',
