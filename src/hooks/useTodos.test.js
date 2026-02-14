@@ -64,6 +64,40 @@ describe('useTodos Airtable persistence', () => {
     });
   });
 
+  it('surfaces a friendly message when the initial fetch hits a network error', async () => {
+    const fetchMock = vi.fn().mockRejectedValueOnce(new TypeError('Offline'));
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.errorMessage).toBe(
+        'Unable to connect to database. Please check your internet connection.'
+      )
+    );
+    expect(result.current.todosState.isLoading).toBe(false);
+  });
+
+  it('shows an auth error message when Airtable rejects the request', async () => {
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      json: () => Promise.resolve({}),
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.errorMessage).toBe(
+        "We're having trouble loading your todos. Please refresh the page."
+      )
+    );
+    expect(result.current.todosState.isLoading).toBe(false);
+  });
+
   it('saves a new todo to the configured Airtable base', async () => {
     const savedRecord = {
       id: 'rec123',
