@@ -244,4 +244,34 @@ describe('useTodos Airtable persistence', () => {
     const titleUrl = `${expectedBaseUrl}?sort[0][field]=title&sort[0][direction]=desc&filterByFormula=%7BisCompleted%7D%3DFALSE()`;
     expect(secondUrl).toBe(titleUrl);
   });
+
+  it('adds a search filter when querying by title contents', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ records: [] }),
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+
+    await act(() => {
+      result.current.setQueryString('cat');
+    });
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const expectedBaseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+    const encodedFormula = encodeURIComponent(
+      'AND({isCompleted}=FALSE(), SEARCH("cat",{title}))'
+    );
+    const expectedUrl = `${expectedBaseUrl}?sort[0][field]=createdTime&sort[0][direction]=desc&filterByFormula=${encodedFormula}`;
+
+    const [secondUrl] = fetchMock.mock.calls[1];
+    expect(secondUrl).toBe(expectedUrl);
+  });
 });
