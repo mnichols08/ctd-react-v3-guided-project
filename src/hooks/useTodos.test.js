@@ -8,6 +8,54 @@ afterEach(() => {
 });
 
 describe('useTodos Airtable persistence', () => {
+  it('loads saved todos from Airtable on mount', async () => {
+    const airtableRecords = [
+      {
+        id: 'recExisting',
+        createdTime: '2025-02-01T10:00:00.000Z',
+        fields: { title: 'Existing todo', isCompleted: false },
+      },
+    ];
+
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ records: airtableRecords }),
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    const [url, options] = fetchMock.mock.calls[0];
+    const expectedBaseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+    const expectedUrl = `${expectedBaseUrl}?sort[0][field]=createdTime&sort[0][direction]=desc&filterByFormula=%7BisCompleted%7D%3DFALSE()`;
+
+    expect(url).toBe(expectedUrl);
+    expect(options).toMatchObject({
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_PAT}`,
+      },
+    });
+
+    await waitFor(() => {
+      expect(result.current.todosState.todoList).toEqual([
+        {
+          id: 'recExisting',
+          title: 'Existing todo',
+          createdTime: '2025-02-01T10:00:00.000Z',
+          isCompleted: false,
+        },
+      ]);
+    });
+  });
+
   it('saves a new todo to the configured Airtable base', async () => {
     const savedRecord = {
       id: 'rec123',
