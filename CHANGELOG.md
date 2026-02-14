@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add TodoForm tests to validate adding new todos functionality
 - Add tests for TodoList component to validate empty and loading states
 - Add test to disable Add Todo button when input is empty
+- Add tests for TodoListItem component to validate checkbox functionality
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
