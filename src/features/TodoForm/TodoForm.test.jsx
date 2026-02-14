@@ -73,6 +73,27 @@ describe('TodoForm', () => {
     clearQueryStringMock.mockClear();
   });
 
+  it('disables the Add Todo button when input is empty', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TodosTestHarness>
+        <TodoForm />
+      </TodosTestHarness>
+    );
+
+    const input = screen.getByLabelText(/todo/i);
+    const submit = screen.getByRole('button', { name: /add todo/i });
+
+    expect(submit).toBeDisabled();
+
+    await user.type(input, 'New task');
+    expect(submit).toBeEnabled();
+
+    await user.clear(input);
+    expect(submit).toBeDisabled();
+  });
+
   it('keeps focus and renders the todo when submitted via button', async () => {
     const addTodoSpyRef = { current: null };
     const user = userEvent.setup();

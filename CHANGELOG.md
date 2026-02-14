@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
 - Update Vitest configuration to exclude multicalc-tests
+- Refactor TodoForm tests to use shared context and improve todo submission validation
 
 ---
 
