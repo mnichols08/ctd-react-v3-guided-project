@@ -13,19 +13,35 @@ const createMockFetch = (records = todosFixture.records) => {
     fields: { ...record.fields },
   }));
 
-  const createRecordResponse = record => ({
+  const pageSize = 100;
+
+  const formatResponse = (recordsSubset, offset = null) => ({
     ok: true,
-    json: async () => ({ records: [record] }),
+    json: async () => ({ records: recordsSubset, offset }),
   });
+
+  const createRecordResponse = record => formatResponse([record]);
+
+  const getSearchParams = url => {
+    try {
+      return new URL(url).searchParams;
+    } catch (_err) {
+      return new URL(url, 'https://local.test').searchParams;
+    }
+  };
 
   return vi.fn(async (_url, options = {}) => {
     const method = options.method ?? 'GET';
 
     if (method === 'GET') {
-      return {
-        ok: true,
-        json: async () => ({ records: dataset }),
-      };
+      const searchParams = getSearchParams(_url ?? '');
+      const rawOffset = searchParams.get('offset');
+      const startIndex = Number.parseInt(rawOffset ?? '0', 10) || 0;
+      const endIndex = startIndex + pageSize;
+      const nextOffset = endIndex < dataset.length ? String(endIndex) : null;
+      const pagedRecords = dataset.slice(startIndex, endIndex);
+
+      return formatResponse(pagedRecords, nextOffset);
     }
 
     if (method === 'POST') {
@@ -133,8 +149,8 @@ describe('App navigation and routing', () => {
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
 
-    const next = screen.getByRole('button', { name: /next/i });
-    const prev = screen.getByRole('button', { name: /previous/i });
+    const next = await screen.findByRole('button', { name: /next/i });
+    const prev = await screen.findByRole('button', { name: /previous/i });
     const locationNode = screen.getByTestId('location-display');
 
     expect(locationNode).toHaveTextContent('/');

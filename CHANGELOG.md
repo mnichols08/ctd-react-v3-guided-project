@@ -51,6 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add screen reader guidance announcements in App test
 - Add tests for App routing including home, about, and not-found pages
 - Add comprehensive tests for App navigation and routing functionality
+- Refactor mock fetch implementation to support pagination and improve URL search parameter handling
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
