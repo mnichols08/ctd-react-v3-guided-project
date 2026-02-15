@@ -7,6 +7,8 @@
   --focus: #005fcc;
   --accent: #0066ff;
   --danger: #e65806;
+  --active-link: #1a1868;
+  --inactive-link: #797a88;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,6 +18,8 @@
     --border: #444444;
     --focus: #4da3ff;
     --accent: #3399ff;
+    --active-link: #6674ec;
+    --inactive-link: #45537a;
   }
 }
 
@@ -49,7 +53,11 @@ h1 {
 }
 
 #root {
-  user-select: none;
-  display: flex;
+  display: grid;
   justify-content: center;
+}
+
+main {
+  margin: auto;
+  max-width: 30em;
 }

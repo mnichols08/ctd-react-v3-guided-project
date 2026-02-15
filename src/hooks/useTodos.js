@@ -16,11 +16,13 @@ import {
 // doesn’t need to know where they live.
 import logo from '../assets/logo.png';
 import errorImg from '../assets/error.png';
+import todosFixture from '../test/fixtures/todos.records.json';
 
 // Airtable configuration derived from env vars.
 // Kept outside the hook so they remain stable across renders.
 const BASE_URL = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 const AUTH_TOKEN = `Bearer ${import.meta.env.VITE_PAT}`;
+const USE_FIXTURE = import.meta.env.VITE_DATA_SOURCE === 'fixture';
 
 // Default headers for write requests.
 // GET requests intentionally omit Content-Type.
@@ -139,14 +141,127 @@ const useTodos = function () {
   // - Differentiates loading vs saving states
   // - Applies appropriate headers per request type
   // - Normalizes fetch and HTTP errors
+  const fixtureStoreRef = useRef(
+    todosFixture.records.map(record => ({
+      ...record,
+      fields: {
+        ...record.fields,
+        isCompleted: record.fields.isCompleted ?? false,
+      },
+    }))
+  );
+
   const createRequest = useCallback(
-    async (method, payload = null) => {
+    async (
+      method,
+      payload = null,
+      { pageOffset = null, skipState = false } = {}
+    ) => {
       const requestKind = method === 'GET' ? 'loading' : 'saving';
 
-      dispatch({ type: todoActions.startRequest, requestKind });
+      if (!skipState) {
+        dispatch({ type: todoActions.startRequest, requestKind });
+      }
+
+      if (USE_FIXTURE) {
+        try {
+          // Simulate Airtable API shape using the local JSON fixture.
+          if (method === 'GET') {
+            let records = fixtureStoreRef.current.filter(
+              record => record.fields.isCompleted === false
+            );
+
+            if (queryString) {
+              const lower = queryString.toLowerCase();
+              records = records.filter(record =>
+                record.fields.title.toLowerCase().includes(lower)
+              );
+            }
+
+            const sorted = [...records].sort((a, b) => {
+              const aVal =
+                sortField === 'createdTime'
+                  ? a.createdTime
+                  : a.fields[sortField];
+              const bVal =
+                sortField === 'createdTime'
+                  ? b.createdTime
+                  : b.fields[sortField];
+
+              if (aVal === bVal) return 0;
+              if (aVal === undefined) return 1;
+              if (bVal === undefined) return -1;
+
+              if (sortField === 'createdTime') {
+                const aTime = Date.parse(aVal);
+                const bTime = Date.parse(bVal);
+                return sortDirection === 'desc' ? bTime - aTime : aTime - bTime;
+              }
+
+              return sortDirection === 'desc'
+                ? String(bVal).localeCompare(String(aVal))
+                : String(aVal).localeCompare(String(bVal));
+            });
+
+            return { records: sorted };
+          }
+
+          if (method === 'POST') {
+            const fields = payload?.records?.[0]?.fields ?? {};
+            const newRecord = {
+              id:
+                typeof crypto?.randomUUID === 'function'
+                  ? crypto.randomUUID()
+                  : `fixture_${Date.now()}`,
+              createdTime: new Date().toISOString(),
+              fields: {
+                title: fields.title,
+                isCompleted: fields.isCompleted ?? false,
+              },
+            };
+
+            fixtureStoreRef.current.push(newRecord);
+            return { records: [newRecord] };
+          }
+
+          if (method === 'PATCH') {
+            const update = payload?.records?.[0];
+            if (!update?.id) {
+              throw new Error('Missing record id for update');
+            }
+
+            fixtureStoreRef.current = fixtureStoreRef.current.map(record =>
+              record.id === update.id
+                ? {
+                    ...record,
+                    fields: {
+                      ...record.fields,
+                      ...update.fields,
+                    },
+                  }
+                : record
+            );
+
+            const updatedRecord = fixtureStoreRef.current.find(
+              record => record.id === update.id
+            );
+            return { records: updatedRecord ? [updatedRecord] : [] };
+          }
+
+          throw new Error(`Unsupported method: ${method}`);
+        } finally {
+          if (!skipState) {
+            dispatch({ type: todoActions.endRequest, requestKind });
+          }
+        }
+      }
 
       try {
-        const url = method === 'GET' ? encodeUrl() : BASE_URL;
+        const baseUrl = method === 'GET' ? encodeUrl() : BASE_URL;
+        const url =
+          method === 'GET' && pageOffset
+            ? `${baseUrl}&offset=${encodeURIComponent(pageOffset)}`
+            : baseUrl;
 
         const options = {
           method,
@@ -169,11 +284,37 @@ const useTodos = function () {
         if (err.name === 'TypeError') err.code = 'NETWORK_ERROR';
         throw err;
       } finally {
-        dispatch({ type: todoActions.endRequest, requestKind });
+        if (!skipState) {
+          dispatch({ type: todoActions.endRequest, requestKind });
+        }
       }
     },
-    [encodeUrl]
+    [encodeUrl, queryString, sortDirection, sortField]
   );
+
+  // Fetches all pages from Airtable, keeping loading true for the whole loop.
+  const fetchAllPages = async () => {
+    let pageOffset = null;
+    const allRecords = [];
+
+    // Keep loading state active across the entire multi-page fetch
+    dispatch({ type: todoActions.startRequest, requestKind: 'loading' });
+    try {
+      do {
+        const { records = [], offset } = await createRequest(
+          'GET',
+          null,
+          { pageOffset, skipState: true } // avoid per-page flicker
+        );
+        allRecords.push(...records);
+        pageOffset = offset ?? null;
+      } while (pageOffset);
+    } finally {
+      dispatch({ type: todoActions.endRequest, requestKind: 'loading' });
+    }
+
+    return allRecords;
+  };
 
   // Fetches todos for the current query state.
   // Serves from cache when available to avoid refetching.
@@ -189,7 +330,7 @@ const useTodos = function () {
     dispatch({ type: todoActions.fetchTodos });
 
     try {
-      const { records } = await createRequest('GET');
+      const records = await fetchAllPages();
 
       // Normalize Airtable records into app-friendly shape
       const normalizedTodos = records.map(record => ({

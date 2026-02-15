@@ -114,6 +114,7 @@ function TodosViewForm() {
     return () => clearTimeout(debounce);
   }, [localQueryString, setQueryString]);
 
+  // Syncs localQueryString with queryString so that when TodoForm resets queryString, the state in this component resets as well
   useEffect(() => {
     setLocalQueryString(queryString);
   }, [queryString]);
@@ -142,6 +143,9 @@ function TodosViewForm() {
         </div>
         {/* Sort controls for field and direction */}
         <div className="sort-controls">
+          <p className="screen-reader-only">
+            To search for todos or change the sort field and direction change the values below.
+          </p>
           <label htmlFor="sort-by">Sort By</label>
           <select
             name="sort-by"

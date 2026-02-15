@@ -97,6 +97,8 @@ function TodoForm() {
 
   return (
     <StyledTodoForm onSubmit={handleAddTodo}>
+    {/* Explain to screen reader users how to add a new todo */}
+      <p className="screen-reader-only">Add a new todo by typing in the input below and pressing enter</p>
       <TextInputWithLabel
         ref={todoTitleInput}
         value={workingTodoTitle}
