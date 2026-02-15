@@ -336,4 +336,47 @@ describe('TodoListItem', () => {
       vi.useRealTimers();
     }
   });
+
+  it('supports keyboard navigation for completion and edit flows', async () => {
+    const user = userEvent.setup();
+    const completeTodo = vi.fn();
+    const updateTodo = vi.fn();
+
+    renderWithContext({ completeTodo, updateTodo });
+
+    // Tab to the checkbox and toggle completion with Space
+    await user.tab();
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toHaveFocus();
+
+    await user.keyboard(' ');
+    expect(completeTodo).toHaveBeenCalledWith(baseTodo.id);
+
+    // Tab to the keyboard-accessible title element
+    await user.tab();
+    const titleFocusable = screen.getByText(baseTodo.title, {
+      selector: 'p[tabindex="0"]',
+    });
+    expect(titleFocusable).toHaveFocus();
+
+    // Enter should switch to edit mode and focus the input
+    fireEvent.keyDown(titleFocusable, {
+      key: 'Enter',
+      code: 'Enter',
+      charCode: 13,
+    });
+    const input = await screen.findByLabelText('Todo title');
+    expect(input).toHaveFocus();
+
+    await user.clear(input);
+    await user.type(input, 'Updated via keyboard');
+    await user.keyboard('{Enter}');
+
+    expect(updateTodo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: baseTodo.id,
+        title: 'Updated via keyboard',
+      })
+    );
+  });
 });
