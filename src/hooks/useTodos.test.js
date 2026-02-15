@@ -275,6 +275,38 @@ describe('useTodos Airtable persistence', () => {
     expect(secondUrl).toBe(expectedUrl);
   });
 
+  it('escapes special characters in search queries so encoded filters stay valid', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ records: [] }),
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+
+    const query = 'cat "dog" + (bird)%';
+
+    await act(() => {
+      result.current.setQueryString(query);
+    });
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const expectedBaseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+    const expectedFormula = `AND({isCompleted}=FALSE(), SEARCH(${JSON.stringify(query)},{title}))`;
+    const expectedUrl = `${expectedBaseUrl}?sort[0][field]=createdTime&sort[0][direction]=desc&filterByFormula=${encodeURIComponent(
+      expectedFormula
+    )}`;
+
+    const [secondUrl] = fetchMock.mock.calls[1];
+    expect(secondUrl).toBe(expectedUrl);
+  });
+
   it('batches rapid query changes so only one request is sent while the user is typing', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,

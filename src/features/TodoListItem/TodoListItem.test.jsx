@@ -1,6 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, act } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 import { describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 

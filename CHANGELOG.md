@@ -46,6 +46,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Updated App.test.jsx to render the real App within TodosProvider, stubbing fetch against an in-memory mock that reads from the fixture and simulates POST/PATCH writes so no live API calls occur.
 - Added a 200-record Airtable-style fixture for todos at todos.records.json for consistent, offline testing.
 - Add test for caching behavior of todos with sort and filter combinations
+- Implement special character escaping in useTodos tests
+- Add act import to TodoListItem tests 
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
