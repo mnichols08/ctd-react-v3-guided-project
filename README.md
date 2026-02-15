@@ -51,3 +51,37 @@ The application will open in your browser at `http://localhost:5173` (or another
 - `npm run dev` - Starts the development server
 - `npm run build` - Builds the app for production
 - `npm run preview` - Preview the production build locally
+- `npm test` - Runs the test suite with mocked Airtable responses
+- `npm run test:watch` - Watches and reruns the mocked test suite on change
+- `npm run test:airtable` - Opt-in live check against your Airtable base
+- `npm run test:all:airtable` - Run full suite plus the live Airtable check
+
+### Running Airtable integration tests
+
+Live Airtable tests are skipped by default. To run them, supply your Airtable credentials and set the flag that opts into network calls:
+
+```bash
+VITE_BASE_ID=your_base_id \
+VITE_TABLE_NAME=Todos \
+VITE_PAT=your_pat \
+npm run test:airtable
+```
+
+On PowerShell, use:
+
+```powershell
+$env:VITE_BASE_ID="your_base_id"; $env:VITE_TABLE_NAME="Todos"; $env:VITE_PAT="your_pat"; npm run test:airtable
+```
+
+The live test performs a read-only fetch to confirm Airtable connectivity. All other tests continue to run against mocked data.
+
+To run the full suite including the live check in one go, use:
+
+```bash
+VITE_BASE_ID=your_base_id \
+VITE_TABLE_NAME=Todos \
+VITE_PAT=your_pat \
+npm run test:all:airtable
+```
+
+This keeps the standard mocked tests and simply unskips the live Airtable test when the flag and creds are present.

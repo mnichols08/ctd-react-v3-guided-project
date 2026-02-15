@@ -51,14 +51,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add screen reader guidance announcements in App test
 - Add tests for App routing including home, about, and not-found pages
 - Add comprehensive tests for App navigation and routing functionality
-- Refactor mock fetch implementation to support pagination and improve URL search parameter handling
 - Add tests for AboutPage, TodosPage, Footer, Header, and TextInputWithLabel components
 - Add cross-env for environment variable management and implement Airtable integration tests
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
 - Update Vitest configuration to exclude multicalc-tests
+- Refactor mock fetch implementation to support pagination and improve URL search parameter handling
 - Refactor TodoForm tests to use shared context and improve todo submission validation
+- Update README.md to include instructions for running Airtable integration tests
 
 ---
 
