@@ -42,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add keyboard navigation tests for App component
 - Add keyboard navigation tests for TodosViewForm and TodoForm components
 - Add keyboard navigation support for completion and edit flows in TodoListItem tests
+- Add test for NotFoundPage to verify error illustration display
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.

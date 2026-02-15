@@ -29,4 +29,11 @@ describe('ErrorMessage', () => {
     await userEvent.click(dismissButton);
     expect(mockContext.clearError).toHaveBeenCalledTimes(1);
   });
+
+  it('displays the error illustration provided by context', () => {
+    render(<ErrorMessage />);
+
+    const errorIllustration = screen.getByRole('img', { hidden: true });
+    expect(errorIllustration).toHaveAttribute('src', '/static/error.png');
+  });
 });
