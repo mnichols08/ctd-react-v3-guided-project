@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import TodosViewForm from './TodosViewForm.component.jsx';
@@ -26,6 +26,7 @@ const buildHarness = () => {
   const setSortFieldSpy = vi.fn();
   const setSortDirectionSpy = vi.fn();
   const setQueryStringSpy = vi.fn();
+  const clearQueryStringSpy = vi.fn();
 
   function Harness({ children }) {
     const [sortField, setSortField] = React.useState('title');
@@ -48,13 +49,22 @@ const buildHarness = () => {
         setQueryString(value);
         setQueryStringSpy(value);
       },
-      clearQueryString: () => setQueryString(''),
+      clearQueryString: () => {
+        setQueryString('');
+        clearQueryStringSpy();
+      },
     };
 
     return <TodosProvider value={value}>{children}</TodosProvider>;
   }
 
-  return { Harness, setSortFieldSpy, setSortDirectionSpy, setQueryStringSpy };
+  return {
+    Harness,
+    setSortFieldSpy,
+    setSortDirectionSpy,
+    setQueryStringSpy,
+    clearQueryStringSpy,
+  };
 };
 
 describe('TodosViewForm', () => {
@@ -83,5 +93,37 @@ describe('TodosViewForm', () => {
 
     expect(setSortFieldSpy).toHaveBeenCalledWith('createdTime');
     expect(setSortDirectionSpy).toHaveBeenCalledWith('desc');
+  });
+
+  it('lets users search and reflects the query immediately while dispatching the debounced update', async () => {
+    vi.useFakeTimers();
+    const { Harness, setQueryStringSpy, clearQueryStringSpy } = buildHarness();
+
+    try {
+      render(
+        <Harness>
+          <TodosViewForm />
+        </Harness>
+      );
+
+      const searchInput = screen.getByLabelText(/search todos/i);
+      const clearButton = screen.getByRole('button', { name: /clear/i });
+
+      fireEvent.change(searchInput, { target: { value: 'cats' } });
+
+      // Optimistic: input value updates immediately as the user types
+      expect(searchInput).toHaveValue('cats');
+
+      // Debounced propagation: advance timers to trigger setQueryString
+      vi.advanceTimersByTime(500);
+      expect(setQueryStringSpy).toHaveBeenCalledWith('cats');
+
+      fireEvent.click(clearButton);
+
+      expect(searchInput).toHaveValue('');
+      expect(clearQueryStringSpy).toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
