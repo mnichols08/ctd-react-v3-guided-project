@@ -444,4 +444,93 @@ describe('useTodos Airtable persistence', () => {
     expect(result.current.todosState.todoList[0].id).toBe('rec-default');
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
+
+  it('serves cached todos for prior sort + filter combos without refetching and preserves ordering', async () => {
+    const defaultRecords = [
+      {
+        id: 'rec-default',
+        createdTime: '2025-01-01T00:00:00.000Z',
+        fields: { title: 'Default todo', isCompleted: false },
+      },
+    ];
+
+    const catDescRecords = [
+      {
+        id: 'rec-cat-new',
+        createdTime: '2025-02-02T00:00:00.000Z',
+        fields: { title: 'Zesty cat', isCompleted: false },
+      },
+      {
+        id: 'rec-cat-old',
+        createdTime: '2025-02-01T00:00:00.000Z',
+        fields: { title: 'Angry cat', isCompleted: false },
+      },
+    ];
+
+    const catAscRecords = [...catDescRecords].reverse();
+
+    const fetchMock = vi
+      .fn()
+      // default query: createdTime desc, no filter
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ records: defaultRecords }),
+      })
+      // filtered query: createdTime desc, queryString = "cat"
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ records: catDescRecords }),
+      })
+      // same filter, sortDirection asc
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ records: catAscRecords }),
+      });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    // initial fetch populates default cache entry
+    await waitFor(() =>
+      expect(result.current.todosState.todoList[0].id).toBe('rec-default')
+    );
+
+    await act(async () => {
+      result.current.setQueryString('cat');
+    });
+
+    await waitFor(() =>
+      expect(result.current.todosState.todoList.map(t => t.id)).toEqual([
+        'rec-cat-new',
+        'rec-cat-old',
+      ])
+    );
+
+    await act(async () => {
+      result.current.setSortDirection('asc');
+    });
+
+    await waitFor(() =>
+      expect(result.current.todosState.todoList.map(t => t.id)).toEqual([
+        'rec-cat-old',
+        'rec-cat-new',
+      ])
+    );
+
+    // returning to previous filter + sort combo should read from cache, not refetch
+    await act(async () => {
+      result.current.setSortDirection('desc');
+    });
+
+    await waitFor(() =>
+      expect(result.current.todosState.todoList.map(t => t.id)).toEqual([
+        'rec-cat-new',
+        'rec-cat-old',
+      ])
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(result.current.todosState.isLoading).toBe(false);
+  });
 });
