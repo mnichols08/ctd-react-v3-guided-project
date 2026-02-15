@@ -247,4 +247,93 @@ describe('TodoListItem', () => {
       vi.useRealTimers();
     }
   });
+
+  it('clears the completion timer when a completed todo is edited and saved', async () => {
+    vi.useFakeTimers();
+
+    const TestList = () => {
+      const [todos, setTodos] = useState([baseTodo]);
+      const timersRef = useRef({});
+
+      const completeTodo = id => {
+        setTodos(prev => {
+          const next = prev.map(todo =>
+            todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+          );
+
+          if (timersRef.current[id]) {
+            clearTimeout(timersRef.current[id]);
+            delete timersRef.current[id];
+          }
+
+          const updated = next.find(todo => todo.id === id);
+          if (updated?.isCompleted) {
+            timersRef.current[id] = setTimeout(() => {
+              setTodos(current =>
+                current.filter(todo => todo.id !== id || !todo.isCompleted)
+              );
+              delete timersRef.current[id];
+            }, 3500);
+          }
+
+          return next;
+        });
+      };
+
+      const updateTodo = editedTodo => {
+        // Saving an edit should also clear any lingering timer
+        if (timersRef.current[editedTodo.id]) {
+          clearTimeout(timersRef.current[editedTodo.id]);
+          delete timersRef.current[editedTodo.id];
+        }
+
+        setTodos(prev =>
+          prev.map(todo => (todo.id === editedTodo.id ? editedTodo : todo))
+        );
+      };
+
+      return (
+        <TodosProvider value={{ completeTodo, updateTodo }}>
+          <ul>
+            {todos.map(todo => (
+              <TodoListItem key={todo.id} todo={todo} />
+            ))}
+          </ul>
+        </TodosProvider>
+      );
+    };
+
+    try {
+      render(<TestList />);
+
+      // Mark complete to start the timer
+      fireEvent.click(screen.getByRole('checkbox'));
+      expect(screen.getByRole('checkbox')).toBeChecked();
+
+      // Enter edit mode (component will mark it incomplete, clearing timer)
+      fireEvent.click(screen.getByRole('button', { name: baseTodo.title }));
+
+      const input = screen.getByLabelText('Todo title');
+      fireEvent.change(input, { target: { value: 'Updated todo' } });
+
+      fireEvent.click(screen.getByDisplayValue('Update'));
+
+      // After save, todo remains and checkbox should be unchecked
+      expect(
+        screen.getByRole('button', { name: 'Updated todo' })
+      ).toBeInTheDocument();
+      expect(screen.getByRole('checkbox')).not.toBeChecked();
+
+      act(() => {
+        vi.runAllTimers();
+      });
+
+      // Timer was cleared; todo should persist
+      expect(
+        screen.getByRole('button', { name: 'Updated todo' })
+      ).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
