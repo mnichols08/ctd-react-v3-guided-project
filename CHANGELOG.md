@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add test to verify rendering of todos from context with loading state
 - Add test for sorting todos in descending order
 - Add tests for todos reducer functionality
+- Add tests for ErrorMessage component functionality
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
