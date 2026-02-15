@@ -1,46 +1,108 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import App from './App.jsx';
+import { TodosProvider } from './context/TodosContext';
+import todosFixture from './test/fixtures/todos.records.json';
 
-// Mock everything App renders so we don't need real context state
-vi.mock('./pages/TodosPage/TodosPage.component', () => ({
-  default: () => <div>todos</div>,
-}));
-vi.mock('./pages/AboutPage/AboutPage.component', () => ({
-  default: () => <div>about</div>,
-}));
-vi.mock('./pages/NotFoundPage/NotFoundPage.component', () => ({
-  default: () => <div>not found</div>,
-}));
-vi.mock('./shared/Header/Header.component', () => ({
-  default: () => <header />,
-}));
-vi.mock('./shared/Footer/Footer.component', () => ({
-  default: () => <footer />,
-}));
-vi.mock('./features/ErrorMessage/ErrorMessage.component', () => ({
-  default: () => <div role="alert" />,
-}));
+const createMockFetch = (records = todosFixture.records) => {
+  const dataset = records.map(record => ({
+    ...record,
+    fields: { ...record.fields },
+  }));
 
-// Minimal context stub: App only reads errorMessage
-vi.mock('./context/TodosContext', () => ({
-  useTodosContext: () => ({ todosState: { errorMessage: null } }),
-}));
-// This test just ensures App doesn't throw any errors or warnings when rendered with the default context state. It doesn't test any specific behavior of App, but it does verify that the component can render without crashing and that there are no unexpected console messages.
+  const createRecordResponse = record => ({
+    ok: true,
+    json: async () => ({ records: [record] }),
+  });
+
+  return vi.fn(async (_url, options = {}) => {
+    const method = options.method ?? 'GET';
+
+    if (method === 'GET') {
+      return {
+        ok: true,
+        json: async () => ({ records: dataset }),
+      };
+    }
+
+    if (method === 'POST') {
+      const body = options.body ? JSON.parse(options.body) : { records: [] };
+      const fields = body.records?.[0]?.fields ?? {};
+      const nextId = `rec${String(dataset.length + 1).padStart(4, '0')}`;
+
+      const record = {
+        id: nextId,
+        createdTime: new Date('2025-02-01T00:00:00.000Z').toISOString(),
+        fields: {
+          title: fields.title ?? `Todo ${dataset.length + 1}`,
+          isCompleted: !!fields.isCompleted,
+        },
+      };
+
+      dataset.push(record);
+      return createRecordResponse(record);
+    }
+
+    if (method === 'PATCH') {
+      const body = options.body ? JSON.parse(options.body) : { records: [] };
+      const incoming = body.records?.[0] ?? {};
+      const recordIndex = dataset.findIndex(
+        record => record.id === incoming.id
+      );
+
+      if (recordIndex !== -1) {
+        dataset[recordIndex] = {
+          ...dataset[recordIndex],
+          fields: {
+            ...dataset[recordIndex].fields,
+            ...incoming.fields,
+          },
+        };
+
+        return createRecordResponse(dataset[recordIndex]);
+      }
+
+      const fallbackRecord = {
+        id: incoming.id ?? `rec${String(dataset.length + 1).padStart(4, '0')}`,
+        createdTime: new Date().toISOString(),
+        fields: incoming.fields ?? {},
+      };
+
+      dataset.push(fallbackRecord);
+      return createRecordResponse(fallbackRecord);
+    }
+
+    return { ok: false, status: 405, json: async () => ({}) };
+  });
+};
+
 describe('App', () => {
+  let fetchMock;
+
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(console, 'warn').mockImplementation(() => {});
+    fetchMock = createMockFetch();
+    vi.stubGlobal('fetch', fetchMock);
   });
 
-  it('renders without console errors or warnings', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('renders without console errors or warnings when using real components and mocked API', async () => {
     render(
       <MemoryRouter>
-        <App />
+        <TodosProvider>
+          <App />
+        </TodosProvider>
       </MemoryRouter>
     );
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
 
     expect(console.error).not.toHaveBeenCalled();
     expect(console.warn).not.toHaveBeenCalled();
