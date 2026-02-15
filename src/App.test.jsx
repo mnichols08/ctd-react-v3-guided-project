@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 
 import App from './App.jsx';
@@ -106,5 +106,44 @@ describe('App', () => {
 
     expect(console.error).not.toHaveBeenCalled();
     expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it('announces key actions for screen readers across the app', async () => {
+    render(
+      <MemoryRouter>
+        <TodosProvider>
+          <App />
+        </TodosProvider>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+
+    const addGuidance = await screen.findByText(
+      /add a new todo by typing in the input below and pressing enter/i
+    );
+    expect(addGuidance).toHaveClass('screen-reader-only');
+
+    const completeGuidance = await screen.findAllByText(
+      /mark this todo as complete/i
+    );
+    expect(completeGuidance.length).toBeGreaterThan(0);
+    completeGuidance.forEach(node =>
+      expect(node).toHaveClass('screen-reader-only')
+    );
+
+    const editGuidance = await screen.findAllByText(
+      /edit the value of this todo/i
+    );
+    expect(editGuidance.length).toBeGreaterThan(0);
+    editGuidance.forEach(node => {
+      const srContainer = node.closest('.screen-reader-only') ?? node;
+      expect(srContainer).toHaveClass('screen-reader-only');
+    });
+
+    const searchGuidance = await screen.findByText(
+      /search for todos or change the sort field and direction/i
+    );
+    expect(searchGuidance).toHaveClass('screen-reader-only');
   });
 });

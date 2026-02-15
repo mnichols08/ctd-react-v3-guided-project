@@ -48,6 +48,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add test for caching behavior of todos with sort and filter combinations
 - Implement special character escaping in useTodos tests
 - Add act import to TodoListItem tests 
+- Add screen reader guidance announcements in App tests
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
