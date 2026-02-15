@@ -53,4 +53,30 @@ describe('TodoList', () => {
       screen.queryByText('Add todo above to get started')
     ).not.toBeInTheDocument();
   });
+
+  it('renders todos from context when data is available', () => {
+    renderWithContext({
+      todosState: {
+        todoList: [
+          { id: '2', title: 'Brush teeth', isCompleted: false },
+          { id: '1', title: 'Aardvark task', isCompleted: false },
+        ],
+      },
+      completeTodo: vi.fn(),
+      updateTodo: vi.fn(),
+      isLoading: false,
+      sortField: 'title',
+      sortDirection: 'asc',
+    });
+
+    const items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    // Sorted ascending by title
+    expect(items[0]).toHaveTextContent('Aardvark task');
+    expect(items[1]).toHaveTextContent('Brush teeth');
+    expect(screen.queryByText('Todo list loading...')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Add todo above to get started')
+    ).not.toBeInTheDocument();
+  });
 });

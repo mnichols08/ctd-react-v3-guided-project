@@ -1,4 +1,3 @@
-import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { render } from '@testing-library/react';
