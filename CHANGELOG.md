@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add test for immediate search query reflection and debounced updates in TodosViewForm
 - Add test to verify memoization of request builder in useTodos hook
 - Add test to ensure batching of rapid query changes in useTodos hook
+- Add tests for App styling and error handling with mocked components
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
