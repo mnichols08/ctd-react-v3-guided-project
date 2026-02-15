@@ -382,4 +382,66 @@ describe('useTodos Airtable persistence', () => {
       "We couldn't update that todo. We've restored it to how it was."
     );
   });
+
+  it('uses cached todos and resolves loading without refetching when returning to a prior query', async () => {
+    const defaultRecords = [
+      {
+        id: 'rec-default',
+        createdTime: '2025-01-01T00:00:00.000Z',
+        fields: { title: 'Default todo', isCompleted: false },
+      },
+    ];
+
+    const catRecords = [
+      {
+        id: 'rec-cat',
+        createdTime: '2025-01-02T00:00:00.000Z',
+        fields: { title: 'Cat todo', isCompleted: false },
+      },
+    ];
+
+    const fetchMock = vi
+      .fn()
+      // initial load for default query
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ records: defaultRecords }),
+      })
+      // fetch for query "cat"
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ records: catRecords }),
+      });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    // initial load populates cache for default query
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+    expect(result.current.todosState.todoList[0].id).toBe('rec-default');
+
+    // switch to a new query (cat) which triggers a network fetch
+    await act(async () => {
+      result.current.setQueryString('cat');
+    });
+
+    await waitFor(() =>
+      expect(result.current.todosState.todoList[0].id).toBe('rec-cat')
+    );
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+
+    // switch back to default query; should serve from cache without new fetch
+    await act(async () => {
+      result.current.setQueryString('');
+    });
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+    expect(result.current.todosState.todoList[0].id).toBe('rec-default');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
 });
