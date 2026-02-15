@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add test for sorting todos in descending order
 - Add tests for todos reducer functionality
 - Add tests for ErrorMessage component functionality
+- Add test for removing completed todo after 3500ms in TodoListItem
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
