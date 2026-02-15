@@ -72,6 +72,7 @@ export default [
     languageOptions: {
       globals: {
         describe: 'readonly',
+        process: 'readonly',
         it: 'readonly',
         test: 'readonly',
         expect: 'readonly',
