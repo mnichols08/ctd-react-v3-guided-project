@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { describe, it, expect, vi } from 'vitest';
@@ -100,6 +100,88 @@ describe('TodoListItem', () => {
       });
 
       expect(screen.queryByText(baseTodo.title)).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('clears completion timer when editing and re-starts it on cancel', async () => {
+    vi.useFakeTimers();
+
+    const TestList = () => {
+      const [todos, setTodos] = useState([baseTodo]);
+      const timersRef = useRef({});
+
+      const completeTodo = id => {
+        setTodos(prev => {
+          const next = prev.map(todo =>
+            todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+          );
+
+          if (timersRef.current[id]) {
+            clearTimeout(timersRef.current[id]);
+            delete timersRef.current[id];
+          }
+
+          const updated = next.find(todo => todo.id === id);
+          if (updated?.isCompleted) {
+            timersRef.current[id] = setTimeout(() => {
+              setTodos(current =>
+                current.filter(todo => todo.id !== id || !todo.isCompleted)
+              );
+              delete timersRef.current[id];
+            }, 3500);
+          }
+
+          return next;
+        });
+      };
+
+      return (
+        <TodosProvider value={{ completeTodo, updateTodo: vi.fn() }}>
+          <ul>
+            {todos.map(todo => (
+              <TodoListItem key={todo.id} todo={todo} />
+            ))}
+          </ul>
+        </TodosProvider>
+      );
+    };
+
+    try {
+      render(<TestList />);
+
+      // Mark as complete to start the timer
+      fireEvent.click(screen.getByRole('checkbox'));
+      expect(screen.getByRole('checkbox')).toBeChecked();
+
+      // Enter edit mode on a completed todo; this should cancel the timer
+      fireEvent.click(screen.getByRole('button', { name: baseTodo.title }));
+
+      act(() => {
+        vi.runAllTimers();
+      });
+
+      // Timer should have been cleared; todo remains in edit mode
+      expect(screen.getByDisplayValue(baseTodo.title)).toBeInTheDocument();
+
+      // Cancel edit without changes, which re-completes and restarts timer
+      fireEvent.click(screen.getByDisplayValue('Cancel'));
+      expect(screen.getByRole('checkbox')).toBeChecked();
+
+      // Back to display mode while timer runs
+      expect(
+        screen.getByRole('button', { name: baseTodo.title })
+      ).toBeInTheDocument();
+
+      act(() => {
+        vi.runAllTimers();
+      });
+
+      // Timer fires after cancel, removing the todo
+      expect(
+        screen.queryByRole('button', { name: baseTodo.title })
+      ).not.toBeInTheDocument();
     } finally {
       vi.useRealTimers();
     }
