@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import TodosViewForm from './TodosViewForm.component.jsx';
@@ -96,34 +96,62 @@ describe('TodosViewForm', () => {
   });
 
   it('lets users search and reflects the query immediately while dispatching the debounced update', async () => {
-    vi.useFakeTimers();
     const { Harness, setQueryStringSpy, clearQueryStringSpy } = buildHarness();
 
-    try {
-      render(
-        <Harness>
-          <TodosViewForm />
-        </Harness>
-      );
+    render(
+      <Harness>
+        <TodosViewForm />
+      </Harness>
+    );
 
-      const searchInput = screen.getByLabelText(/search todos/i);
-      const clearButton = screen.getByRole('button', { name: /clear/i });
+    const searchInput = screen.getByLabelText(/search todos/i);
+    const clearButton = screen.getByRole('button', { name: /clear/i });
 
-      fireEvent.change(searchInput, { target: { value: 'cats' } });
+    fireEvent.change(searchInput, { target: { value: 'cats' } });
 
-      // Optimistic: input value updates immediately as the user types
-      expect(searchInput).toHaveValue('cats');
+    // Optimistic: input value updates immediately as the user types
+    expect(searchInput).toHaveValue('cats');
 
-      // Debounced propagation: advance timers to trigger setQueryString
-      vi.advanceTimersByTime(500);
-      expect(setQueryStringSpy).toHaveBeenCalledWith('cats');
+    await waitFor(() => expect(setQueryStringSpy).toHaveBeenCalledWith('cats'));
 
-      fireEvent.click(clearButton);
+    fireEvent.click(clearButton);
 
-      expect(searchInput).toHaveValue('');
-      expect(clearQueryStringSpy).toHaveBeenCalled();
-    } finally {
-      vi.useRealTimers();
-    }
+    expect(searchInput).toHaveValue('');
+    expect(clearQueryStringSpy).toHaveBeenCalled();
+  });
+
+  it('supports keyboard navigation for search, clear, and sort controls', async () => {
+    const { Harness, setQueryStringSpy, clearQueryStringSpy, setSortFieldSpy } =
+      buildHarness();
+
+    const user = userEvent.setup();
+
+    render(
+      <Harness>
+        <TodosViewForm />
+      </Harness>
+    );
+
+    await user.tab();
+    const searchInput = screen.getByLabelText(/search todos/i);
+    expect(searchInput).toHaveFocus();
+
+    await user.keyboard('dogs');
+    await waitFor(() => expect(setQueryStringSpy).toHaveBeenCalledWith('dogs'));
+
+    await user.tab();
+    const clearButton = screen.getByRole('button', { name: /clear/i });
+    expect(clearButton).toHaveFocus();
+
+    await user.keyboard(' ');
+    expect(searchInput).toHaveValue('');
+    expect(clearQueryStringSpy).toHaveBeenCalled();
+
+    await user.tab();
+    const sortBySelect = screen.getByLabelText(/sort by/i);
+    expect(sortBySelect).toHaveFocus();
+
+    await user.selectOptions(sortBySelect, 'createdTime');
+    expect(setSortFieldSpy).toHaveBeenCalledWith('createdTime');
   });
 });

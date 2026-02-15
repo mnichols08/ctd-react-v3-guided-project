@@ -164,4 +164,34 @@ describe('TodoForm', () => {
     ).toBeInTheDocument();
     expect(input).toHaveFocus();
   });
+
+  it('supports tabbing to the submit button and activating with Space', async () => {
+    const addTodoSpyRef = { current: null };
+    const user = userEvent.setup();
+
+    render(
+      <TodosTestHarness addTodoSpyRef={addTodoSpyRef}>
+        <TodoForm />
+        <TodoList />
+      </TodosTestHarness>
+    );
+
+    await user.tab();
+    const input = screen.getByLabelText(/todo/i);
+    expect(input).toHaveFocus();
+
+    await user.type(input, 'Keyboard submit');
+
+    await user.tab();
+    const submit = screen.getByRole('button', { name: /add todo/i });
+    expect(submit).toHaveFocus();
+
+    await user.keyboard(' ');
+
+    expect(addTodoSpyRef.current).toHaveBeenCalledWith('Keyboard submit');
+    expect(
+      await screen.findByRole('button', { name: 'Keyboard submit' })
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/todo/i)).toHaveFocus();
+  });
 });

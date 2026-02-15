@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add test to revert optimistic update and display error message on failure
 - Add test for caching behavior and loading resolution in useTodos hook
 - Add keyboard navigation tests for App component
+- Add keyboard navigation tests for TodosViewForm and TodoForm components
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
