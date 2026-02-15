@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add tests for TodosViewForm to validate optimistic UI updates on sorting changes
 - Add test to validate search filter functionality in useTodos hook
 - Add test for immediate search query reflection and debounced updates in TodosViewForm
+- Add test to verify memoization of request builder in useTodos hook
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.

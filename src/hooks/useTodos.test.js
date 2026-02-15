@@ -274,4 +274,28 @@ describe('useTodos Airtable persistence', () => {
     const [secondUrl] = fetchMock.mock.calls[1];
     expect(secondUrl).toBe(expectedUrl);
   });
+
+  it('does not refetch when unrelated state changes, proving the request builder stays memoized', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ records: [] }),
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    await act(() => {
+      result.current.setWorkingTodoTitle('noop change');
+    });
+
+    // If encodeUrl/createRequest were not memoized, the effect dependency would refire here.
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+  });
 });
