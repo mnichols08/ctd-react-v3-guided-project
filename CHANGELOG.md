@@ -6,7 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+<!--
+
 ## [Unreleased]
+
+### Added
+
+- ***
+
+### Changed
+
+- ***
+
+### Fixed
+
+- ***
+
+-->
+
+## [0.11.2] 2026-02-15
 
 ### Added
 
@@ -60,6 +78,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Refactor mock fetch implementation to support pagination and improve URL search parameter handling
 - Refactor TodoForm tests to use shared context and improve todo submission validation
 - Update README.md to include instructions for running Airtable integration tests
+- Implement fixture-based data handling in useTodos hook for local testing
 
 ---
 
@@ -795,6 +814,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.11.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.10...v0.11.0
 

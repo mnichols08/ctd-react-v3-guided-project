@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "dev:fixture": "cross-env VITE_DATA_SOURCE=fixture vite --host",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
