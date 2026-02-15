@@ -332,4 +332,54 @@ describe('useTodos Airtable persistence', () => {
     // If encodeUrl/createRequest were not memoized, the effect dependency would refire here.
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
   });
+
+  it('reverts an optimistic update and surfaces an error message when the update fails', async () => {
+    const fetchMock = vi
+      .fn()
+      // initial load
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            records: [
+              {
+                id: 'rec1',
+                createdTime: '2025-01-01T00:00:00.000Z',
+                fields: { title: 'Existing todo', isCompleted: false },
+              },
+            ],
+          }),
+      })
+      // failed PATCH for update
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: () => Promise.resolve({}),
+      });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { result } = renderHook(() => useTodos());
+
+    await waitFor(() =>
+      expect(result.current.todosState.isLoading).toBe(false)
+    );
+
+    const originalTodo = result.current.todosState.todoList[0];
+
+    await act(async () => {
+      await result.current.updateTodo({
+        ...originalTodo,
+        title: 'Edited title',
+      });
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(result.current.todosState.todoList[0].title).toBe(
+      originalTodo.title
+    );
+    expect(result.current.todosState.errorMessage).toBe(
+      "We couldn't update that todo. We've restored it to how it was."
+    );
+  });
 });

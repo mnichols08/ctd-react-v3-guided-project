@@ -37,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add test to clear completion timer when editing and re-starts on cancel
 - Add test to finalize completion of todo after 3500ms when untouched
 - Add test to clear completion timer when editing a completed todo
+- Add test to revert optimistic update and display error message on failure
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.
