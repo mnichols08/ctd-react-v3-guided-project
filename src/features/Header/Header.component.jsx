@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import { useTodosContext } from '../../context/TodosContext';
 
-import defaultLogo from '../../assets/logo.png';
+import styled from 'styled-components';
 
 // Styled logo image with auto horizontal margins for centering and right padding
 const StyledLogo = styled.img`
@@ -15,11 +15,11 @@ const StyledHeader = styled.header`
 `;
 
 // Header component that displays a logo and title text
-// - logo = Path to the logo image (defaults to defaultLogo)
 // - displayedText = Text to display as the title
 //  (defaults to 'My Todos') and sets logo alt to this + logo
 
-function Header({ logo = defaultLogo, displayedText = 'My Todos' }) {
+function Header({ displayedText = 'My Todos' }) {
+  const { logo } = useTodosContext();
   return (
     <StyledHeader>
       <StyledLogo src={logo} alt={`${displayedText} Logo`} />

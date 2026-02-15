@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import { useTodosContext } from '../../context/TodosContext';
+
 import TodoListItem from '../../features/TodoListItem/TodoListItem.component';
 import styles from './TodoList.module.css';
 
@@ -8,7 +10,7 @@ import styles from './TodoList.module.css';
 // - field = The field name to sort by (e.g., 'title', 'createdTime')
 // - direction = Sort direction: 'asc' for ascending, 'desc' for descending
 // - Returns A new sorted array of todos
- 
+
 const sortTodos = (todos, field, direction) => {
   const sorted = [...todos].sort((a, b) => {
     const aVal = a[field];
@@ -30,26 +32,21 @@ const sortTodos = (todos, field, direction) => {
 // - sortField = Field name to sort todos by
 // - sortDirection = Direction to sort: 'asc' or 'desc'
 
-function TodoList({
-  todoList,
-  onCompleteTodo,
-  onUpdateTodo,
-  isLoading,
-  sortField,
-  sortDirection,
-}) {
+function TodoList() {
+  const {
+    todosState: { todoList },
+    isLoading,
+    sortField,
+    sortDirection,
+  } = useTodosContext();
   // Memoize the sorted list to avoid re-sorting on every render
   // Only recalculates when todoList, sortField, or sortDirection changes
   const sortedAndFilteredTodoList = useMemo(() => {
-    return sortTodos(
-      todoList,
-      sortField,
-      sortDirection
-    );
+    return sortTodos(todoList, sortField, sortDirection);
   }, [todoList, sortField, sortDirection]);
 
   return (
-    <ul className={styles["todo-list"]}>
+    <ul className={styles['todo-list']}>
       {sortedAndFilteredTodoList.length < 1 ? (
         // Show appropriate message when list is empty
         !isLoading ? (
@@ -60,12 +57,7 @@ function TodoList({
       ) : (
         // Render each todo item
         sortedAndFilteredTodoList.map(todo => (
-          <TodoListItem
-            key={todo.id}
-            todo={todo}
-            onCompleteTodo={onCompleteTodo}
-            onUpdateTodo={onUpdateTodo}
-          />
+          <TodoListItem key={todo.id} todo={todo} />
         ))
       )}
     </ul>

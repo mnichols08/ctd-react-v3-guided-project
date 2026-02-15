@@ -1,62 +1,77 @@
+// Action type constants for the todos reducer.
+// Grouped by concern: fetching, mutations, view state, and errors.
 const actions = {
+  // Fetch lifecycle
   fetchTodos: 'fetchTodos',
   serveCachedTodos: 'serveCachedTodos',
   loadTodos: 'loadTodos',
+
+  // Create / update lifecycle
   addOptimisticTodo: 'addOptimisticTodo',
   addTodo: 'addTodo',
   updateTodo: 'updateTodo',
   revertTodo: 'revertTodo',
   completeTodo: 'completeTodo',
+  finalizeComplete: 'finalizeComplete',
+  removeOptimisticTodo: 'removeOptimisticTodo',
+
+  // Request state
   startRequest: 'startRequest',
   endRequest: 'endRequest',
+
+  // Error handling
   setLoadError: 'setLoadError',
-  finalizeComplete: 'finalizeComplete',
   clearError: 'clearError',
+
+  // View / form state
+  setWorkingTodoTitle: 'setWorkingTodoTitle',
+  setSortDirection: 'setSortDirection',
+  setSortField: 'setSortField',
+  setQueryString: 'setQueryString',
+  clearQueryString: 'clearQueryString',
 };
 
+// Initial reducer state.
+// Represents both domain data (todos) and UI/view concerns.
 const initialState = {
   todoList: [],
   errorMessage: '',
   workingTodoTitle: '',
   isLoading: false,
   isSaving: false,
+  sortField: 'createdTime',
+  sortDirection: 'desc',
+  queryString: '',
 };
 
 function reducer(state = initialState, action) {
   switch (action.type) {
     case actions.serveCachedTodos:
-      // Set state with previously cached todos for the current query, if available
+      // Serve previously fetched todos for the current query
+      // without triggering a network request.
       return {
         ...state,
         todoList: action.cachedRecords,
+        isLoading: false,
       };
+
     case actions.fetchTodos:
+      // Marks the beginning of a fetch request.
       return {
         ...state,
         isLoading: true,
       };
+
     case actions.loadTodos:
+      // Accepts already-normalized todo objects from the hook.
       return {
         ...state,
-        todoList: [
-          // Normalize Airtable records into app-friendly todo objects
-          // and ensure `isCompleted` always exists
-          ...action.records.map(record => {
-            const todo = {
-              id: record.id,
-              createdTime: record.createdTime,
-              ...record.fields,
-            };
-            if (!todo.isCompleted) {
-              // Normalize missing or falsy isCompleted values from Airtable
-              todo.isCompleted = false;
-            }
-            return todo;
-          }),
-        ],
+        todoList: action.records,
         isLoading: false,
       };
+
     case actions.setLoadError:
+      // Capture error message and reset loading state.
       return {
         ...state,
         errorMessage: action.error.message,
@@ -64,55 +79,86 @@ function reducer(state = initialState, action) {
       };
 
     case actions.startRequest:
+      // Differentiates read vs write requests to avoid flipping
+      // the saving indicator during data fetches.
+      if (action.requestKind === 'loading') {
+        return {
+          ...state,
+          isLoading: true,
+        };
+      }
+
       return {
         ...state,
         isSaving: true,
       };
+
     case actions.addOptimisticTodo: {
-      // Optimistically add the todo immediately for responsiveness.
-      // A temporary client-generated ID is replaced after persistence.
-      // A current timestamp is also added for sorting todos optimistically
+      // Immediately insert a new todo into state for responsiveness.
+      // This placeholder is later replaced by the persisted record.
+      const clientId = action.clientId;
       const newTodo = {
-        id: crypto.randomUUID(),
+        id: clientId, // temporary fake id
+        clientId, // stable client-side identifier for replacement
         title: action.newTodoTitle,
         isCompleted: false,
-        isStillSaving: true, // Flag to identify this temporary todo for replacement
+        isStillSaving: true, // Identifies optimistic placeholder
         createdTime: new Date().toISOString(),
       };
+
       return {
         ...state,
         todoList: [...state.todoList, newTodo],
       };
     }
 
+    case actions.removeOptimisticTodo:
+      return {
+        ...state,
+        todoList: state.todoList.filter(
+          todo => !(todo.isStillSaving && todo.clientId === action.clientId)
+        ),
+      };
+
     case actions.addTodo: {
       const firstRecord = action.records?.[0];
-      if (!firstRecord) return state;
-      // Replace the optimistic todo (identified by isStillSaving flag) 
-      // with the real record returned from the server
+      if (!firstRecord || !action.clientId) return state;
+
+      // Replace only the matching optimistic placeholder with the server response.
       return {
         ...state,
         todoList: state.todoList.map(todo =>
-          todo.isStillSaving
+          todo.isStillSaving && todo.clientId === action.clientId
             ? {
                 id: firstRecord.id,
+                clientId: undefined,
                 ...firstRecord.fields,
+                createdTime: firstRecord.createdTime ?? todo.createdTime,
                 isCompleted: firstRecord.fields.isCompleted ?? false,
+                isStillSaving: false,
               }
             : todo
         ),
         isSaving: false,
       };
     }
+
     case actions.endRequest:
+      // Reset only the flag corresponding to the request type.
+      if (action.requestKind === 'loading') {
+        return {
+          ...state,
+          isLoading: false,
+        };
+      }
+
       return {
         ...state,
-        isLoading: false,
         isSaving: false,
       };
 
     case actions.completeTodo:
-      // Optimistically update the todo to completed state before server confirmation
+      // Optimistically toggle completion state prior to server confirmation.
       return {
         ...state,
         todoList: state.todoList.map(todo =>
@@ -122,41 +168,83 @@ function reducer(state = initialState, action) {
 
     case actions.revertTodo:
     case actions.updateTodo: {
-      // Handle both update confirmation and revert-on-error scenarios
-      // revertTodo uses the same logic to restore previous state if update fails
-      const updatedTodos = state.todoList.map(todo => {
-        if (todo.id === action.editedTodo.id) {
-          return { ...action.editedTodo };
+      // Shared logic for:
+      // - Confirming an update
+      // - Reverting to previous state if persistence fails
+      if (!action.editedTodo) {
+        if (action.error) {
+          return {
+            ...state,
+            errorMessage: action.error.message,
+          };
         }
-        return todo;
-      });
+
+        return state;
+      }
+
+      const updatedTodos = state.todoList.map(todo =>
+        todo.id === action.editedTodo.id ? { ...action.editedTodo } : todo
+      );
 
       const updatedState = {
         ...state,
-        todoList: [...updatedTodos],
+        todoList: updatedTodos,
       };
-      
-      // Optionally set error message if this is a failed update
+
+      // Only set error message when reverting due to failure.
       if (action.error) {
         updatedState.errorMessage = action.error.message;
       }
 
-      return {
-        ...updatedState,
-      };
+      return updatedState;
     }
+
     case actions.finalizeComplete:
-      // Remove the todo from list after successful completion 
-      // (called after server confirms the delete/complete operation)
+      // Remove a completed todo after delayed confirmation.
+      // This enables undo-like behavior in the UI.
       return {
         ...state,
         todoList: state.todoList.filter(todo => todo.id !== action.completedId),
       };
+
     case actions.clearError:
+      // Clears any visible error message.
       return {
         ...state,
         errorMessage: '',
       };
+
+    case actions.setWorkingTodoTitle:
+      // Updates controlled input value for the todo form.
+      return {
+        ...state,
+        workingTodoTitle: action.workingTodoTitle,
+      };
+
+    case actions.setSortDirection:
+      return {
+        ...state,
+        sortDirection: action.sortDirection,
+      };
+
+    case actions.setSortField:
+      return {
+        ...state,
+        sortField: action.sortField,
+      };
+
+    case actions.setQueryString:
+      return {
+        ...state,
+        queryString: action.queryString,
+      };
+
+    case actions.clearQueryString:
+      return {
+        ...state,
+        queryString: '',
+      };
+
     default:
       return state;
   }

@@ -1,7 +1,7 @@
+import { useTodosContext } from '../../context/TodosContext';
 import styled from 'styled-components';
 
 import styles from './ErrorMessage.module.css';
-import errorImg from '../../assets/error.png';
 
 const StyledErrorImage = styled.img`
   width: 4rem;
@@ -11,12 +11,13 @@ const ErrorContent = styled.div`
   display: flex;
 `;
 
-function ErrorMessage({ errorMessage, clearError }) {
+function ErrorMessage() {
+  const { errorMessage, clearError, errorImg } = useTodosContext();
   return (
     <div className={styles['error-message']}>
       <hr />
       <ErrorContent>
-        <StyledErrorImage src={errorImg} alt="" aria-hidden="true" />
+        <StyledErrorImage src={errorImg} aria-hidden="true" alt='Error icon' />
         <p>{errorMessage}</p>
       </ErrorContent>
       <input type="button" onClick={clearError} value="Dismiss" />

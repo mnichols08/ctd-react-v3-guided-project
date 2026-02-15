@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+<!--
+
 ## [Unreleased]
 
 ### Added
@@ -18,11 +20,159 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- ***
+- *** 
+
+-->
+
+## [0.10.10] - 2026-02-10
+
+### Fixed
+
+- Remove optimistic todos from state when POST request fails (e.g., network offline) to prevent phantom todos that persist until page refresh
 
 ---
 
-## [0.10.0] - 2026-02-07
+## [0.10.9] - 2026-02-10
+
+### Fixed
+
+ - Moved todo normalization logic from reducer to `useTodos` hook to avoid duplicate processing and ensure both state and cache use the same normalized data
+
+---
+
+## [0.10.8] - 2026-02-10
+
+### Changed
+
+- Wraps html comment in changelog after `---` line and the final bullet
+- Within useTodos hook, inside of fetchTodos: uses the normalized todos for both state and cache to avoid redoing this work elsewhere
+
+### Fixed
+
+- Removes `[aria-hidden='true']` from reset.css stylesheet that was hiding the error image on normal screens
+- Reset isLoading when cached to prevent stuck UI
+
+---
+
+## [0.10.7] - 2026-02-10
+
+### Added
+
+- Error icon now includes descriptive alt text (`errorMessage` or 'Error icon' fallback) instead of empty string, improving screen reader experience
+
+### Fixed
+
+- Fix typo in entry within 0.6.1 `recafcor` to `refactor`
+- In TodoListItem component, fix duplicate startEditing call on Space key
+
+---
+
+## [0.10.6] - 2026-02-10
+
+### Fixed
+
+- Fixes typo in changelog v.0.10.5
+- In useTodos hook:
+  - In updateTodo, avoid invalid updates and PATCH requests by returning early if original todo is missing
+  - In addTodo, prevent clearing an in-flight fetch loading state when a save fails
+- In todos reducer, normalize null/undefined isCompleted for consistency
+- In TodoListItem component, sync workingTitle with todo.title when idle
+- Corrects various formatting inconsistencies across changelog
+
+---
+
+## [0.10.5] - 2026-02-10
+
+### Fixed
+
+- Avoids unintended coercion by using a nullish check on isCompleted within loadTodos action
+- In TodoListItem component, extends onKeyDown to handle Space (and preventing default to avoid page scrolling)
+- Avoid incorrectly clearing an active loading state by only using the load-specific error action when no load is in progress
+
+---
+
+## [0.10.4] - 2026-02-10
+
+### Added
+
+- In useTodos hook:
+  - After finalizing a todo as complete, remove completed todo from completion timers
+  - Remove completed todo from completion timers on error
+
+### Changed
+
+- In TodoListItem component:
+  - Renames toggleIsEditing to startEditing to improve clarity
+  - Makes span accessible by screen readers by setting its role to button and adding an event listener or enter to start editing
+
+### Removed
+
+- Remove unnecessary error handling for missing original todo in update process
+
+### Fixed
+
+- Schedules finalizeComplete only after the PATCH succeeds so a failure can’t permanently drop the item
+- Fix background properties in body for consistent styling 
+
+---
+
+## [0.10.3] - 2026-02-09
+
+### Changed
+
+- Updated TodoListItem component so entering edit mode on a completed todo immediately marks it incomplete and clears the pending removal timer; canceling the edit restores the completed state and re-arms completion.
+- Tracked the todo’s completion state at edit start to safely revert only when appropriate.
+
+### Fixed
+
+- Prevents a single response from overwriting multiple placeholders by tracking the optimistic todo via a unique clientId
+- Added createdTime to cached todos so cached results match reducer shape and sorting by createdTime works.
+- In updateTodo, implements a guard if the original todo is not found to skip the revert to avoid reducer errors.
+- Differentiates read vs write requests to avoid flipping the saving indicator during data fetches.
+- Prevents reducer errors by guarding against missing originalTodo during updateTodo reverts, avoiding invalid editedTodo dispatches when UI state is stale or items are removed.
+- Prevent invalid Airtable formulas by safely escaping quotes and special characters in queryString when interpolating into SEARCH(). Now only query parameter values are encoded instead of the entire URL.
+
+---
+
+## [0.10.2] - 2026-02-08
+
+### Added
+
+- Correctly clears the query string if the workingTodoTitle changes
+
+### Changed
+
+- Adds a temporary fake id to newly created optimistic todo
+
+### Fixed
+
+- Fixes todo creation by removing `crypto.randomUUID`
+- Refactors entire app to utilize TodosContext correctly
+
+---
+
+## [0.10.1] - 2026-02-07
+
+### Added
+
+- Implements TodosContext to wrap the App with useTodos Hook logic.
+
+### Changed
+
+- Compresses images for better performance
+- Refactor App component to use TodosContext for state management
+- Refactor useTodos and todos.reducer to manage all state properties and actions
+- Improves comments within hook and context files
+
+### Fixed
+
+- Fixes updateTodo so that an edited todo remains incomplete
+- Remove aria-hidden attribute from error image in ErrorMessage component
+- Enhance checkbox styling for consistent appearance and alignment
+
+---
+
+## [0.10.0] - 2026-02-05
 
 ### Added
 
@@ -41,7 +191,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [0.9.3] - 2026-02-05
 
-## Added
+### Added
 
 - Adds empty `alt` tag and `aria-hidden` set to true within ErrorMessage component
 
@@ -116,7 +266,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [0.8.3] - 2026-1-31
+## [0.8.3] - 2026-01-31
 
 ### Fixed
 
@@ -256,7 +406,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Fixes bug where an added todo could not be completed. A previous recaftor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
+- Fixes bug where an added todo could not be completed. A previous refactor was retracting the logic to set state after adding a new todo, which resulted in local state not having the correct ID within the 'optimistic' todos.
 - Applies styles akin to rest of app for the error message button
 
 ---
@@ -317,8 +467,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.1.0] - 2025-01-13
 
 ### Changed
-
-- Updated foundational application code from Week 02 coursework.
 
 - Updated foundational application code from Week 02 coursework.
 
@@ -400,8 +548,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Removes redundant id when setting the updated todos inside of TodoListItem component
 - Removes wrapper functions from onClick handlers within TodoListItem component
-- Initial implementation of TodosViewForm for sorting and direction control.
-- Integration of sortField and sortDirection state into the App component.
 
 ### Changed
 
@@ -577,25 +723,46 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
 
+[0.10.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.9...v0.10.10
+[0.10.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.8...v0.10.9
+[0.10.8]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.7...v0.10.8
+[0.10.7]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.6...v0.10.7
+[0.10.6]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.5...v0.10.6
+[0.10.5]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.4...v0.10.5
+[0.10.4]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.3...v0.10.4
+[0.10.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.2...v0.10.3
+[0.10.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.1...v0.10.2
+[0.10.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.0...v0.10.1
+[0.10.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.2...v0.10.0
+
 [0.9.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.2
 [0.9.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.9.0
+
 [0.8.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.3...v0.8.0
+
 [0.7.3]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.7.0
+
 [0.6.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.5.0...v0.6.0
+
 [0.5.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.4.0...v0.5.0
+
 [0.4.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.3.0...v0.4.0
+
 [0.3.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.2.0...v0.3.0
+
 [0.2.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.1.0...v0.2.0
+
 [0.1.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.11...v0.1.0
+
 [0.0.11]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.10...v0.0.11
 [0.0.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.9...v0.0.10
 [0.0.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.8...v0.0.9

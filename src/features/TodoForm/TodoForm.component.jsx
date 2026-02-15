@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import styled from 'styled-components';
 
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
+import { useTodosContext } from '../../context/TodosContext';
 
 // Styled form container with consistent spacing and theming for form elements
 // Includes styles for labels, inputs, textareas, selects, and buttons with focus states
@@ -69,20 +70,21 @@ const StyledTodoForm = styled.form`
 // - setWorkingTodoTitle Function to update the todo title
 // - clearQueryString Function to clear query parameters
 
-function TodoForm({
-  onAddTodo,
-  isSaving,
-  workingTodoTitle,
-  setWorkingTodoTitle,
-  clearQueryString,
-}) {
+function TodoForm() {
+  const {
+    addTodo,
+    isSaving,
+    workingTodoTitle,
+    setWorkingTodoTitle,
+    clearQueryString,
+  } = useTodosContext();
   // Ref to maintain focus on the input after adding a todo
   const todoTitleInput = useRef(null);
 
   // Handle form submission - adds the todo and resets the form
   const handleAddTodo = event => {
     event.preventDefault();
-    onAddTodo(workingTodoTitle);
+    addTodo(workingTodoTitle);
     setWorkingTodoTitle('');
     todoTitleInput.current.focus();
   };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+import { useTodosContext } from '../../context/TodosContext';
+
 // Styled form container with themed controls for search and sort functionality
 // Includes focus states, dividers, and responsive layout
 const StyledTodosViewForm = styled.form`
@@ -86,14 +88,16 @@ const StyledTodosViewForm = styled.form`
 //  - setSortDirection = Function to update the sort direction
 //  - queryString = Current search query string
 //  - setQueryString = Function to update the search query
-function TodosViewForm({
-  sortField,
-  setSortField,
-  sortDirection,
-  setSortDirection,
-  queryString,
-  setQueryString,
-}) {
+function TodosViewForm() {
+  const {
+    sortField,
+    setSortField,
+    sortDirection,
+    setSortDirection,
+    queryString,
+    setQueryString,
+    clearQueryString,
+  } = useTodosContext();
   // Local state for search input to enable debouncing
   const [localQueryString, setLocalQueryString] = useState(queryString);
 
@@ -109,7 +113,10 @@ function TodosViewForm({
     // Cleanup timeout if user types again before 500ms
     return () => clearTimeout(debounce);
   }, [localQueryString, setQueryString]);
-  
+
+  useEffect(() => {
+    setLocalQueryString(queryString);
+  }, [queryString]);
   return (
     <StyledTodosViewForm onSubmit={preventRefresh}>
       <hr />
@@ -126,7 +133,10 @@ function TodosViewForm({
           />
           <input
             type="button"
-            onClick={() => setLocalQueryString('')}
+            onClick={() => {
+              setLocalQueryString('');
+              clearQueryString();
+            }}
             value="Clear"
           />
         </div>
