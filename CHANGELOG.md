@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add tests for ErrorMessage component functionality
 - Add test for removing completed todo after 3500ms in TodoListItem
 - Add test to clear completion timer when editing and re-starts on cancel
+- Add test to finalize completion of todo after 3500ms when untouched
 
 ### Changed
 - Updated package.json to include Vitest and Testing Library dependencies.

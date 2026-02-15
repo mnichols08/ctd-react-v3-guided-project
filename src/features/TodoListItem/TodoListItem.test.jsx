@@ -186,4 +186,65 @@ describe('TodoListItem', () => {
       vi.useRealTimers();
     }
   });
+
+  it('still finalizes completion after 3500ms when untouched', async () => {
+    vi.useFakeTimers();
+
+    const TestList = () => {
+      const [todos, setTodos] = useState([baseTodo]);
+      const timersRef = useRef({});
+
+      const completeTodo = id => {
+        setTodos(prev => {
+          const next = prev.map(todo =>
+            todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+          );
+
+          if (timersRef.current[id]) {
+            clearTimeout(timersRef.current[id]);
+            delete timersRef.current[id];
+          }
+
+          const updated = next.find(todo => todo.id === id);
+          if (updated?.isCompleted) {
+            timersRef.current[id] = setTimeout(() => {
+              setTodos(current =>
+                current.filter(todo => todo.id !== id || !todo.isCompleted)
+              );
+              delete timersRef.current[id];
+            }, 3500);
+          }
+
+          return next;
+        });
+      };
+
+      return (
+        <TodosProvider value={{ completeTodo, updateTodo: vi.fn() }}>
+          <ul>
+            {todos.map(todo => (
+              <TodoListItem key={todo.id} todo={todo} />
+            ))}
+          </ul>
+        </TodosProvider>
+      );
+    };
+
+    try {
+      render(<TestList />);
+
+      fireEvent.click(screen.getByRole('checkbox'));
+      expect(screen.getByRole('checkbox')).toBeChecked();
+
+      act(() => {
+        vi.advanceTimersByTime(3500);
+      });
+
+      expect(
+        screen.queryByRole('button', { name: baseTodo.title })
+      ).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
