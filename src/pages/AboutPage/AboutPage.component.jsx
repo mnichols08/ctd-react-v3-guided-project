@@ -17,6 +17,7 @@ const StyledSection = styled.section`
 function AboutPage() {
   return (
     <StyledSection>
+      <h2>About</h2>
       <p>
         <span className="first-letter">H</span>ello and thank you for stopping
         by my about page! This app grew out of my time in Code the Dream&apos;s

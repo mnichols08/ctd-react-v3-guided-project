@@ -140,7 +140,11 @@ describe('App routing', () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /about/i })
+      screen.getByRole('heading', { level: 1, name: /todo app/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: /about/i })
     ).toBeInTheDocument();
 
     expect(
@@ -160,7 +164,7 @@ describe('App routing', () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /not found/i })
+      screen.getByRole('heading', { level: 1, name: /todo app/i })
     ).toBeInTheDocument();
 
     expect(

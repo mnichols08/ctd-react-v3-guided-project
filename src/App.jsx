@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router';
 
 import { useTodosContext } from './context/TodosContext';
@@ -16,23 +16,23 @@ import ErrorMessage from './features/ErrorMessage/ErrorMessage.component';
 function App() {
   // Leverages useLocation from react-router
   const location = useLocation();
+  const { pathname } = location;
+  const title = 'Todo App';
   // Read only the global error state needed at this level.
   // Other state is consumed closer to where it’s used.
   const {
     todosState: { errorMessage },
   } = useTodosContext();
-  const [title, setTitle] = useState('Todo App');
 
-  // Sets the heading based upon the page route
+  // Keep the document title aligned with the current page
   useEffect(() => {
-    if (location.pathname === '/') {
-      setTitle('Todo App');
-    } else if (location.pathname === '/about') {
-      setTitle('About');
-    } else {
-      setTitle('Not Found');
-    }
-  }, [location]);
+    const titleByPath = {
+      '/': title,
+      '/about': `About - ${title}`,
+    };
+
+    document.title = titleByPath[pathname] ?? `Not Found - ${title}`;
+  }, [pathname]);
   return (
     <>
       {/* Static application header */}

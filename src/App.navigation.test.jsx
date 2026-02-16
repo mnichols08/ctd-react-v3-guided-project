@@ -230,7 +230,7 @@ describe('App navigation and routing', () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalled());
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /not found/i })
+      screen.getByRole('heading', { level: 1, name: /todo app/i })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { level: 2, name: /route cannot be found/i })
