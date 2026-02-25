@@ -42,8 +42,8 @@ function NotFoundPage() {
   const { errorImg } = useTodosContext();
   return (
     <StyledSection>
-      <img src={errorImg} alt="" aria-hidden="true" />
       <h2>Oops! This route cannot be found.</h2>
+      <img src={errorImg} alt="" aria-hidden="true" />
       <p>
         You seem to have have found a page that we cannot find. Please go back,
         or try again later.

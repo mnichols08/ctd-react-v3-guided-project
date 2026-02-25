@@ -3,9 +3,7 @@ import TodoList from '../../features/TodoList/TodoList.component';
 import TodoForm from '../../features/TodoForm/TodoForm.component';
 import TodosViewForm from '../../features/TodosViewForm/TodosViewForm.component';
 
-// App composes the main features of the todos experience.
-// It owns no business logic and delegates state management
-// to TodosContext and feature-level components.
+// This page is responsible for rendering the  todo list and related controls.
 function TodosPage() {
   const {
     todosState: { todoList, isLoading },
@@ -19,8 +17,8 @@ function TodosPage() {
       <TodoList />
       {/*   Conditionally render controls for sorting and filtering  *
        *   If there is a queryString, regardless of results, or      *
-       *   If todos are not loading and there are any todos, or      *
-       *   If there is not a queryString and there are todos         *
+       *   if todos are finished loading and there are any todos,    *
+       *   or if there is not a queryString and there are todos         *
        *   (i.e. show controls when there are todos,                 *
        *    even if they don't match the current search)             *
        */}

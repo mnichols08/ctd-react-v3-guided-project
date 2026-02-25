@@ -17,6 +17,7 @@ const StyledSection = styled.section`
 function AboutPage() {
   return (
     <StyledSection>
+      <h2>About</h2>
       <p>
         <span className="first-letter">H</span>ello and thank you for stopping
         by my about page! This app grew out of my time in Code the Dream&apos;s
@@ -29,7 +30,7 @@ function AboutPage() {
         React&apos;s nuances, and dove into hooks like <code>useState</code> to
         make things interactive. I practiced conditional rendering, crafted
         controlled form components, and refactored for clarity. I even dipped
-        into testing (none live here yet).
+        into testing.
       </p>
 
       <p>
