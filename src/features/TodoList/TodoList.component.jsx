@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 import { useTodosContext } from '../../context/TodosContext';
 
+import { useTodosContext } from '../../context/TodosContext';
+
 import TodoListItem from '../../features/TodoListItem/TodoListItem.component';
 
 // Sorts an array of todos by a specified field and direction
