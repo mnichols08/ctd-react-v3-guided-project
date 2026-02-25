@@ -99,6 +99,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.11.0.1] - 2026-02-25
+
+### Fixed
+- Hot fixes merging issue, removing duplicate import of useTodosContext in TodoList component
+- Declares `patch-package` as dev dependency to allow deployment
+- Removes git submodules as the references were corrupt preventing successful deployment
+
+---
+
 ## [0.11.0] - 2026-02-13
 
 ### Added
@@ -827,7 +836,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [0.11.2]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.0...v0.11.1
 
-[0.11.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.10...v0.11.0
+[0.11.0.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.0...v0.11.0.1
+[0.11.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.9...v0.11.0
+
 [0.10.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.9...v0.10.10
 [0.10.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.8...v0.10.9
 [0.10.8]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.7...v0.10.8

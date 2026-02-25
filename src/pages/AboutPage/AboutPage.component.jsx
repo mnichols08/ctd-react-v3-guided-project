@@ -30,7 +30,7 @@ function AboutPage() {
         React&apos;s nuances, and dove into hooks like <code>useState</code> to
         make things interactive. I practiced conditional rendering, crafted
         controlled form components, and refactored for clarity. I even dipped
-        into testing (none live here yet).
+        into testing.
       </p>
 
       <p>
