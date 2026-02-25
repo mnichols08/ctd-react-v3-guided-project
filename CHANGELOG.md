@@ -24,13 +24,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -->
 
-## [0.10.10] - 2026-02-10
+## [0.11.0.1] - 2026-02-25
 
 ### Fixed
+- Hot fixes merging issue, removing duplicate import of useTodosContext in TodoList component
+- Declares `patch-package` as dev dependency to allow deployment
+- Removes git submodules as the references were corrupt preventing successful deployment
 
-- Remove optimistic todos from state when POST request fails (e.g., network offline) to prevent phantom todos that persist until page refresh
-
--->
+---
 
 ## [0.11.0] - 2026-02-13
 
