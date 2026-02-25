@@ -24,6 +24,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 -->
 
+## [0.11.0.1] - 2026-02-25
+
+### Fixed
+- Hot fixes merging issue, removing duplicate import of useTodosContext in TodoList component
+- Declares `patch-package` as dev dependency to allow deployment
+- Removes git submodules as the references were corrupt preventing successful deployment
+
+---
+
+## [0.11.0] - 2026-02-13
+
+### Added
+
+- Add Footer component and place in app layout
+- Imports react-router and wraps App component with it
+- Add TodosPage and move all Todo components into it
+- In Header, add styled nav with Home/About links
+- Sets heading based upon browser route
+- Add /about and catch-all NotFound routes
+- Adds NotFound route and page
+- Implements client side pagination
+
+### Changed
+
+- Moves Header into shared components directory
+- Refactor TodosPage to conditionally render TodosViewForm based on query string and loading state
+- Moves pagination controls inside of conditional block
+
+### Fixed
+
+- Fixes accessibility issues where screen reader users were unable to read and understand how to use the app
+
+---
+
 ## [0.10.10] - 2026-02-10
 
 ### Fixed
@@ -36,7 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
- - Moved todo normalization logic from reducer to `useTodos` hook to avoid duplicate processing and ensure both state and cache use the same normalized data
+- Moved todo normalization logic from reducer to `useTodos` hook to avoid duplicate processing and ensure both state and cache use the same normalized data
 
 ---
 
@@ -112,7 +146,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Schedules finalizeComplete only after the PATCH succeeds so a failure can’t permanently drop the item
-- Fix background properties in body for consistent styling 
+- Fix background properties in body for consistent styling
 
 ---
 
@@ -722,6 +756,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Security**: Security-related updates
 
 <!-- [Unreleased]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.0.1...HEAD -->
+
+[0.11.0.1]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.11.0...v0.11.0.1
+[0.11.0]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.9...v0.11.0
 
 [0.10.10]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.9...v0.10.10
 [0.10.9]: https://github.com/mnichols08/ctd-react-v3-guided-project/compare/v0.10.8...v0.10.9

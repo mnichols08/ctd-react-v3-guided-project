@@ -97,33 +97,47 @@ function TodoListItem({ todo }) {
         ) : (
           // Display mode: show checkbox and title (click title to edit)
           <div className={styles.labelContainer}>
+            {/* Tell screen reader users how to mark this todo as complete */}
+            <p className="screen-reader-only">
+              To mark this todo as complete, click, or navigate to it with tab
+              and press enter, or press space on this input
+            </p>
             <input
               type="checkbox"
               checked={todo.isCompleted}
               onChange={() => completeTodo(todo.id)}
               disabled={todo.isStillSaving}
-              className={styles.checkbox}
+              className={`${styles.checkbox} screen-reader-only`}
               id={`todo-${todo.id}-checkbox`}
             />
             <label
               htmlFor={`todo-${todo.id}-checkbox`}
               className={styles.checkboxButton}
             />
-            <span
-              role="button"
-              tabIndex={0}
-              onClick={startEditing}
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  startEditing();
-                } else if (e.key === ' ') {
-                  e.preventDefault();
-                  startEditing();
-                }
-              }}
-            >
+            <span role="button" onClick={startEditing}>
               {todo.title}
             </span>
+            <div className="screen-reader-only">
+              {/* Tell screen reader users how to edit this todo */}
+              <p>
+                To edit the value of this todo, click, or navigate to it with
+                tab and press enter or space.
+              </p>
+              {/* Ensure that the todo title is visible to screen readers */}
+              <p
+                tabIndex={0}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    startEditing();
+                  } else if (e.key === ' ') {
+                    e.preventDefault();
+                    startEditing();
+                  }
+                }}
+              >
+                {todo.title}
+              </p>
+            </div>
           </div>
         )}
       </form>
